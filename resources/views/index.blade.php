@@ -83,9 +83,23 @@
             </a>
             @endif
 
-            <form method='get' style="display:inline-block;{{$is_search_form?'width: calc(100% - 60px);':'width: 260px;'}}" action='{{Request::url()}}'>
+            <form id="search-form" method='get' style="display:inline-block;{{$is_search_form?'width: calc(100% - 70px);':'width: 260px;'}}" action='{{Request::url()}}'>
                 @if($is_search_form)
                     @include('search_form')
+                    @push('bottom')
+                        <script type="application/javascript">
+                            $(function() {
+                                $('#search-form select').change(function () {
+                                    $('.loading').show();
+                                    $('#search-form').submit();
+                                });
+                                $('#search-form input.input_date').change(function () {
+                                    $('.loading').show();
+                                    $('#search-form').submit();
+                                });
+                            });
+                        </script>
+                    @endpush
                 @endif
                 <div class="input-group">
                   <input type="text" name="q" value="{{ Request::get('q') }}" class="form-control input-sm pull-{{ trans('crudbooster.right') }}" placeholder="{{trans('crudbooster.filter_search')}}"/>
@@ -96,7 +110,7 @@
                         foreach($search_forms as $index=>$form) {
                             if($form['name']){
                                 $exception_paras[] = $form['name'];
-                                if(Request::get($form['name'])){
+                                if(Request::get($form['name'])!=null && Request::get($form['name'])!=''){
                                     $has_search_value = true;
                                 }
                             }
@@ -131,7 +145,7 @@
           <form method='get' id='form-limit-paging' style="display:inline-block" action='{{Request::url()}}'>                        
               {!! CRUDBooster::getUrlParameters(['limit']) !!}
               <div class="input-group">
-                <select onchange="$('#form-limit-paging').submit()" name='limit' style="width: 56px;"  class='form-control input-sm'>
+                <select onchange="$('#form-limit-paging').submit()" name='limit' style="width: 65px;"  class='form-control input-sm'>
                     <option {{($limit==5)?'selected':''}} value='5'>5</option> 
                     <option {{($limit==10)?'selected':''}} value='10'>10</option>
                     <option {{($limit==20)?'selected':''}} value='20'>20</option>
@@ -149,7 +163,7 @@
 
       </div>
       <div class="box-body table-responsive no-padding">
-        @include("crudbooster::default.table")
+        @include("table")
       </div>
     </div>
 

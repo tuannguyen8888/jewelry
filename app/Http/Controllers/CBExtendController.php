@@ -24,6 +24,9 @@ use Psy\Util\Json;
 
 	class CBExtendController extends \crocodicstudio\crudbooster\controllers\CBController {
         public $is_search_form = false;
+        public function getAccessDenied(){
+            return view("access_denied",[]);
+        }
         public function getIndex() {
             $this->cbLoader();
 
@@ -31,9 +34,10 @@ use Psy\Util\Json;
 
             if(!CRUDBooster::isView() && $this->global_privilege==FALSE) {
                 CRUDBooster::insertLog(trans('crudbooster.log_try_view',['module'=>$module->name]));
-                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+                //CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+                CRUDBooster::redirect(CRUDBooster::mainpath().'/access-denied', '');
             }
-
+            
             if(Request::get('parent_table')) {
                 $parentTablePK = CB::pk(g('parent_table'));
                 $data['parent_table'] = DB::table(Request::get('parent_table'))->where($parentTablePK,Request::get('parent_id'))->first();
@@ -51,7 +55,7 @@ use Psy\Util\Json;
                     }
                 }
             }
-
+            
             $data['table'] 	  = $this->table;
             $data['table_pk'] = CB::pk($this->table);
             $data['page_title']       = $module->name;
@@ -62,7 +66,7 @@ use Psy\Util\Json;
             $tablePK = $data['table_pk'];
             $table_columns = CB::getTableColumns($this->table);
             $result = DB::table($this->table)->select(DB::raw($this->table.".".$this->primary_key));
-
+            
             if(Request::get('parent_id')) {
                 $table_parent = $this->table;
                 $table_parent = CRUDBooster::parseSqlTable($table_parent)['table'];
@@ -185,8 +189,19 @@ use Psy\Util\Json;
             // Nguyên add for search form
             if($this->search_form  && count($this->search_form )>0) {
                 foreach ($this->search_form as $index => $search_form) {
-                    Log::debug('$search_form = ',$search_form);
-                    if (CRUDBooster::isColumnExists($this->table, $search_form['name'])) {
+//                    Log::debug(CRUDBooster::getCurrentMethod().' $search_form = ',$search_form);
+                    if($search_form['search_type'] == 'equals_or' && Request::get($search_form['name'])){
+                        $or_columns = explode(",", $search_form['data_column']);
+                        $result->where(function($w) use ($or_columns, $search_form) {
+                            foreach($or_columns as $col) {
+                                $w->orwhere($col, Request::get($search_form['name']));
+                            }
+                        });
+                    } elseif($search_form['search_type'] == 'equals_raw' && Request::get($search_form['name'])!=null && Request::get($search_form['name'])!=''){
+                        $result->whereRaw($search_form['data_column'].' = '.Request::get($search_form['name']));
+                    } elseif ($search_form['search_type'] == 'in_details' && $search_form['sub_query'] && Request::get($search_form['name'])!=null && Request::get($search_form['name'])!=''){
+                        $result->whereRaw(str_replace($search_form['mark_value'],Request::get($search_form['name']),$search_form['sub_query']));
+                    } elseif (CRUDBooster::isColumnExists($this->table, $search_form['name'])) {
                         if (Request::get($search_form['name'])) {
                             if ($search_form['search_type'] != 'between_from' && $search_form['search_type'] != 'between_to') {
                                 if (Request::get($search_form['name']) == 'NULL') {
@@ -230,7 +245,7 @@ use Psy\Util\Json;
                         $this->search_form[$index]['value'] = Request::get($search_form['name']);
                     }
                 }
-                Log::debug('SQL = '.$result->toSql());
+                Log::debug(CRUDBooster::getCurrentMethod().' SQL = '.$result->toSql());
             }
             /////
 
@@ -315,7 +330,12 @@ use Psy\Util\Json;
                 $data['result']  = $result->paginate($limit);
 
             }else{
-                if($this->orderby) {
+                if($this->rawOrderby && is_array($this->rawOrderby)){
+                    foreach($this->rawOrderby as $k=>$v) {
+                        $result->orderby(DB::raw($k),$v);
+                    }
+                    $data['result'] = $result->paginate($limit);
+                }else if($this->orderby) {
                     if(is_array($this->orderby)) {
                         foreach($this->orderby as $k=>$v) {
                             if(strpos($k, '.')!==FALSE) {
@@ -481,7 +501,7 @@ use Psy\Util\Json;
             $this->cbLoader();
             if(!CRUDBooster::isCreate() && $this->global_privilege==FALSE) {
                 CRUDBooster::insertLog(trans('crudbooster.log_try_add_save',['name'=>Request::input($this->title_field),'module'=>CRUDBooster::getCurrentModule()->name ]));
-                CRUDBooster::redirect(CRUDBooster::adminPath(),trans("crudbooster.denied_access"));
+                CRUDBooster::redirect(CRUDBooster::mainpath().'/access-denied', '');
             }
 
             $this->validation();
@@ -575,6 +595,9 @@ use Psy\Util\Json;
                     $childtable = CRUDBooster::parseSqlTable($ro['table'])['table'];
                     DB::table($childtable)->insert($child_array);
                 }
+
+
+
             }
 
 
@@ -607,7 +630,8 @@ use Psy\Util\Json;
 
             if(!CRUDBooster::isUpdate() && $this->global_privilege==FALSE) {
                 CRUDBooster::insertLog(trans("crudbooster.log_try_add",['name'=>$row->{$this->title_field},'module'=>CRUDBooster::getCurrentModule()->name]));
-                CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+                //CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+                CRUDBooster::redirect(CRUDBooster::mainpath().'/access-denied', '');
             }
 
             $this->validation($id);
@@ -800,6 +824,7 @@ use Psy\Util\Json;
             CRUDBooster::insertLog(trans("crudbooster.log_delete",['name'=>$row->{$this->title_field},'module'=>CRUDBooster::getCurrentModule()->name]));
 
             $this->hook_before_delete($id);
+
             // edit by NguyenVT
             if(CRUDBooster::isColumnExists($this->table,'deleted_at')) {
                 $delete_query = ['deleted_at'=>date('Y-m-d H:i:s')];
@@ -810,7 +835,11 @@ use Psy\Util\Json;
             }else{
                 DB::table($this->table)->where($this->primary_key,$id)->delete();
             }
+
+
             $this->hook_after_delete($id);
+
+            $url = g('return_url')?:CRUDBooster::referer();
 
             CRUDBooster::redirect($url,trans("crudbooster.alert_delete_data_success"),'success');
         }

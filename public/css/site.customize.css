@@ -59,9 +59,9 @@
 .customize-form-search #form-limit-paging .input-group{
     margin-bottom: 15px !important;
 }
-.customize-form-search .control-label{
+/*.customize-form-search .control-label{
     width: fit-content !important;
-}
+}*/
 .invisible{
     visibility: hidden;;
 }

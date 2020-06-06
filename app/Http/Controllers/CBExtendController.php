@@ -326,6 +326,26 @@ use Psy\Util\Json;
                 }
             }
 
+            $index_statistic = [];
+
+            foreach($this->index_statistic as $item_statistic){
+                if($item_statistic['use_main_query']) {
+                    $statistic_query = clone $result;
+                    $function = $item_statistic['operator'];
+                    $field = $item_statistic['field'];
+                    if($function == 'count_distinct'){
+                        $item_statistic['count'] = number_format($statistic_query->distinct($field)->count($field));
+                    }else {
+                        if ($field) {
+                            $item_statistic['count'] = number_format($statistic_query->$function($field));
+                        } else {
+                            $item_statistic['count'] = number_format($statistic_query->$function());
+                        }
+                    }
+                }
+                $index_statistic[] = $item_statistic;
+            }
+
             if($filter_is_orderby == true) {
                 $data['result']  = $result->paginate($limit);
 
@@ -493,6 +513,8 @@ use Psy\Util\Json;
             $data['html_contents'] = $html_contents;
             $data['is_search_form'] = $this->is_search_form;
             $data['search_forms'] = $this->search_form;
+
+            $data['index_statistic'] = $index_statistic;
 
             return view("index",$data);
         }

@@ -340,7 +340,7 @@
 			width: 20px;
 		}
 		#table_order_details .sort_no{
-			width: 30px;
+			width: 45px;
 		}
 		#table_order_details .bar_code{
 			width: 100px;

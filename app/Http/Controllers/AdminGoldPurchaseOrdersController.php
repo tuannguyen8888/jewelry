@@ -60,7 +60,7 @@
 
             $this->search_form = [];
             if(CRUDBooster::myPrivilegeId() == 2) {
-                $this->search_form[] = ["label" => "Khách hàng", "name" => "customer_id", "type" => "select2", "width" => "col-sm-6", 'datatable' => 'gold_customers,name', 'datatable_where' => 'deleted_at is null', 'datatable_format' => "code,' - ',name,' - ',IFNULL(phone,'')"];
+                $this->search_form[] = ["label" => "Khách hàng", "name" => "customer_id", "type" => "select2", "width" => "col-sm-6", 'datatable' => 'gold_customers,name','datatable_ajax'=>true, 'datatable_where' => 'deleted_at is null', 'datatable_format' => "code,' - ',name,' - ',IFNULL(phone,'')"];
             }else{
                 $this->search_form[] = ["label" => "Khách hàng", "name" => "customer_id", "type" => "select2", "width" => "col-sm-6", 'datatable' => 'gold_customers,name', 'datatable_where' => 'deleted_at is null', 'datatable_format' => "code,' - ',name,' - ',IFNULL(phone,'')"];
             }

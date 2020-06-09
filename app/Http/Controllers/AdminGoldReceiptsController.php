@@ -536,14 +536,21 @@
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
 			$filename = 'SQ_'.time();
+	    $para_values = explode("@", $para);
             $parameter = [
-				'from_date'=>substr($para, 0, 10),
-				'to_date'=>substr($para, 11, 10),
-				'type'=>substr($para, 22, 2),
+				'from_date'=>$para_values[0],
+				'to_date'=>$para_values[1],
+				'type'=>$para_values[2],
+				'brand_id'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
             $input = base_path().'/app/Reports/rpt_book_cash.jasper';
             $output = public_path().'/output_reports/'.$filename;
+
+            $command = $jasper->process($input, $output, array('pdf'), $parameter, $database)->output();
+            Log::debug(CRUDBooster::getCurrentMethod() . ' $database = ', $database);
+            Log::debug(CRUDBooster::getCurrentMethod() . ' $command = ' . $command);
+
             $jasper->process($input, $output, array('pdf'), $parameter, $database)->execute();
 
             while (!file_exists($output.'.pdf' )){
@@ -564,10 +571,12 @@
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
 			$filename = 'SQ_'.time();
+            $para_values = explode("@", $para);
             $parameter = [
-				'from_date'=>substr($para, 0, 10),
-				'to_date'=>substr($para, 11, 10),
-				'type'=>substr($para, 22, 2),
+				'from_date'=>$para_values[0],
+				'to_date'=>$para_values[1],
+				'type'=>$para_values[2],
+				'brand_id'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
             $input = base_path().'/app/Reports/rpt_book_cash.jasper';

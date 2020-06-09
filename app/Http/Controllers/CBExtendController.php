@@ -198,6 +198,9 @@ use Psy\Util\Json;
                             }
                         });
                     } elseif($search_form['search_type'] == 'equals_raw' && Request::get($search_form['name'])!=null && Request::get($search_form['name'])!=''){
+                        if($search_form['data_column'] == 'gold_pawn_orders.status'){
+                            Log::debug(CRUDBooster::getCurrentMethod().' s'.Request::get($search_form['name']).'ssssss');
+                        }
                         $result->whereRaw($search_form['data_column'].' = '.Request::get($search_form['name']));
                     } elseif ($search_form['search_type'] == 'in_details' && $search_form['sub_query'] && Request::get($search_form['name'])!=null && Request::get($search_form['name'])!=''){
                         $result->whereRaw(str_replace($search_form['mark_value'],Request::get($search_form['name']),$search_form['sub_query']));
@@ -241,9 +244,9 @@ use Psy\Util\Json;
                             }
                         }
                     }
-                    if (Request::get($search_form['name'])) {
+//                    if (Request::get($search_form['name'])) {
                         $this->search_form[$index]['value'] = Request::get($search_form['name']);
-                    }
+//                    }
                 }
                 Log::debug(CRUDBooster::getCurrentMethod().' SQL = '.$result->toSql());
             }

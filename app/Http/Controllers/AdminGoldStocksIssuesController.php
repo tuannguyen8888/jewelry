@@ -268,8 +268,26 @@
 	    */
 	    public function hook_query_index(&$query) {
 	        //Your code here
-	        
-	    }
+            $query->leftJoin('gold_customers', function($join)
+            {
+                $join->on('gold_customers.id', '=', $this->table.'.object_id')
+                    ->where($this->table.'.object_type', '=', '0');
+            })->leftJoin('gold_suppliers', function($join)
+            {
+                $join->on('gold_suppliers.id', '=', $this->table.'.object_id')
+                    ->where($this->table.'.object_type', '=', '1');
+            })->leftJoin('gold_investors', function($join)
+            {
+                $join->on('gold_investors.id', '=', $this->table.'.object_id')
+                    ->where($this->table.'.object_type', '=', '2');
+            })->leftJoin('cms_users as U', function($join)
+            {
+                $join->on('U.id', '=', $this->table.'.object_id')
+                    ->where($this->table.'.object_type', '=', '3');
+            });
+            $query->addSelect(DB::raw('CASE WHEN object_type = 0 THEN gold_customers.name WHEN object_type = 1 THEN gold_suppliers.name WHEN object_type = 2 THEN gold_investors.name WHEN object_type = 3 THEN U.name ELSE \'Lỗi\' END as object_name'));
+
+        }
 
 	    /*
 	    | ---------------------------------------------------------------------- 
@@ -303,7 +321,21 @@
             $id = $para['id'];
 
             $order = DB::table($this->table)->where($this->primary_key, $id)->first();
-            $supplier = DB::table('gold_suppliers')->where('id', $order->supplier_id)->first();
+            switch ($order->object_type){
+                case 0:
+                    $object = DB::table('gold_customers')->where('id', $order->object_id)->first();
+                    break;
+                case 1:
+                    $object = DB::table('gold_suppliers')->where('id', $order->object_id)->first();
+                    break;
+                case 2:
+                    $object = DB::table('gold_investors')->where('id', $order->object_id)->first();
+                    break;
+                case 3:
+                    $object = DB::table('cms_users')->where('id', $order->object_id)->first();
+                    break;
+            }
+
 			$details = DB::table('gold_stocks_issue_detail as D')
 				->leftJoin('gold_items as I', 'D.item_id', '=', 'I.id')
                 ->leftJoin('gold_products as P', 'I.product_id', '=', 'P.id')
@@ -326,7 +358,7 @@
 					'PT.name as product_type_name',
 					'D.notes')
                 ->get();
-            return ['order'=>$order, 'supplier'=>$supplier, 'details'=>$details];
+            return ['order'=>$order, 'object'=>$object, 'details'=>$details];
         }
 
         private function updateOrder($order) {
@@ -374,15 +406,17 @@
 							'updated_by' => CRUDBooster::myId()
 						]);
 					}
-					$supplier = DB::table('gold_suppliers')->where('id', $order['supplier_id'])->first();
-					if($supplier){
-						DB::table('gold_suppliers')->where('id', $supplier->id)->update([
-							'q10' => $supplier->q10 - $q10, 
-							'balance' => $supplier->balance - $fee, 
-							'updated_at' => date('Y-m-d H:i:s'), 
-							'updated_by' => CRUDBooster::myId()
-						]);
-					}
+					if(intval($order['object_type']) == 1) {
+                        $supplier = DB::table('gold_suppliers')->where('id', $order['supplier_id'])->first();
+                        if ($supplier) {
+                            DB::table('gold_suppliers')->where('id', $supplier->id)->update([
+                                'q10' => $supplier->q10 - $q10,
+                                'balance' => $supplier->balance - $fee,
+                                'updated_at' => date('Y-m-d H:i:s'),
+                                'updated_by' => CRUDBooster::myId()
+                            ]);
+                        }
+                    }
 				}
             }
             catch( \Exception $e){
@@ -659,14 +693,15 @@
 							'status' => 1, 
 							'notes' => 'Hủy phiếu xuất [' . $order->order_no . ']'
 						]);
-
-						$supplier = DB::table('gold_suppliers')->where('id', $order->supplier_id)->first();
-						if($supplier){
-							DB::table('gold_suppliers')->where('id', $supplier->id)->update([
-								'q10' => $supplier->q10 + $detail->q10, 
-								'balance' => $supplier->balance + $detail->fee
-							]);
-						}
+                        if($order->object_type == 1) {
+                            $supplier = DB::table('gold_suppliers')->where('id', $order->supplier_id)->first();
+                            if ($supplier) {
+                                DB::table('gold_suppliers')->where('id', $supplier->id)->update([
+                                    'q10' => $supplier->q10 + $detail->q10,
+                                    'balance' => $supplier->balance + $detail->fee
+                                ]);
+                            }
+                        }
 					}
 				}
             }

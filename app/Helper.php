@@ -1,15 +1,16 @@
 <?php
 class Enums{
-    public static $PRODUCT_STATUS = "\"0\"|<label class='label label-warning'>Hết hàng</label>;1|<label class='label label-info'>Còn hàng</label>";
+    public static $PRODUCT_STATUS = "0|<label class='label label-warning'>Hết hàng</label>;1|<label class='label label-info'>Còn hàng</label>";
     public static $TRANFER_TYPES = "2|<label class='label label-warning'>Trả hàng</label>;1|<label class='label label-primary'>Chuyển kho</label>";
-    public static $IMPORT = "\"0\"|Phát sinh khi saler bán cho khách hàng mới;1|Import từ bảng công nợ của kế toán";
-    public static $INPUT_STATUS = "\"0\"|<label class='label label-success label-status' data-code='0'>Đang nhập</label>;1|<label class='label label-primary label-status' data-code='1'>Hoàn tất</label>;2|<label class='label label-warning label-status' data-code='2'>Đã bán</label>;3|<label class='label label-warning label-status' data-code='3'>Đã trả hàng</label>";
-    public static $COUNTER_STATUS = "\"0\"|<label class='label label-info label-status' data-code='0'>Mở sổ</label>;1|<label class='label label-primary label-status' data-code='1'>Đóng sổ</label>;2|<label class='label label-success label-status' data-code='2'>Khóa sổ</label>";
-    public static $PAWN_STATUS = "\"0\"|<label class='label label-primary label-status' data-code='0'>Đang nhập</label>;1|<label class='label label-warning label-status' data-code='1'>Đang cầm</label>;2|<label class='label label-success label-status' data-code='2'>Đã thanh lý</label>";
-    public static $CUSTOMER_TYPE = "\"0\"|<label class='label label-info'>Thường</label>;1|<label class='label label-primary'>VIP</label>";
-    public static $LIQUIDATION_METHOD = "\"0\"|<label class='label label-success'>Tất toán</label>;1|<label class='label label-primary'>Thanh lý</label>";
-    public static $PAYMENT_METHOD = "\"0\"|<label class='label label-success'>Tiền mặt</label>;1|<label class='label label-primary'>Chuyển khoản</label>";
-    public static $USER_STATUS = "\"0\"|<label class='label label-success'>Đang dùng</label>;1|<label class='label label-primary'>Tạm ngưng</label>";
+    public static $IMPORT = "0|Phát sinh khi saler bán cho khách hàng mới;1|Import từ bảng công nợ của kế toán";
+    public static $INPUT_STATUS = "0|<label class='label label-success label-status' data-code='0'>Đang nhập</label>;1|<label class='label label-primary label-status' data-code='1'>Hoàn tất</label>;2|<label class='label label-warning label-status' data-code='2'>Đã bán</label>;3|<label class='label label-warning label-status' data-code='3'>Đã trả hàng</label>";
+    public static $COUNTER_STATUS = "0|<label class='label label-info label-status' data-code='0'>Mở sổ</label>;1|<label class='label label-primary label-status' data-code='1'>Đóng sổ</label>;2|<label class='label label-success label-status' data-code='2'>Khóa sổ</label>";
+    public static $PAWN_STATUS = "0|<label class='label label-primary label-status' data-code='0'>Đang nhập</label>;1|<label class='label label-warning label-status' data-code='1'>Đang cầm</label>;2|<label class='label label-success label-status' data-code='2'>Đã thanh lý</label>";
+    public static $CUSTOMER_TYPE = "0|<label class='label label-info'>Thường</label>;1|<label class='label label-primary'>VIP</label>";
+    public static $LIQUIDATION_METHOD = "0|<label class='label label-success'>Tất toán</label>;1|<label class='label label-primary'>Thanh lý</label>";
+    public static $PAYMENT_METHOD = "0|<label class='label label-success'>Tiền mặt</label>;1|<label class='label label-primary'>Chuyển khoản</label>";
+    public static $USER_STATUS = "0|<label class='label label-success'>Đang dùng</label>;1|<label class='label label-primary'>Tạm ngưng</label>";
+    public static $OBJECT_TYPE = "0|Khách hàng;1|Nhà cung cấp;2|Nhà đầu tư;3|Nhân viên";
 }
 
 function employees() {
@@ -128,5 +129,21 @@ if (!function_exists('date_time_format')) {
         if(!$dateTimeStr) return $dateTimeStr;
         $dateTime = DateTime::createFromFormat($formatInString, $dateTimeStr); // 'Y-m-d H:i:s'
         return $dateTime->format($formatOutString);
+    }
+}
+
+if (!function_exists('convert_enums_to_array')) {
+    function convert_enum_to_array ($enums_string) {
+        $dataenums = explode(";",trim($enums_string));
+        $results = [];
+        if($dataenums && count($dataenums)){
+            foreach ($dataenums as $item) {
+                $id_name = explode("|",$item);
+                if($id_name && count($id_name)==2){
+                    $results[] = ['id'=>$id_name[0], 'name'=>$id_name[1]];
+                }
+            }
+        }
+        return $results;
     }
 }

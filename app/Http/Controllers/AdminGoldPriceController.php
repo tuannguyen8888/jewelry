@@ -39,7 +39,6 @@
 			$this->button_import = false;
 			$this->button_export = true;
 			$this->table = "gold_price";
-            $this->is_search_form = true;
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
@@ -64,22 +63,18 @@
 			$this->form[] = ['label'=>'Ghi chú','name'=>'notes','type'=>'text','validation'=>'min:0|max:200','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE
 
-            $this->search_form = [];
-            $this->search_form[] = ["label"=>"Từ ngày", "name"=>"apply_time_from_date", "data_column"=>"apply_time", "search_type"=>"between_from","type"=>"date","width"=>"col-sm-2"];
-            $this->search_form[] = ["label"=>"Đến ngày", "name"=>"apply_time_to_date", "data_column"=>"apply_time", "search_type"=>"between_to","type"=>"date","width"=>"col-sm-2"];
-
-            /*
-            | ----------------------------------------------------------------------
-            | Sub Module
-            | ----------------------------------------------------------------------
-            | @label          = Label of action
-            | @path           = Path of sub module
-            | @foreign_key 	  = foreign key of sub table/module
-            | @button_color   = Bootstrap Class (primary,success,warning,danger)
-            | @button_icon    = Font Awesome Class
-            | @parent_columns = Sparate with comma, e.g : name,created_at
-            |
-            */
+			/* 
+	        | ---------------------------------------------------------------------- 
+	        | Sub Module
+	        | ----------------------------------------------------------------------     
+			| @label          = Label of action 
+			| @path           = Path of sub module
+			| @foreign_key 	  = foreign key of sub table/module
+			| @button_color   = Bootstrap Class (primary,success,warning,danger)
+			| @button_icon    = Font Awesome Class  
+			| @parent_columns = Sparate with comma, e.g : name,created_at
+	        | 
+	        */
 	        $this->sub_module = array();
 
 
@@ -225,10 +220,7 @@
 	        |
 	        */
 	        $this->load_css = array();
-            $this->load_css[] = asset("css/loading.css");
-            $this->load_css[] = asset("css/site.customize.css");
-            $this->load_css[] = asset("vendor/crudbooster/assets/datetimepicker-master/jquery.datetimepicker.css");
-            $this->load_css[] = asset("vendor/crudbooster/assets/select2/dist/css/select2.min.css");
+	        
 	        
 	    }
 

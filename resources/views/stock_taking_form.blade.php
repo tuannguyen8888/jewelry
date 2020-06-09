@@ -168,7 +168,7 @@
 			width:100%;
 		}
         #table_order_details .sort_no{
-			width: 45px;
+			width: 30px;
 		}
         #table_order_details .qty{
 			width: 75px;
@@ -287,7 +287,7 @@
                                 detail.no = i + 1;
                                 addNewOrderDetail(detail);
                             });
-                            order_details = data.details.reverse();
+                            order_details = data.details;
                             calcTotalOfOrderDetails();
 						}
                         if (data.order && data.order.status == 1){
@@ -468,7 +468,7 @@
                     <th class="text-right">${dataRow.gold_weight.toLocaleString('en-US')}</th>
                     <th class="qty text-right">${dataRow.actual_qty.toLocaleString('en-US')}</th>
                 </tr>`;
-			$('#table_order_details tbody').prepend(html);
+			$('#table_order_details tbody').append(html);
             // $('#table_order_details tbody').animate({scrollTop:9999999}, 'slow');
         }
 
@@ -493,12 +493,6 @@
                                         removeIndex = index;
                                         $('#order_detail_'+detail.id).remove();
                                         order_details.splice(removeIndex, 1);
-                                        // giảm số thứ tự
-                                        for (let i = 0; i < removeIndex; i++) {
-                                            let detail = order_details[i];
-                                            detail.no -= 1;
-                                            $('#order_detail_'+detail.id+' .sort_no').html(detail.no);
-                                        }
                                         calcTotalOfOrderDetails();
                                     }
                                 },
@@ -509,8 +503,12 @@
                                 }
                             });
                         }
+                        // giảm số thứ tự
+                        if(removeIndex != -1 && index > removeIndex) {
+                            detail.no -= 1;
+                            $('#no_'+detail.id).html(detail.no);
+                        }
                     });
-
 				}else{
 					console.log('Chưa có sản phẩm được quét barcode, không thể xóa');
 				}
@@ -591,7 +589,7 @@
                         }
                         item.id = data.detail_id
                         item.no = order_details ? order_details.length + 1 : 1;
-                        order_details.unshift(item); // add first
+                        order_details.push(item);
                         addNewOrderDetail(item);
                         calcTotalOfOrderDetails();
                     }

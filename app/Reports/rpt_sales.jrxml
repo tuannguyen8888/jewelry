@@ -23,6 +23,7 @@
 		<parameter name="from_date" class="java.util.Date"/>
 		<parameter name="to_date" class="java.util.Date"/>
 		<parameter name="user_ids" class="java.lang.String"/>
+		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT P.name, COUNT(SOD.id) AS qty, SUM(SOD.edit_weight) AS weight, I.age, 
 	SUM(I.q10) AS q10, SUM(SOD.gold_amount) AS gold_amount, SUM(I.fund_fee) AS fund_fee, 
@@ -34,6 +35,7 @@ FROM gold_sale_orders SO
 	LEFT OUTER JOIN gold_product_types P ON I.product_type_id = P.id
 WHERE SO.deleted_at IS NULL AND SOD.deleted_at IS NULL AND FIND_IN_SET(C.saler_id, $P{user_ids}) > 0
 	AND SO.order_date >= $P{from_date} AND SO.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+	AND SO.brand_id = $P{brand_id}  
 GROUP BY P.name, I.age
 ORDER BY P.name, I.age]]>
 		</queryString>
@@ -98,6 +100,7 @@ ORDER BY P.name, I.age]]>
 		<parameter name="user_ids" class="java.lang.String"/>
 		<parameter name="from_date" class="java.util.Date"/>
 		<parameter name="to_date" class="java.util.Date"/>
+		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT name, SUM(qty) as qty, SUM(gold_weight) AS gold_weight, age, SUM(q10) AS q10, SUM(amount) AS amount, SUM(fee) AS fee
 FROM(
@@ -109,6 +112,7 @@ FROM(
 		LEFT OUTER JOIN gold_product_types P ON POD.product_type_id = P.id	
 	WHERE PO.deleted_at IS NULL AND POD.deleted_at IS NULL AND FIND_IN_SET(C.saler_id, $P{user_ids}) > 0
 		AND PO.order_date >= $P{from_date} AND PO.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+		AND PO.brand_id = $P{brand_id}  
 	GROUP BY P.name, POD.age
 	UNION ALL
 	SELECT P.name, COUNT(POD.id) as qty, SUM(POD.gold_weight) AS gold_weight, POD.age, SUM(POD.q10) AS q10, 
@@ -119,6 +123,7 @@ FROM(
 		LEFT OUTER JOIN gold_product_types P ON POD.product_type_id = P.id	
 	WHERE PO.deleted_at IS NULL AND POD.deleted_at IS NULL AND FIND_IN_SET(C.saler_id, $P{user_ids}) > 0
 		AND PO.order_date >= $P{from_date} AND PO.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+		AND PO.brand_id = $P{brand_id}  		
 	GROUP BY P.name, POD.age
 ) A
 GROUP BY name, age
@@ -174,6 +179,7 @@ ORDER BY name, age]]>
 		<parameter name="user_ids" class="java.lang.String"/>
 		<parameter name="from_date" class="java.util.Date"/>
 		<parameter name="to_date" class="java.util.Date"/>
+		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT SUM(qty) AS qty, SUM(amount) AS amount, SUM(interested) AS interested, SUM(finalization) AS finalization, SUM(liquidation) AS liquidation
 FROM(
@@ -182,6 +188,7 @@ FROM(
 		INNER JOIN gold_counters C ON SO.counter_id = C.id
 	WHERE SO.deleted_at IS NULL  AND FIND_IN_SET(C.saler_id, $P{user_ids}) > 0
 		AND SO.order_date >= $P{from_date} AND SO.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+		AND SO.brand_id = $P{brand_id} 
 	UNION ALL
 	SELECT 0 AS qty, 0 AS amount,
 		CASE WHEN SO.liquidation_method = 0 AND SO.liquidation_at = POD.interested_date THEN POD.amount - SO.amount ELSE POD.amount END AS interested,
@@ -192,6 +199,7 @@ FROM(
 		INNER JOIN gold_counters C ON POD.counter_id = C.id
 	WHERE SO.deleted_at IS NULL AND POD.deleted_at IS NULL AND FIND_IN_SET(C.saler_id, $P{user_ids}) > 0
 		AND POD.interested_date >= $P{from_date} AND POD.interested_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+		AND POD.brand_id = $P{brand_id} 		
 ) A]]>
 		</queryString>
 		<field name="qty" class="java.lang.Long">
@@ -229,6 +237,7 @@ FROM(
 		<parameter name="user_ids" class="java.lang.String"/>
 		<parameter name="to_date" class="java.util.Date"/>
 		<parameter name="from_date" class="java.util.Date"/>
+		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT COUNT(V.order_no) AS qty, SUM(V.amount) AS amount, 
 	SUM(ROUND(V.amount * V.bank_fee / 100)) as bank_amount, 
@@ -236,7 +245,8 @@ FROM(
 FROM gold_vouchers V
 	INNER JOIN gold_counters C ON V.counter_id = C.id
 WHERE V.deleted_at IS NULL AND V.order_type = 2 AND FIND_IN_SET(C.saler_id, $P{user_ids}) > 0
-	AND V.order_date >= $P{from_date} AND V.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)]]>
+	AND V.order_date >= $P{from_date} AND V.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+	AND V.brand_id = $P{brand_id}]]>
 		</queryString>
 		<field name="qty" class="java.lang.Long">
 			<property name="com.jaspersoft.studio.field.label" value="qty"/>
@@ -265,10 +275,7 @@ WHERE V.deleted_at IS NULL AND V.order_type = 2 AND FIND_IN_SET(C.saler_id, $P{u
 		</variable>
 	</subDataset>
 	<parameter name="comp_name" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["KIM VẠN PHƯỚC"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="comp_prefix" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ KIM VẠN PHƯỚC"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
@@ -288,16 +295,23 @@ WHERE V.deleted_at IS NULL AND V.order_type = 2 AND FIND_IN_SET(C.saler_id, $P{u
 	<parameter name="user_ids" class="java.lang.String">
 		<defaultValueExpression><![CDATA["10,13,14"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="brand_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT GROUP_CONCAT(name SEPARATOR '; ') AS name
+	,(SELECT name FROM gold_brands WHERE id = $P{brand_id}) AS brand_name
 FROM cms_users
 WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
-	WHERE deleted_at IS NULL
+	WHERE deleted_at IS NULL AND brand_id = $P{brand_id}
 	AND opened_at >= $P{from_date} AND opened_at < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
 	AND FIND_IN_SET(saler_id, $P{user_ids}) > 0)]]>
 	</queryString>
 	<field name="name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="name"/>
+	</field>
+	<field name="brand_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="brand_name"/>
 	</field>
 	<title>
 		<band height="110">
@@ -353,7 +367,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="16" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{brand_name}]]></textFieldExpression>
 			</textField>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
 				<reportElement x="0" y="0" width="60" height="60" uuid="d3c88925-405f-4ae3-960c-5b88297b736c">
@@ -393,7 +407,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{comp_prefix}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -411,7 +425,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dsSales" uuid="f1dae14b-c882-4c98-9113-2a9d78fb0c76">
+					<datasetRun subDataset="dsSales" uuid="ce493300-5ca4-4110-9fb0-3a47864491e5">
 						<datasetParameter name="from_date">
 							<datasetParameterExpression><![CDATA[$P{from_date}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -420,6 +434,9 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 						</datasetParameter>
 						<datasetParameter name="user_ids">
 							<datasetParameterExpression><![CDATA[$P{user_ids}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="brand_id">
+							<datasetParameterExpression><![CDATA[$P{brand_id}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
@@ -1055,7 +1072,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dsPurchase" uuid="75ffa92f-e9d8-4871-ba13-f33bd3a25073">
+					<datasetRun subDataset="dsPurchase" uuid="6f150542-0add-4cb5-9dfa-be9ba29b5f73">
 						<datasetParameter name="user_ids">
 							<datasetParameterExpression><![CDATA[$P{user_ids}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -1064,6 +1081,9 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 						</datasetParameter>
 						<datasetParameter name="to_date">
 							<datasetParameterExpression><![CDATA[$P{to_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="brand_id">
+							<datasetParameterExpression><![CDATA[$P{brand_id}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
@@ -1636,7 +1656,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dsPawn" uuid="7505c773-7ef5-42ff-80a7-77005956c139">
+					<datasetRun subDataset="dsPawn" uuid="f3e368e5-89cd-4f2f-b7a0-b9aa2c4883a8">
 						<datasetParameter name="user_ids">
 							<datasetParameterExpression><![CDATA[$P{user_ids}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -1645,6 +1665,9 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 						</datasetParameter>
 						<datasetParameter name="to_date">
 							<datasetParameterExpression><![CDATA[$P{to_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="brand_id">
+							<datasetParameterExpression><![CDATA[$P{brand_id}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
@@ -1910,7 +1933,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dsWithdrawal" uuid="a9dc8bf0-4977-48e4-bd9e-b464e048d767">
+					<datasetRun subDataset="dsWithdrawal" uuid="c1e3b2fa-3933-401d-8d9b-694dab9c5845">
 						<datasetParameter name="user_ids">
 							<datasetParameterExpression><![CDATA[$P{user_ids}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -1919,6 +1942,9 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 						</datasetParameter>
 						<datasetParameter name="to_date">
 							<datasetParameterExpression><![CDATA[$P{to_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="brand_id">
+							<datasetParameterExpression><![CDATA[$P{brand_id}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>

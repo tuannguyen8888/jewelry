@@ -237,7 +237,6 @@
 	        */
 	        $this->load_css = array();
             $this->load_css[] = asset("css/loading.css");
-            $this->load_css[] = asset("css/site.customize.css");
             $this->load_css[] = asset("vendor/crudbooster/assets/datetimepicker-master/jquery.datetimepicker.css");
             $this->load_css[] = asset("vendor/crudbooster/assets/select2/dist/css/select2.min.css");
 	    }

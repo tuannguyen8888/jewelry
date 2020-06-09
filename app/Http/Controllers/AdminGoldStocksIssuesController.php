@@ -38,7 +38,7 @@
 			$this->col = [];
 			$this->col[] = ["label"=>"Số phiếu","name"=>"order_no"];
 			$this->col[] = ["label"=>"T/g xuất","name"=>"order_date","callback_php"=>'date_time_format($row->order_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
-			$this->col[] = ["label"=>"Đối tượng","name"=>"object_id","callback_php"=>'$row->object_name'];
+			$this->col[] = ["label"=>"NCC","name"=>"supplier_id","join"=>"gold_suppliers,name"];
 			$this->col[] = ["label"=>"Trạng thái","name"=>"status","callback_php"=>'get_input_status($row->status);'];
 			$this->col[] = ["label"=>"Lý do","name"=>"notes"];
 			$this->col[] = ["label"=>"Cửa hàng","name"=>"brand_id","join"=>"gold_brands,name"];

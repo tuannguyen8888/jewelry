@@ -1,15 +1,15 @@
 <?php
 class Enums{
-    public static $PRODUCT_STATUS = "\"0\"|<label class='label label-warning'>Hết hàng</label>;1|<label class='label label-info'>Còn hàng</label>";
+    public static $PRODUCT_STATUS = "0|<label class='label label-warning'>Hết hàng</label>;1|<label class='label label-info'>Còn hàng</label>";
     public static $TRANFER_TYPES = "2|<label class='label label-warning'>Trả hàng</label>;1|<label class='label label-primary'>Chuyển kho</label>";
-    public static $IMPORT = "\"0\"|Phát sinh khi saler bán cho khách hàng mới;1|Import từ bảng công nợ của kế toán";
-    public static $INPUT_STATUS = "\"0\"|<label class='label label-success label-status' data-code='0'>Đang nhập</label>;1|<label class='label label-primary label-status' data-code='1'>Hoàn tất</label>;2|<label class='label label-warning label-status' data-code='2'>Đã bán</label>;3|<label class='label label-warning label-status' data-code='3'>Đã trả hàng</label>";
-    public static $COUNTER_STATUS = "\"0\"|<label class='label label-info label-status' data-code='0'>Mở sổ</label>;1|<label class='label label-primary label-status' data-code='1'>Đóng sổ</label>;2|<label class='label label-success label-status' data-code='2'>Khóa sổ</label>";
-    public static $PAWN_STATUS = "\"0\"|<label class='label label-primary label-status' data-code='0'>Đang nhập</label>;1|<label class='label label-warning label-status' data-code='1'>Đang cầm</label>;2|<label class='label label-success label-status' data-code='2'>Đã thanh lý</label>";
-    public static $CUSTOMER_TYPE = "\"0\"|<label class='label label-info'>Thường</label>;1|<label class='label label-primary'>VIP</label>";
-    public static $LIQUIDATION_METHOD = "\"0\"|<label class='label label-success'>Tất toán</label>;1|<label class='label label-primary'>Thanh lý</label>";
-    public static $PAYMENT_METHOD = "\"0\"|<label class='label label-success'>Tiền mặt</label>;1|<label class='label label-primary'>Chuyển khoản</label>";
-    public static $USER_STATUS = "\"0\"|<label class='label label-success'>Đang dùng</label>;1|<label class='label label-primary'>Tạm ngưng</label>";
+    public static $IMPORT = "0|Phát sinh khi saler bán cho khách hàng mới;1|Import từ bảng công nợ của kế toán";
+    public static $INPUT_STATUS = "0|<label class='label label-success label-status' data-code='0'>Đang nhập</label>;1|<label class='label label-primary label-status' data-code='1'>Hoàn tất</label>;2|<label class='label label-warning label-status' data-code='2'>Đã bán</label>;3|<label class='label label-warning label-status' data-code='3'>Đã trả hàng</label>";
+    public static $COUNTER_STATUS = "0|<label class='label label-info label-status' data-code='0'>Mở sổ</label>;1|<label class='label label-primary label-status' data-code='1'>Đóng sổ</label>;2|<label class='label label-success label-status' data-code='2'>Khóa sổ</label>";
+    public static $PAWN_STATUS = "0|<label class='label label-primary label-status' data-code='0'>Đang nhập</label>;1|<label class='label label-warning label-status' data-code='1'>Đang cầm</label>;2|<label class='label label-success label-status' data-code='2'>Đã thanh lý</label>";
+    public static $CUSTOMER_TYPE = "0|<label class='label label-info'>Thường</label>;1|<label class='label label-primary'>VIP</label>";
+    public static $LIQUIDATION_METHOD = "0|<label class='label label-success'>Tất toán</label>;1|<label class='label label-primary'>Thanh lý</label>";
+    public static $PAYMENT_METHOD = "0|<label class='label label-success'>Tiền mặt</label>;1|<label class='label label-primary'>Chuyển khoản</label>";
+    public static $USER_STATUS = "0|<label class='label label-success'>Đang dùng</label>;1|<label class='label label-primary'>Tạm ngưng</label>";
 }
 
 function employees() {

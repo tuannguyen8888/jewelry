@@ -20,11 +20,12 @@
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="235"/>
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="758"/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
-		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="806"/>
-		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="180"/>
+		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="620"/>
+		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="366"/>
 		<parameter name="from_date" class="java.util.Date"/>
 		<parameter name="to_date" class="java.util.Date"/>
 		<parameter name="type" class="java.lang.Integer"/>
+		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT NULL AS order_no, NULL as order_date, N'Số dư đầu kỳ' AS notes, NULL as object, 
 	SUM(in_amount) as in_amount, 0 as out_amount 
@@ -32,10 +33,12 @@ FROM(
 	SELECT SUM(ROUND(amount * (1 - bank_fee / 100))) as in_amount
 	FROM gold_vouchers
 	WHERE deleted_at IS NULL AND status <> 0 	AND ($P{type} = -1 OR method = $P{type}) AND order_date < $P{from_date} 
+		AND brand_id = $P{brand_id} 
 	UNION ALL
 	SELECT SUM(ROUND((pay_amount - return_amount) * (1 - bank_fee / 100))) as in_amount
 	FROM gold_sale_orders
 	WHERE deleted_at IS NULL AND order_type <> 0 AND payment_method = 1 AND $P{type} <> 0 AND order_date < $P{from_date}
+		AND brand_id = $P{brand_id}
 ) A
 HAVING SUM(in_amount) <> 0
 UNION ALL
@@ -48,6 +51,7 @@ FROM gold_vouchers V
 	LEFT OUTER JOIN cms_users U ON V.object_id = U.id AND V.object_type = 3
 WHERE V.deleted_at IS NULL AND V.status <> 0 AND ($P{type} = -1 OR V.method = $P{type})
 	AND V.order_date >= $P{from_date} AND V.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+	AND V.brand_id = $P{brand_id}
 UNION ALL
 SELECT V.order_no, V.order_date, NULL AS notes, C.name as object, 
 	ROUND((V.pay_amount - V.return_amount) / (1 + V.bank_fee / 100)) as in_amount, 0 AS out_amount 
@@ -55,6 +59,7 @@ FROM gold_sale_orders V
 	LEFT OUTER JOIN gold_customers C ON V.customer_id = C.id
 WHERE V.deleted_at IS NULL AND V.order_type <> 0 AND V.payment_method = 1 AND $P{type} <> 0
 	AND V.order_date >= $P{from_date} AND V.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+	AND V.brand_id = $P{brand_id}
 ORDER BY order_date, order_no]]>
 		</queryString>
 		<field name="order_no" class="java.lang.String">
@@ -92,10 +97,7 @@ ORDER BY order_date, order_no]]>
 		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_name" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["KIM VẠN PHƯỚC"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="comp_prefix" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ KIM VẠN PHƯỚC"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
@@ -112,9 +114,16 @@ ORDER BY order_date, order_no]]>
 	<parameter name="type" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[-1]]></defaultValueExpression>
 	</parameter>
+	<parameter name="brand_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
-		<![CDATA[]]>
+		<![CDATA[SELECT name AS brand_name from gold_brands WHERE id = $P{brand_id}]]>
 	</queryString>
+	<field name="brand_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="brand_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_brands"/>
+	</field>
 	<title>
 		<band height="160" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -127,7 +136,7 @@ ORDER BY order_date, order_no]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{comp_prefix}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="60" y="35" width="445" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
@@ -171,7 +180,7 @@ ORDER BY order_date, order_no]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="16" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{brand_name}]]></textFieldExpression>
 			</textField>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
 				<reportElement x="0" y="0" width="60" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
@@ -193,7 +202,7 @@ ORDER BY order_date, order_no]]>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
-					<datasetRun subDataset="dsData" uuid="7976aa4d-ab51-41bb-ac19-3c9b95e3887e">
+					<datasetRun subDataset="dsData" uuid="d37de020-145b-4fdd-9845-c9505672c28a">
 						<datasetParameter name="from_date">
 							<datasetParameterExpression><![CDATA[$P{from_date}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -202,6 +211,9 @@ ORDER BY order_date, order_no]]>
 						</datasetParameter>
 						<datasetParameter name="type">
 							<datasetParameterExpression><![CDATA[$P{type}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="brand_id">
+							<datasetParameterExpression><![CDATA[$P{brand_id}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>

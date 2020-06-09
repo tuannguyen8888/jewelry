@@ -39,7 +39,7 @@
 			$this->col[] = ["label"=>"Số phiếu","name"=>"order_no"];
 			$this->col[] = ["label"=>"T/g thu","name"=>"order_date","callback_php"=>'date_time_format($row->order_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			$this->col[] = ["label"=>"Trạng thái","name"=>"status","callback_php"=>'get_input_status($row->status);'];
-			$this->col[] = ["label"=>"Đối tượng","name"=>"object_id","callback_php"=>'$row->object_name'];
+			$this->col[] = ["label"=>"Đối tượng","name"=>"object_id","join"=>"gold_suppliers,name"];
 			$this->col[] = ["label"=>"Số tiền","name"=>"in_amount","callback_php"=>'number_format($row->in_amount)'];
 			$this->col[] = ["label"=>"Hình thức thu","name"=>"method","callback_php"=>'get_payment_method($row->method);'];
 			$this->col[] = ["label"=>"Nội dung","name"=>"notes"];
@@ -212,8 +212,7 @@
 	        |
 	        */
 	        $this->load_css = array();
-            $this->load_css[] = asset("css/loading.css");
-            $this->load_css[] = asset("css/site.customize.css");
+	        $this->load_css[] = asset("css/loading.css");
             $this->load_css[] = asset("vendor/crudbooster/assets/datetimepicker-master/jquery.datetimepicker.css");
             $this->load_css[] = asset("vendor/crudbooster/assets/select2/dist/css/select2.min.css");
 	    }
@@ -271,24 +270,6 @@
 	    */
 	    public function hook_query_index(&$query) {
 	        //Your code here
-            $query->leftJoin('gold_customers', function($join)
-            {
-                $join->on('gold_customers.id', '=', $this->table.'.object_id')
-                    ->where($this->table.'.object_type', '=', '0');
-            })->leftJoin('gold_suppliers', function($join)
-            {
-                $join->on('gold_suppliers.id', '=', $this->table.'.object_id')
-                    ->where($this->table.'.object_type', '=', '1');
-            })->leftJoin('gold_investors', function($join)
-            {
-                $join->on('gold_investors.id', '=', $this->table.'.object_id')
-                    ->where($this->table.'.object_type', '=', '2');
-            })->leftJoin('cms_users as U', function($join)
-            {
-                $join->on('U.id', '=', $this->table.'.object_id')
-                    ->where($this->table.'.object_type', '=', '3');
-            });
-            $query->addSelect(DB::raw('CASE WHEN object_type = 0 THEN gold_customers.name WHEN object_type = 1 THEN gold_suppliers.name WHEN object_type = 2 THEN gold_investors.name WHEN object_type = 3 THEN U.name ELSE \'Lỗi\' END as object_name'));
 			$query->where('gold_vouchers.order_type', 0);
 	    }
 
@@ -540,6 +521,7 @@
 				'from_date'=>substr($para, 0, 10),
 				'to_date'=>substr($para, 11, 10),
 				'type'=>substr($para, 22, 2),
+				'brand_id'=>substr($para, 25, 1),
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
             $input = base_path().'/app/Reports/rpt_book_cash.jasper';
@@ -568,6 +550,7 @@
 				'from_date'=>substr($para, 0, 10),
 				'to_date'=>substr($para, 11, 10),
 				'type'=>substr($para, 22, 2),
+				'brand_id'=>substr($para, 25, 1),
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
             $input = base_path().'/app/Reports/rpt_book_cash.jasper';

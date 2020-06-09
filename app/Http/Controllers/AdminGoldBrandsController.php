@@ -325,11 +325,8 @@
             //First, Add an auth
             // if(!CRUDBooster::isView()) CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
             $para = Request::all();
-			$brand = DB::table('gold_brands')
-				->whereRaw('deleted_at is null')
-				->orderBy('name')
-				->get();
-            return ['brand'=>$brand];
+			$brands = DB::table('gold_brands')->whereRaw('deleted_at is null')->orderBy('name')->get();
+            return ['brands'=>$brands];
 		}
 
 	}

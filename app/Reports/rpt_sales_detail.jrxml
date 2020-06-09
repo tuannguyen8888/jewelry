@@ -23,6 +23,7 @@
 		<parameter name="from_date" class="java.util.Date"/>
 		<parameter name="to_date" class="java.util.Date"/>
 		<parameter name="user_id" class="java.lang.Integer"/>
+		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT P.name, COUNT(SOD.id) AS qty, SUM(SOD.edit_weight) AS weight, I.age, 
 	SUM(I.q10) AS q10, SUM(SOD.gold_amount) AS gold_amount, SUM(I.fund_fee) AS fund_fee, 
@@ -34,6 +35,7 @@ FROM gold_sale_orders SO
 	LEFT OUTER JOIN gold_product_types P ON I.product_type_id = P.id
 WHERE SO.deleted_at IS NULL AND SOD.deleted_at IS NULL AND C.saler_id = $P{user_id} 
 	AND SO.order_date >= $P{from_date} AND SO.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+	AND SO.brand_id = $P{brand_id}
 GROUP BY P.name, I.age
 ORDER BY P.name, I.age]]>
 		</queryString>
@@ -98,6 +100,7 @@ ORDER BY P.name, I.age]]>
 		<parameter name="user_id" class="java.lang.Integer"/>
 		<parameter name="from_date" class="java.util.Date"/>
 		<parameter name="to_date" class="java.util.Date"/>
+		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT name, SUM(qty) as qty, SUM(gold_weight) AS gold_weight, age, SUM(q10) AS q10, SUM(amount) AS amount, SUM(fee) AS fee
 FROM(
@@ -109,6 +112,7 @@ FROM(
 		LEFT OUTER JOIN gold_product_types P ON POD.product_type_id = P.id	
 	WHERE PO.deleted_at IS NULL AND POD.deleted_at IS NULL AND C.saler_id = $P{user_id} 
 		AND PO.order_date >= $P{from_date} AND PO.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+		AND PO.brand_id = $P{brand_id}
 	GROUP BY P.name, POD.age
 	UNION ALL
 	SELECT P.name, COUNT(POD.id) as qty, SUM(POD.gold_weight) AS gold_weight, POD.age, SUM(POD.q10) AS q10, 
@@ -119,6 +123,7 @@ FROM(
 		LEFT OUTER JOIN gold_product_types P ON POD.product_type_id = P.id	
 	WHERE PO.deleted_at IS NULL AND POD.deleted_at IS NULL AND C.saler_id = $P{user_id} 
 		AND PO.order_date >= $P{from_date} AND PO.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+		AND PO.brand_id = $P{brand_id}
 	GROUP BY P.name, POD.age
 ) A
 GROUP BY name, age
@@ -174,6 +179,7 @@ ORDER BY name, age]]>
 		<parameter name="user_id" class="java.lang.Integer"/>
 		<parameter name="from_date" class="java.util.Date"/>
 		<parameter name="to_date" class="java.util.Date"/>
+		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT SUM(qty) AS qty, SUM(amount) AS amount, SUM(interested) AS interested, SUM(finalization) AS finalization, SUM(liquidation) AS liquidation
 FROM(
@@ -182,6 +188,7 @@ FROM(
 		INNER JOIN gold_counters C ON SO.counter_id = C.id
 	WHERE SO.deleted_at IS NULL  AND C.saler_id = $P{user_id} 
 		AND SO.order_date >= $P{from_date} AND SO.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+		AND SO.brand_id = $P{brand_id}
 	UNION ALL
 	SELECT 0 AS qty, 0 AS amount,
 		CASE WHEN SO.liquidation_method = 0 AND SO.liquidation_at = POD.interested_date THEN POD.amount - SO.amount ELSE POD.amount END AS interested,
@@ -192,6 +199,7 @@ FROM(
 		INNER JOIN gold_counters C ON POD.counter_id = C.id
 	WHERE SO.deleted_at IS NULL AND POD.deleted_at IS NULL AND C.saler_id = $P{user_id} 
 		AND POD.interested_date >= $P{from_date} AND POD.interested_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+		AND POD.brand_id = $P{brand_id}
 ) A]]>
 		</queryString>
 		<field name="qty" class="java.lang.Long">
@@ -229,6 +237,7 @@ FROM(
 		<parameter name="user_id" class="java.lang.Integer"/>
 		<parameter name="to_date" class="java.util.Date"/>
 		<parameter name="from_date" class="java.util.Date"/>
+		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT COUNT(V.order_no) AS qty, SUM(V.amount) AS amount, 
 	SUM(ROUND(V.amount * V.bank_fee / 100)) as bank_amount, 
@@ -236,7 +245,8 @@ FROM(
 FROM gold_vouchers V
 	INNER JOIN gold_counters C ON V.counter_id = C.id
 WHERE V.deleted_at IS NULL AND V.order_type = 2 AND C.saler_id = $P{user_id} 
-	AND V.order_date >= $P{from_date} AND V.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)]]>
+	AND V.order_date >= $P{from_date} AND V.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+	AND V.brand_id = $P{brand_id}]]>
 		</queryString>
 		<field name="qty" class="java.lang.Long">
 			<property name="com.jaspersoft.studio.field.label" value="qty"/>
@@ -265,10 +275,7 @@ WHERE V.deleted_at IS NULL AND V.order_type = 2 AND C.saler_id = $P{user_id}
 		</variable>
 	</subDataset>
 	<parameter name="comp_name" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["KIM VẠN PHƯỚC"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="comp_prefix" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ KIM VẠN PHƯỚC"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
@@ -288,14 +295,19 @@ WHERE V.deleted_at IS NULL AND V.order_type = 2 AND C.saler_id = $P{user_id}
 	<parameter name="user_ids" class="java.lang.String">
 		<defaultValueExpression><![CDATA["10,13,14"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="brand_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT C.saler_id, U.name, SUM(C.sales_amount + C.bank_amount) AS sales, SUM(C.purchase_amount) AS purchase, 
-	SUM(C.pawn_amount + C.interested_amount + C.liquidation_amount) AS pawn, SUM(C.withdrawal_in) AS withdrawal
+	SUM(C.pawn_amount + C.interested_amount + C.liquidation_amount) AS pawn, SUM(C.withdrawal_in) AS withdrawal,
+	(SELECT name FROM gold_brands WHERE id = $P{brand_id}) AS brand_name
 FROM gold_counters C
 	LEFT OUTER JOIN cms_users U ON C.saler_id = U.id
 WHERE C.deleted_at IS NULL
 	AND C.opened_at >= $P{from_date} AND C.opened_at < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
 	AND FIND_IN_SET(C.saler_id, $P{user_ids}) > 0
+	AND C.brand_id = $P{brand_id} 
 GROUP BY C.saler_id, U.name
 HAVING SUM(C.sales_amount + C.bank_amount) <> 0 OR SUM(C.purchase_amount) <> 0
 	OR SUM(C.pawn_amount + C.interested_amount + C.liquidation_amount) <> 0 OR SUM(C.withdrawal_in) <> 0
@@ -321,6 +333,9 @@ ORDER BY U.name]]>
 	<field name="withdrawal" class="java.lang.Double">
 		<property name="com.jaspersoft.studio.field.label" value="withdrawal"/>
 	</field>
+	<field name="brand_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="brand_name"/>
+	</field>
 	<group name="User" isStartNewPage="true" isResetPageNumber="true" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[$F{saler_id}]]></groupExpression>
 		<groupHeader>
@@ -336,7 +351,7 @@ ORDER BY U.name]]>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Arial" size="12" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{comp_prefix}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="60" y="33" width="445" height="12" forecolor="#FFCC00" uuid="461f4c9b-9de4-4564-8821-b0f261f4f02e">
@@ -390,7 +405,7 @@ ORDER BY U.name]]>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Arial" size="16" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{brand_name}]]></textFieldExpression>
 				</textField>
 				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
 					<reportElement x="0" y="0" width="60" height="60" uuid="d3c88925-405f-4ae3-960c-5b88297b736c">
@@ -486,7 +501,7 @@ ORDER BY U.name]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dsSales" uuid="0cee4668-6b42-4988-b4c7-e5e29402168d">
+					<datasetRun subDataset="dsSales" uuid="5c8b35b2-dbc1-49d3-950f-4c69f1eec0ad">
 						<datasetParameter name="from_date">
 							<datasetParameterExpression><![CDATA[$P{from_date}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -495,6 +510,9 @@ ORDER BY U.name]]>
 						</datasetParameter>
 						<datasetParameter name="user_id">
 							<datasetParameterExpression><![CDATA[$F{saler_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="brand_id">
+							<datasetParameterExpression><![CDATA[$P{brand_id}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
@@ -1130,7 +1148,7 @@ ORDER BY U.name]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dsPurchase" uuid="6aeab355-5b2a-4ed0-a00d-514447e1b9f3">
+					<datasetRun subDataset="dsPurchase" uuid="fb0b3a03-ba77-4fe1-ba2c-b1357c24db8e">
 						<datasetParameter name="user_id">
 							<datasetParameterExpression><![CDATA[$F{saler_id}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -1139,6 +1157,9 @@ ORDER BY U.name]]>
 						</datasetParameter>
 						<datasetParameter name="to_date">
 							<datasetParameterExpression><![CDATA[$P{to_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="brand_id">
+							<datasetParameterExpression><![CDATA[$P{brand_id}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
@@ -1711,7 +1732,7 @@ ORDER BY U.name]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dsPawn" uuid="b0d38821-debe-4e1e-b91d-8d3a50106035">
+					<datasetRun subDataset="dsPawn" uuid="b6fb59a7-7f1c-4fab-bae9-7fbcab2dcb27">
 						<datasetParameter name="user_id">
 							<datasetParameterExpression><![CDATA[$F{saler_id}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -1720,6 +1741,9 @@ ORDER BY U.name]]>
 						</datasetParameter>
 						<datasetParameter name="to_date">
 							<datasetParameterExpression><![CDATA[$P{to_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="brand_id">
+							<datasetParameterExpression><![CDATA[$P{brand_id}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
@@ -1985,7 +2009,7 @@ ORDER BY U.name]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dsWithdrawal" uuid="c881a4dd-c25d-430a-a29c-cbfa81199685">
+					<datasetRun subDataset="dsWithdrawal" uuid="c41af195-b992-4c05-88c9-72e67a22ba4e">
 						<datasetParameter name="user_id">
 							<datasetParameterExpression><![CDATA[$F{saler_id}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -1994,6 +2018,9 @@ ORDER BY U.name]]>
 						</datasetParameter>
 						<datasetParameter name="to_date">
 							<datasetParameterExpression><![CDATA[$P{to_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="brand_id">
+							<datasetParameterExpression><![CDATA[$P{brand_id}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>

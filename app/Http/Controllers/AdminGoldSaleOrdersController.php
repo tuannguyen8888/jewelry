@@ -58,21 +58,16 @@
             // Nguen add new for search
 
             $this->search_form = [];
-            $this->search_form[] = ["label"=>"Từ ngày", "name"=>"order_date_from_date", "data_column"=>"order_date", "search_type"=>"between_from","type"=>"date","width"=>"col-sm-2"];
-            $this->search_form[] = ["label"=>"Đến ngày", "name"=>"order_date_to_date", "data_column"=>"order_date", "search_type"=>"between_to","type"=>"date","width"=>"col-sm-2"];
-            $this->search_form[] = ["label"=>"Loại đơn hàng", "name"=>"order_type_search", "data_column"=>"gold_sale_orders.order_type", "search_type"=>"equals_raw","type"=>"select","width"=>"col-sm-2", 'dataenum'=>"\"0\"|<lable class='label label-warning'>Đang nhập</lable>;\"1\"|<lable class='label label-danger'>Hoàn tất</lable>"];
+            $this->search_form[] = ["label"=>"Loại đơn hàng", "name"=>"order_type","type"=>"select","width"=>"col-sm-2", 'dataenum'=>"0|<lable class='label label-warning'>Đang nhập</lable>;1|<lable class='label label-danger'>Hoàn tất</lable>"];
             if(CRUDBooster::myPrivilegeId() == 2) {
-                $this->search_form[] = ["label" => "Khách hàng/ Số ĐT", "name" => "customer", "data_column"=>"gold_sale_orders.customer_id", "search_type"=>"equals_raw", "type" => "select2", "width" => "col-sm-6", 'datatable' => 'gold_customers,name', 'datatable_where' => 'deleted_at is null', 'datatable_format' => "code,' - ',name,' - ',IFNULL(phone,''),' - ',IFNULL(zalo_phone,'')"];
+                $this->search_form[] = ["label" => "Khách hàng", "name" => "customer_id", "type" => "select2", "width" => "col-sm-6", 'datatable' => 'gold_customers,name', 'datatable_where' => 'deleted_at is null', 'datatable_format' => "code,' - ',name,' - ',IFNULL(phone,'')"];
             }else{
-                $this->search_form[] = ["label" => "Khách hàng/ Số ĐT", "name" => "customer", "data_column"=>"gold_sale_orders.customer_id", "search_type"=>"equals_raw", "type" => "select2", "width" => "col-sm-6", 'datatable' => 'gold_customers,name', 'datatable_where' => 'deleted_at is null', 'datatable_format' => "code,' - ',name,' - ',IFNULL(phone,''),' - ',IFNULL(zalo_phone,'')"];
+                $this->search_form[] = ["label" => "Khách hàng", "name" => "customer_id", "type" => "select2", "width" => "col-sm-6", 'datatable' => 'gold_customers,name', 'datatable_where' => 'deleted_at is null', 'datatable_format' => "code,' - ',name,' - ',IFNULL(phone,'')"];
             }
             //$this->search_form[] = ["label"=>"Xuống dòng", "name"=>"break_line", "type"=>"break_line"];
-            $this->search_form[] = ["label"=>"Nhân viên BH", "name"=>"saler", "data_column"=>"gold_sale_orders.saler_id", "search_type"=>"equals_raw","type"=>"select2","width"=>"col-sm-2", 'datatable'=>'cms_users,name', 'datatable_where'=>CRUDBooster::myPrivilegeId() == 2 ? 'id = '.CRUDBooster::myId() : 'id_cms_privileges in (2,3,4,5)', 'datatable_format'=>"employee_code,' - ',name,' (',email,')'"];
-            $this->search_form[] = ["label"=>"Trọng lượng tổng", "name"=>"total_weight_search","type"=>"text","width"=>"col-sm-2", "search_type"=>"in_details", "mark_value"=>"[value_search]",
-                sub_query=>"(select D.id from gold_sale_order_details as D left join gold_items as I on D.item_id = I.id where ".$this->table.".id = D.order_id and CONVERT(I.total_weight, CHAR) = '[value_search]' limit 1) is not null"];
-            $this->search_form[] = ["label"=>"Trọng lượng đá", "name"=>"gem_weight_search","type"=>"text","width"=>"col-sm-2", "search_type"=>"in_details", "mark_value"=>"[value_search]",
-                sub_query=>"(select D.id from gold_sale_order_details as D left join gold_items as I on D.item_id = I.id where ".$this->table.".id = D.order_id and CONVERT(I.gem_weight, CHAR) = '[value_search]' limit 1) is not null"];
-
+            $this->search_form[] = ["label"=>"Nhân viên BH", "name"=>"saler_id","type"=>"select2","width"=>"col-sm-2", 'datatable'=>'cms_users,name', 'datatable_where'=>CRUDBooster::myPrivilegeId() == 2 ? 'id = '.CRUDBooster::myId() : 'id_cms_privileges = 2', 'datatable_format'=>"employee_code,' - ',name,' (',email,')'"];
+            $this->search_form[] = ["label"=>"Từ ngày", "name"=>"order_date_from_date", "data_column"=>"order_date", "search_type"=>"between_from","type"=>"date","width"=>"col-sm-2"];
+            $this->search_form[] = ["label"=>"Đến ngày", "name"=>"order_date_to_date", "data_column"=>"order_date", "search_type"=>"between_to","type"=>"date","width"=>"col-sm-2"];
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
@@ -241,7 +236,6 @@
 	        */
 	        $this->load_css = array();
             $this->load_css[] = asset("css/loading.css");
-            $this->load_css[] = asset("css/site.customize.css");
             $this->load_css[] = asset("vendor/crudbooster/assets/datetimepicker-master/jquery.datetimepicker.css");
             $this->load_css[] = asset("vendor/crudbooster/assets/select2/dist/css/select2.min.css");
 	    }
@@ -878,13 +872,16 @@
         }
 
         public function getPrintSales($para){
+        //public function getPrintSales($type, $from_date, $to_date, $user_ids, $brand_id){
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
-			$filename = 'SS_'.time();
+            $filename = 'SS_'.time();
+            
             $parameter = [
-				'from_date'=>substr($para, 2, 10),
-				'to_date'=>substr($para, 13, 10),
-				'user_ids'=>substr($para, 24, strlen($para)),
+                'brand_id'=>substr($para, 2, 1),
+				'from_date'=>substr($para, 4, 10),
+				'to_date'=>substr($para, 15, 10),
+				'user_ids'=>substr($para, 26, strlen($para)),
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
             $input = base_path().'/app/Reports/rpt_sales.jasper';
@@ -914,9 +911,10 @@
             $database = \Config::get('database.connections.mysql');
 			$filename = 'SD_'.time();
             $parameter = [
-				'from_date'=>substr($para, 2, 10),
-				'to_date'=>substr($para, 13, 10),
-				'user_ids'=>substr($para, 24, strlen($para)),
+				'brand_id'=>substr($para, 2, 1),
+				'from_date'=>substr($para, 4, 10),
+				'to_date'=>substr($para, 15, 10),
+				'user_ids'=>substr($para, 26, strlen($para)),
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
             $input = base_path().'/app/Reports/rpt_sales_detail.jasper';

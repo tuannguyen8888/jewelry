@@ -40,6 +40,10 @@
                                     <option value=1>Ngân hàng</option>
                                 </select>
 							</div>
+							<label class="control-label col-sm-1">Cửa hàng <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
+							<div class="col-sm-2">
+								<select id="brand_id" class="form-control"></select>
+							</div>
 						</div>
 						<div class="row">
 							<label class="control-label col-sm-1"></label>
@@ -115,8 +119,34 @@
                 todayHighlight:true,
                 showOnFocus:false
             });
-            $('#to_date').val(moment().format('DD/MM/YYYY'))
+			$('#to_date').val(moment().format('DD/MM/YYYY'))
+			loadBrands();
 		});
+
+		function loadBrands() {
+            $.ajax({
+                method: "GET",
+                url: '{{Route("AdminGoldBrandsControllerGetBrands")}}',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data && data.brands && data.brands.length > 0) {
+                        let html = '';
+						data.brands.forEach(function (detail, i) {
+                            html += `<option value=${detail.id}>${detail.name}</option>`;					
+                        });
+                        $('#brand_id').append(html);
+                    }
+                },
+                error: function (request, status, error) {
+                    console.log('PostAdd status = ', status);
+                    console.log('PostAdd error = ', error);
+                }
+            });
+        }
 
         function popupWindow(url,windowName) {
             window.open(url,windowName,'height=500,width=600');
@@ -134,12 +164,13 @@
 				var from_date = moment($('#from_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
 				var to_date = moment($('#to_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
 				var book_type = $('#book_type').val() ? $('#book_type').val() : 0;
+				var brand_id = $('#brand_id').val() ? $('#brand_id').val() : 0;
 				// console.log('from_date = ', from_date);
 				// console.log('to_date = ', to_date);
 				if(isExport){
-					popupWindow("{{action('AdminGoldReceiptsController@getPrintBookCashXlsx')}}/" + from_date + "@" + to_date + "@" + book_type,"Export");
+					popupWindow("{{action('AdminGoldReceiptsController@getPrintBookCashXlsx')}}/" + from_date + "@" + to_date + "@" + book_type + "@" + brand_id,"Export");
 				}else{
-					popupWindow("{{action('AdminGoldReceiptsController@getPrintBookCash')}}/" + from_date + "@" + to_date + "@" + book_type,"Print");
+					popupWindow("{{action('AdminGoldReceiptsController@getPrintBookCash')}}/" + from_date + "@" + to_date + "@" + book_type + "@" + brand_id,"Print");
 				}
             }
         }

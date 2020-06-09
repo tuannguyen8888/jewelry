@@ -185,8 +185,27 @@ use Psy\Util\Json;
             // Nguyên add for search form
             if($this->search_form  && count($this->search_form )>0) {
                 foreach ($this->search_form as $index => $search_form) {
+<<<<<<< HEAD
                     Log::debug('$search_form = ',$search_form);
                     if (CRUDBooster::isColumnExists($this->table, $search_form['name'])) {
+=======
+//                    Log::debug(CRUDBooster::getCurrentMethod().' $search_form = ',$search_form);
+                    if($search_form['search_type'] == 'equals_or' && Request::get($search_form['name'])){
+                        $or_columns = explode(",", $search_form['data_column']);
+                        $result->where(function($w) use ($or_columns, $search_form) {
+                            foreach($or_columns as $col) {
+                                $w->orwhere($col, Request::get($search_form['name']));
+                            }
+                        });
+                    } elseif($search_form['search_type'] == 'equals_raw' && Request::get($search_form['name'])!=null && Request::get($search_form['name'])!=''){
+                        if($search_form['data_column'] == 'gold_pawn_orders.status'){
+                            Log::debug(CRUDBooster::getCurrentMethod().' s'.Request::get($search_form['name']).'ssssss');
+                        }
+                        $result->whereRaw($search_form['data_column'].' = '.Request::get($search_form['name']));
+                    } elseif ($search_form['search_type'] == 'in_details' && $search_form['sub_query'] && Request::get($search_form['name'])!=null && Request::get($search_form['name'])!=''){
+                        $result->whereRaw(str_replace($search_form['mark_value'],Request::get($search_form['name']),$search_form['sub_query']));
+                    } elseif (CRUDBooster::isColumnExists($this->table, $search_form['name'])) {
+>>>>>>> b9d31c8a464c1881afc1ef1bd6a7de8a0dd32d80
                         if (Request::get($search_form['name'])) {
                             if ($search_form['search_type'] != 'between_from' && $search_form['search_type'] != 'between_to') {
                                 if (Request::get($search_form['name']) == 'NULL') {
@@ -226,9 +245,9 @@ use Psy\Util\Json;
                             }
                         }
                     }
-                    if (Request::get($search_form['name'])) {
+//                    if (Request::get($search_form['name'])) {
                         $this->search_form[$index]['value'] = Request::get($search_form['name']);
-                    }
+//                    }
                 }
                 Log::debug('SQL = '.$result->toSql());
             }

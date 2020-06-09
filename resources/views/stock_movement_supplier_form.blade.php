@@ -140,7 +140,7 @@
                 success: function (data) {
                     if (data && data.suppliers) {
 						suppliers = data.suppliers;
-						loadSupplier();
+						loadObjects();
                     }
                 },
                 error: function (request, status, error) {
@@ -150,7 +150,7 @@
             });
 		});
 
-		function loadSupplier() {
+		function loadObjects() {
 			if (suppliers && suppliers.length > 0) {
 				let html = '';
 				suppliers.forEach(function (detail, i) {

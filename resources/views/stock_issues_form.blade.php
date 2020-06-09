@@ -10,9 +10,17 @@
 					<input type="hidden" name="id" id="id">
 					<div class="col-sm-12">
                         <div class="row">
-                            <label for="supplier_code" class="control-label col-sm-2">NCC <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
+                            <label for="object_type" class="control-label col-sm-2">Loại đối tượng <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
+                            <div class="col-sm-2">
+                                <select id="object_type" class="form-control">
+                                    @foreach(convert_enum_to_array(Enums::$OBJECT_TYPE) as $otype)
+                                        <option value="{{$otype['id']}}">{{$otype['name']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <label for="object_id" class="control-label col-sm-2 text-right">Đối tượng <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
                             <div class="col-sm-6">
-                                <select id="supplier_id" class="form-control"></select>
+                                <select id="object_id" class="form-control"></select>
                             </div>
 						</div>
                         <div class="row">
@@ -228,8 +236,12 @@
                 todayHighlight:true,
                 showOnFocus:false
             });
-
-            loadSupplier();
+            $('#object_type').select2().change(function () {
+                loadObjects();
+                $('#object_id').val(null).trigger('change');
+            });
+            $('#object_id').select2();
+            loadObjects();
             AutoNumeric.multiple('.money', optionNumberInput);
             let resume_id = getUrlParameter('resume_id') ? getUrlParameter('resume_id') : '{{$resume_id}}';
             if(resume_id) {
@@ -255,10 +267,12 @@
                             $('#order_date').val(moment(data.order.order_date, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss'));
                             $('#order_no').val(data.order.order_no);
                             $('#notes').val(data.order.notes);
-                            $('#supplier_id').val(data.order.supplier_id);
+                            $('#object_type').val(data.order.object_type)
+                            $('#object_id').html('<option value="'+data.object.id+'">'+data.object.name+'</option>');
+                            $('#object_id').val(data.order.object_id).trigger('change');
                         }
 						if(data.details && data.details.length > 0){
-                            $('#supplier_id').attr('disabled', true);
+                            $('#object_id').attr('disabled', true);
                             data.details.forEach(function (detail, i) {
                                 detail.no = i + 1;
                                 addNewOrderDetail(detail);
@@ -295,22 +309,59 @@
             }
         };
 
-        function loadSupplier() {
+        function loadObjects() {
+            let url = '';
+            switch (Number($('#object_type').val())) {
+                case 0:
+                    url = '{{Route("AdminGoldCustomersControllerGetCustomers")}}';
+                    break;
+                case 1:
+                    url = '{{Route("AdminGoldSuppliersControllerGetSuppliers")}}';
+                    break;
+                case 2:
+                    url = '{{Route("AdminGoldInvestorsControllerGetInvestors")}}';
+                    break;
+                case 3:
+                    url = '{{Route("AdminCmsUsersControllerGetUsers")}}';
+                    break;
+            }
+            console.log('url = ', url);
             $.ajax({
                 method: "GET",
-                url: '{{Route("AdminGoldSuppliersControllerGetSuppliers")}}',
+                url: url,
                 data: {
                     _token: '{{ csrf_token() }}'
                 },
                 dataType: "json",
                 async: false,
                 success: function (data) {
+                    if (data && data.customers && data.customers.length > 0) {
+                        let html = '';
+                        data.customers.forEach(function (detail, i) {
+                            html += `<option value=${detail.id}>${detail.name}</option>`;
+                        });
+                        $('#object_id').html(html);
+                    }
                     if (data && data.suppliers && data.suppliers.length > 0) {
                         let html = '';
-						data.suppliers.forEach(function (detail, i) {
-                            html += `<option value=${detail.id}>${detail.name}</option>`;					
+                        data.suppliers.forEach(function (detail, i) {
+                            html += `<option value=${detail.id}>${detail.name}</option>`;
                         });
-                        $('#supplier_id').append(html);
+                        $('#object_id').html(html);
+                    }
+                    if (data && data.investors && data.investors.length > 0) {
+                        let html = '';
+                        data.investors.forEach(function (detail, i) {
+                            html += `<option value=${detail.id}>${detail.name}</option>`;
+                        });
+                        $('#object_id').html(html);
+                    }
+                    if (data && data.users && data.users.length > 0) {
+                        let html = '';
+                        data.users.forEach(function (detail, i) {
+                            html += `<option value=${detail.id}>${detail.name}</option>`;
+                        });
+                        $('#object_id').html(html);
                     }
                 },
                 error: function (request, status, error) {
@@ -351,7 +402,7 @@
                                     if (data && data.item) {
                                         if(data.item.qty <= 0){
                                             swal("Thông báo", "Hàng hóa [" + data.item.bar_code + "] đã hết tồn kho.", "warning");    
-                                        // }else if(data.item.supplier_id != Number($('#supplier_id').val())){
+                                        // }else if(data.item.object_id != Number($('#object_id').val())){
                                         //     swal("Thông báo", "Hàng hóa [" + data.item.bar_code + "] thuộc NCC [" + data.item.supplier_name + "].", "warning");    
                                         }else{
                                             addNewItem(data.item);
@@ -555,7 +606,8 @@
             return {
                 id: $('#id').val() ? Number($('#id').val()) : null,
                 status: finish ? 1 : 0,
-                supplier_id: $('#supplier_id').val() ? Number($('#supplier_id').val()) : null,
+                object_type: $('#object_type').val() ? Number($('#object_type').val()) : null,
+                object_id: $('#object_id').val() ? Number($('#object_id').val()) : null,
                 order_date: moment($('#order_date').val(), 'DD/MM/YYYY HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'),
                 order_no: $('#order_no').val(),
                 notes: $('#notes').val()
@@ -581,7 +633,8 @@
                             $('#id').val(order_id);
                             $('#order_no').val(data.order_no);
                             $('#btn_search_supplier').attr('disabled', true);
-                            $('#supplier_code').attr('disabled', true);
+                            $('#object_id').attr('disabled', true);
+                            $('#object_type').attr('disabled', true);
                         }
                         item.id = data.detail_id
                         item.no = order_details ? order_details.length + 1 : 1;

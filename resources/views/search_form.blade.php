@@ -3,7 +3,15 @@
 //Loading input components
 if($search_forms && count($search_forms)>0){
     $asset_already = [];
+//    print_r($search_forms); exit();
     foreach($search_forms as $index=>$form) {
+<<<<<<< HEAD
+=======
+        $name = $form['name'];
+        $value = ($form['value'] != null) ? $form['value'] : '';
+        $type = @$form['type']?:'text';
+        $col_width = @$form['width'] ?: "col-sm-9";
+>>>>>>> b9d31c8a464c1881afc1ef1bd6a7de8a0dd32d80
 
     $name = $form['name'];
     @$value = (isset($form['value'])) ? $form['value'] : '';

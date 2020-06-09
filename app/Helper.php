@@ -10,6 +10,10 @@ class Enums{
     public static $LIQUIDATION_METHOD = "0|<label class='label label-success'>Tất toán</label>;1|<label class='label label-primary'>Thanh lý</label>";
     public static $PAYMENT_METHOD = "0|<label class='label label-success'>Tiền mặt</label>;1|<label class='label label-primary'>Chuyển khoản</label>";
     public static $USER_STATUS = "0|<label class='label label-success'>Đang dùng</label>;1|<label class='label label-primary'>Tạm ngưng</label>";
+<<<<<<< HEAD
+=======
+    public static $OBJECT_TYPE = "0|Khách hàng;1|Nhà cung cấp;2|Nhà đầu tư;3|Nhân viên";
+>>>>>>> b9d31c8a464c1881afc1ef1bd6a7de8a0dd32d80
 }
 
 function employees() {
@@ -128,5 +132,21 @@ if (!function_exists('date_time_format')) {
         if(!$dateTimeStr) return $dateTimeStr;
         $dateTime = DateTime::createFromFormat($formatInString, $dateTimeStr); // 'Y-m-d H:i:s'
         return $dateTime->format($formatOutString);
+    }
+}
+
+if (!function_exists('convert_enums_to_array')) {
+    function convert_enum_to_array ($enums_string) {
+        $dataenums = explode(";",trim($enums_string));
+        $results = [];
+        if($dataenums && count($dataenums)){
+            foreach ($dataenums as $item) {
+                $id_name = explode("|",$item);
+                if($id_name && count($id_name)==2){
+                    $results[] = ['id'=>$id_name[0], 'name'=>$id_name[1]];
+                }
+            }
+        }
+        return $results;
     }
 }

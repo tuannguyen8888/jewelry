@@ -267,7 +267,7 @@
                             $('#order_date').val(moment(data.order.order_date, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss'));
                             $('#order_no').val(data.order.order_no);
                             $('#notes').val(data.order.notes);
-                            $('#object_type').val(data.order.object_type)
+                            $('#object_type').val(data.order.object_type).trigger('change');
                             $('#object_id').html('<option value="'+data.object.id+'">'+data.object.name+'</option>');
                             $('#object_id').val(data.order.object_id).trigger('change');
                         }

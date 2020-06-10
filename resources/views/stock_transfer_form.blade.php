@@ -158,7 +158,7 @@
 			width:100%;
 		}
         #table_order_details .sort_no{
-			width: 30px;
+			width: 45px;
 		}
         #table_order_details .age{
 			width: 80px;

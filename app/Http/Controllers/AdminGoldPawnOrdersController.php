@@ -68,15 +68,15 @@
 
             $this->search_form = [];
             if(CRUDBooster::myPrivilegeId() == 2) {
-                $this->search_form[] = ["label" => "Khách hàng", "name" => "customer_id", "type" => "select2", "width" => "col-sm-6", 'datatable' => 'gold_customers,name', 'datatable_where' => 'deleted_at is null', 'datatable_format' => "code,' - ',name,' - ',IFNULL(phone,'')"];
+                $this->search_form[] = ["label" => "Khách hàng/ Số ĐT", "name" => "customer", "data_column"=>"gold_pawn_orders.customer_id", "search_type"=>"equals_raw", "type" => "select2", "width" => "col-sm-6", 'datatable' => 'gold_customers,name', 'datatable_where' => 'deleted_at is null', 'datatable_format' => "code,' - ',name,' - ',IFNULL(phone,''),' - ',IFNULL(zalo_phone,'')"];
             }else{
-                $this->search_form[] = ["label" => "Khách hàng", "name" => "customer_id", "type" => "select2", "width" => "col-sm-6", 'datatable' => 'gold_customers,name', 'datatable_where' => 'deleted_at is null', 'datatable_format' => "code,' - ',name,' - ',IFNULL(phone,'')"];
+                $this->search_form[] = ["label" => "Khách hàng/ Số ĐT", "name" => "customer", "data_column"=>"gold_pawn_orders.customer_id", "search_type"=>"equals_raw", "type" => "select2", "width" => "col-sm-6", 'datatable' => 'gold_customers,name', 'datatable_where' => 'deleted_at is null', 'datatable_format' => "code,' - ',name,' - ',IFNULL(phone,''),' - ',IFNULL(zalo_phone,'')"];
             }
             //$this->search_form[] = ["label"=>"Xuống dòng", "name"=>"break_line", "type"=>"break_line"];
-            $this->search_form[] = ["label"=>"Nhân viên", "name"=>"saler_id","type"=>"select2","width"=>"col-sm-2", 'datatable'=>'cms_users,name', 'datatable_where'=>CRUDBooster::myPrivilegeId() == 2 ? 'id = '.CRUDBooster::myId() : 'id_cms_privileges = 2', 'datatable_format'=>"employee_code,' - ',name,' (',email,')'"];
+            $this->search_form[] = ["label"=>"Nhân viên", "name"=>"saler", "data_column"=>"gold_pawn_orders.saler_id", "search_type"=>"equals_raw","type"=>"select2","width"=>"col-sm-2", 'datatable'=>'cms_users,name', 'datatable_where'=>CRUDBooster::myPrivilegeId() == 2 ? 'id = '.CRUDBooster::myId() : 'id_cms_privileges in (2,3,4,5)', 'datatable_format'=>"employee_code,' - ',name,' (',email,')'"];
             $this->search_form[] = ["label"=>"Từ ngày", "name"=>"order_date_from_date", "data_column"=>"order_date", "search_type"=>"between_from","type"=>"date","width"=>"col-sm-2"];
             $this->search_form[] = ["label"=>"Đến ngày", "name"=>"order_date_to_date", "data_column"=>"order_date", "search_type"=>"between_to","type"=>"date","width"=>"col-sm-2"];
-			$this->search_form[] = ["label"=>"Trạng thái","name"=>"status","type"=>"select2","width"=>"col-sm-2","data_column"=>'get_pawn_status($row->status);'];
+			$this->search_form[] = ["label"=>"Trạng thái","name"=>"status_search","data_column"=>'gold_pawn_orders.status', "search_type"=>"equals_raw", "type"=>"select","width"=>"col-sm-2",'dataenum'=>\Enums::$PAWN_STATUS];
 			# START FORM DO NOT  REMOVE THIS LINE
 			$this->form = [];
 			$this->form[] = ['label'=>'Số phiếu','name'=>'order_no','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
@@ -171,7 +171,10 @@
 	        |
 	        */
 	        $this->index_statistic = array();
-
+            $this->index_statistic[] = ['label'=>'Tổng số phiếu','use_main_query'=>true,'operator'=>'count','icon'=>'fa fa-newspaper-o','color'=>'success'];
+            $this->index_statistic[] = ['label'=>'Tổng số tiền','use_main_query'=>true,'operator'=>'sum','field'=>'amount','icon'=>'fa fa-usd','color'=>'danger'];
+            $this->index_statistic[] = ['label'=>'Số khách hàng','use_main_query'=>true,'operator'=>'count_distinct','field'=>'customer_id','icon'=>'fa fa-users','color'=>'info'];
+            $this->index_statistic[] = ['label'=>'Số nhà đầu tư','use_main_query'=>true,'operator'=>'count_distinct','field'=>'investor_id','icon'=>'fa fa-user','color'=>'primary'];
 
 
 	        /*
@@ -246,6 +249,7 @@
 	        */
 	        $this->load_css = array();
             $this->load_css[] = asset("css/loading.css");
+            $this->load_css[] = asset("css/site.customize.css");
             $this->load_css[] = asset("vendor/crudbooster/assets/datetimepicker-master/jquery.datetimepicker.css");
             $this->load_css[] = asset("vendor/crudbooster/assets/select2/dist/css/select2.min.css");
 	    }

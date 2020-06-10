@@ -340,7 +340,7 @@
 			width: 20px;
 		}
 		#table_order_details .sort_no{
-			width: 30px;
+			width: 45px;
 		}
 		#table_order_details .bar_code{
 			width: 100px;
@@ -985,7 +985,7 @@
                 <th class="text-center"><a onclick="removePayDetail(${data.id})" class="text-red" style="cursor: pointer;"><i class="fa fa-remove"></i></a></th>
                 <th class="no-padding"><input id="pay${data.id}_description" onchange="pay_description_change(${data.id})" type="text" class="form-control" value="${data.description}" required></th>
                 <th class="no-padding">
-                    <select id="pay${data.id}_product_type" class="form-control" onchange="pay_product_type_change(${data.id}) value="` + Number(data.product_type_id) + `">`;
+                    <select id="pay${data.id}_product_type" class="form-control" onchange="pay_product_type_change(${data.id})" value="` + Number(data.product_type_id) + `">`;
             if(product_types && product_types.length > 0){
                 product_types.forEach(function (detail, i) {
                     html = html + ` <option value=${detail.id}>${detail.name}</option>`;

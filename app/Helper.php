@@ -10,10 +10,7 @@ class Enums{
     public static $LIQUIDATION_METHOD = "0|<label class='label label-success'>Tất toán</label>;1|<label class='label label-primary'>Thanh lý</label>";
     public static $PAYMENT_METHOD = "0|<label class='label label-success'>Tiền mặt</label>;1|<label class='label label-primary'>Chuyển khoản</label>";
     public static $USER_STATUS = "0|<label class='label label-success'>Đang dùng</label>;1|<label class='label label-primary'>Tạm ngưng</label>";
-<<<<<<< HEAD
-=======
     public static $OBJECT_TYPE = "0|Khách hàng;1|Nhà cung cấp;2|Nhà đầu tư;3|Nhân viên";
->>>>>>> b9d31c8a464c1881afc1ef1bd6a7de8a0dd32d80
 }
 
 function employees() {

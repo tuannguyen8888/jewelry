@@ -417,7 +417,7 @@
             });
             AutoNumeric.multiple('.money', optionNumberInput);
             loadStock();
-            loadObjects();
+            loadSupplier();
 
             let resume_id = getUrlParameter('resume_id') ? getUrlParameter('resume_id') : '{{$resume_id}}';
             if(resume_id) {
@@ -501,7 +501,7 @@
             });
         }
 
-        function loadObjects() {
+        function loadSupplier() {
             $.ajax({
                 method: "GET",
                 url: '{{Route("AdminGoldSuppliersControllerGetSuppliers")}}',

@@ -25,6 +25,12 @@
 									</div>
 								</div>
 								<div class="row">
+									<label class="control-label col-sm-4">Cửa hàng <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
+									<div class="col-sm-7">
+										<select id="brand_id" class="form-control"></select>
+									</div>
+								</div>
+								<div class="row">
 									<label class="control-label col-sm-1"></label>
 									<div class="col-sm-4">
 										<a id="print_report" style="cursor: pointer;" onclick="printReport(false)" class="btn btn-primary"><i class="fa fa-print"></i> Tổng kho</a>
@@ -118,7 +124,8 @@
                 todayHighlight:true,
                 showOnFocus:false
             });
-            $('#to_date').val(moment().format('DD/MM/YYYY'))
+			$('#to_date').val(moment().format('DD/MM/YYYY'))
+			loadBrands();
 
 			$.ajax({
                 method: "GET",
@@ -155,6 +162,31 @@
 				// console.log('html = ', html)
 				$('#table_stocks tbody').append(html);
 			}
+		}
+		
+		function loadBrands() {
+            $.ajax({
+                method: "GET",
+                url: '{{Route("AdminGoldBrandsControllerGetBrands")}}',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data && data.brands && data.brands.length > 0) {
+                        let html = '';
+						data.brands.forEach(function (detail, i) {
+                            html += `<option value=${detail.id}>${detail.name}</option>`;					
+                        });
+                        $('#brand_id').append(html);
+                    }
+                },
+                error: function (request, status, error) {
+                    console.log('PostAdd status = ', status);
+                    console.log('PostAdd error = ', error);
+                }
+            });
         }
 
 		function checkAll() {
@@ -195,9 +227,9 @@
 					// console.log('from_date = ', from_date);
 					// console.log('to_date = ', to_date);
 					if(detail){
-						popupWindow("{{action('AdminGoldStocksController@getPrintStockBalance')}}/" + to_date + "@" + stock_ids,"print");
+						popupWindow("{{action('AdminGoldStocksController@getPrintStockBalance')}}/" + to_date + "@" + $('#brand_id').val() + "@" + stock_ids,"print");
 					}else{
-						popupWindow("{{action('AdminGoldStocksController@getPrintStockBalanceAll')}}/" + to_date + "@" + stock_ids,"print");
+						popupWindow("{{action('AdminGoldStocksController@getPrintStockBalanceAll')}}/" + to_date + "@" + $('#brand_id').val() + "@" + stock_ids,"print");
 					}
 				}else{
 					alert("Bạn phải chọn ít nhất 1 kho!");
@@ -227,9 +259,9 @@
 					// console.log('from_date = ', from_date);
 					// console.log('to_date = ', to_date);
 					if(detail){
-						popupWindow("{{action('AdminGoldStocksController@getPrintStockBalanceXlsx')}}/" + to_date + "@" + stock_ids,"print");
+						popupWindow("{{action('AdminGoldStocksController@getPrintStockBalanceXlsx')}}/" + to_date + "@" + $('#brand_id').val() + "@" + stock_ids,"print");
 					}else{
-						popupWindow("{{action('AdminGoldStocksController@getPrintStockBalanceAllXlsx')}}/" + to_date + "@" + stock_ids,"print");
+						popupWindow("{{action('AdminGoldStocksController@getPrintStockBalanceAllXlsx')}}/" + to_date + "@" + $('#brand_id').val() + "@" + stock_ids,"print");
 					}
 				}else{
 					alert("Bạn phải chọn ít nhất 1 kho!");

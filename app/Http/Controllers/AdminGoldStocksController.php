@@ -431,14 +431,15 @@
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
 			$filename = 'SM_'.time();
-			// Log::debug('$para = '.$para);
-			// Log::debug('$para = '.substr($para, 0, 10));
-			// Log::debug('$para = '.substr($para, 11, 10));
-			// Log::debug('$para = '.substr($para, 22, strlen($para) - 22));
+			$para_values = explode("@", $para);
+			// Log::debug('$para = '.$para_values[0]);
+			// Log::debug('$para = '.$para_values[1]);
+			// Log::debug('$para = '.$para_values[2]);
             $parameter = [
-				'from_date'=>substr($para, 0, 10),
-				'to_date'=>substr($para, 11, 10),
-				'stock_ids'=>substr($para, 22, strlen($para)),
+				'from_date'=>$para_values[0],
+				'to_date'=>$para_values[1],
+				'stock_ids'=>$para_values[2],
+				// 'brand_id'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
 
@@ -464,10 +465,15 @@
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
 			$filename = 'SMA_'.time();
+            $para_values = explode("@", $para);
+			// Log::debug('$para = '.$para_values[0]);
+			// Log::debug('$para = '.$para_values[1]);
+			// Log::debug('$para = '.$para_values[2]);
             $parameter = [
-				'from_date'=>substr($para, 0, 10),
-				'to_date'=>substr($para, 11, 10),
-				'stock_ids'=>substr($para, 22, strlen($para)),
+				'from_date'=>$para_values[0],
+				'to_date'=>$para_values[1],
+				'stock_ids'=>$para_values[2],
+				// 'brand_id'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
 
@@ -493,14 +499,12 @@
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
 			$filename = 'SM_'.time();
-			// Log::debug('$para = '.$para);
-			// Log::debug('$para = '.substr($para, 0, 10));
-			// Log::debug('$para = '.substr($para, 11, 10));
-			// Log::debug('$para = '.substr($para, 22, strlen($para) - 22));
+			$para_values = explode("@", $para);
             $parameter = [
-				'from_date'=>substr($para, 0, 10),
-				'to_date'=>substr($para, 11, 10),
-				'stock_ids'=>substr($para, 22, strlen($para)),
+				'from_date'=>$para_values[0],
+				'to_date'=>$para_values[1],
+				'stock_ids'=>$para_values[2],
+				// 'brand_id'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
 
@@ -527,10 +531,12 @@
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
 			$filename = 'SMA_'.time();
+            $para_values = explode("@", $para);
             $parameter = [
-				'from_date'=>substr($para, 0, 10),
-				'to_date'=>substr($para, 11, 10),
-				'stock_ids'=>substr($para, 22, strlen($para)),
+				'from_date'=>$para_values[0],
+				'to_date'=>$para_values[1],
+				'stock_ids'=>$para_values[2],
+				// 'brand_id'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
 
@@ -564,11 +570,12 @@
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
 			$filename = 'SMS_'.time();
-			
+			$para_values = explode("@", $para);
             $parameter = [
-				'from_date'=>substr($para, 0, 10),
-				'to_date'=>substr($para, 11, 10),
-				'supplier_ids'=>substr($para, 22, strlen($para)),
+				'from_date'=>$para_values[0],
+				'to_date'=>$para_values[1],
+				'supplier_ids'=>$para_values[2],
+				// 'brand_id'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
 
@@ -594,11 +601,12 @@
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
 			$filename = 'SMS_'.time();
-			
+			$para_values = explode("@", $para);
             $parameter = [
-				'from_date'=>substr($para, 0, 10),
-				'to_date'=>substr($para, 11, 10),
-				'supplier_ids'=>substr($para, 22, strlen($para)),
+				'from_date'=>$para_values[0],
+				'to_date'=>$para_values[1],
+				'supplier_ids'=>$para_values[2],
+				// 'brand_id'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
 
@@ -625,21 +633,26 @@
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
 			$filename = 'SB_'.time();
+			$para_values = explode("@", $para);
             $parameter = [
-				'to_date'=>substr($para, 0, 10),
-				'stock_ids'=>substr($para, 11, strlen($para)),
+				'to_date'=>$para_values[0],
+				'brand_id'=>$para_values[1],
+				'stock_ids'=>$para_values[2],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
             $input = base_path().'/app/Reports/rpt_stock_balance.jasper';
-            $output = public_path().'/output_reports/'.$filename;
+			$output = public_path().'/output_reports/'.$filename;
+			Log::debug('$para = '.$input);
+			Log::debug('$para = '.$output);
+			Log::debug('$para = '.storage_path().'/app/uploads/logo.png');
             $jasper->process($input, $output, array('pdf'), $parameter, $database)->execute();
-
-            while (!file_exists($output.'.pdf' )){
+			
+            while (!file_exists($output.'.pdf')){
                 sleep(1);
             }
 
-            $file = File::get( $output.'.pdf' );
-
+            $file = File::get($output.'.pdf');
+			Log::debug('$para = '.$file);
             return Response::make($file, 200,
                 array(
                     'Content-type' => 'application/pdf',
@@ -652,9 +665,11 @@
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
 			$filename = 'SBA_'.time();
+            $para_values = explode("@", $para);
             $parameter = [
-				'to_date'=>substr($para, 0, 10),
-				'stock_ids'=>substr($para, 11, strlen($para)),
+				'to_date'=>$para_values[0],
+				'brand_id'=>$para_values[1],
+				'stock_ids'=>$para_values[2],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
 
@@ -680,9 +695,11 @@
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
 			$filename = 'SB_'.time();
+            $para_values = explode("@", $para);
             $parameter = [
-				'to_date'=>substr($para, 0, 10),
-				'stock_ids'=>substr($para, 11, strlen($para)),
+				'to_date'=>$para_values[0],
+				'brand_id'=>$para_values[1],
+				'stock_ids'=>$para_values[2],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
             $input = base_path().'/app/Reports/rpt_stock_balance.jasper';
@@ -708,9 +725,11 @@
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
 			$filename = 'SBA_'.time();
+            $para_values = explode("@", $para);
             $parameter = [
-				'to_date'=>substr($para, 0, 10),
-				'stock_ids'=>substr($para, 11, strlen($para)),
+				'to_date'=>$para_values[0],
+				'brand_id'=>$para_values[1],
+				'stock_ids'=>$para_values[2],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
 

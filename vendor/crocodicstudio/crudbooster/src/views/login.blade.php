@@ -81,13 +81,13 @@
             <input autocomplete='off' type="password" class="form-control" name='password' id='password' required placeholder="Password"/>
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           </div>
-          <div class="form-group has-feedback" style="height: 50px;">
-            <label for="brand">Cửa hàng</label>
-            <select id="brand" name="brand" class="form-control" placeholder="Brand">
-              <option value=1>KIM VẠN PHƯỚC 01</option>
-              <option value=2>KIM VẠN PHƯỚC 02</option>
-            </select>
-          </div>
+          {{--<div class="form-group has-feedback" style="height: 50px;">--}}
+            {{--<label for="brand">Cửa hàng</label>--}}
+            {{--<select id="brand" name="brand" class="form-control" placeholder="Brand">--}}
+              {{--<option value=1>KIM VẠN PHƯỚC 01</option>--}}
+              {{--<option value=2>KIM VẠN PHƯỚC 02</option>--}}
+            {{--</select>--}}
+          {{--</div>--}}
           <div class='row'>
             <div class='col-xs-12' align="center"><p>{{trans("crudbooster.text_forgot_password")}} <a href='{{route("getForgot")}}'>{{trans("crudbooster.click_here")}}</a>   </p></div>
           </div>
@@ -107,31 +107,31 @@
     <!-- Bootstrap 3.3.2 JS -->
     <script src="{{asset('vendor/crudbooster/assets/adminlte/bootstrap/js/bootstrap.min.js')}}" type="text/javascript"></script> 
 
-    <script type="application/javascript">
-        function loadBrands() {
-            $.ajax({
-                method: "GET",
-                url: '{{Route("AdminGoldBrandsControllerGetBrands")}}',
-                data: {
-                    _token: $('#_token').val()
-                },
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data && data.brands && data.brands.length > 0) {
-                        let html = '';
-						            data.brands.forEach(function (detail, i) {
-                            html += `<option value=${detail.id}>${detail.name}</option>`;					
-                        });
-                        $('#brand').append(html);
-                    }
-                },
-                error: function (request, status, error) {
-                    console.log('PostAdd status = ', status);
-                    console.log('PostAdd error = ', error);
-                }
-            });
-        }
-    </script>
+    {{--<script type="application/javascript">--}}
+        {{--function loadBrands() {--}}
+            {{--$.ajax({--}}
+                {{--method: "GET",--}}
+                {{--url: '{{Route("AdminGoldBrandsControllerGetBrands")}}',--}}
+                {{--data: {--}}
+                    {{--_token: $('#_token').val()--}}
+                {{--},--}}
+                {{--dataType: "json",--}}
+                {{--async: false,--}}
+                {{--success: function (data) {--}}
+                    {{--if (data && data.brands && data.brands.length > 0) {--}}
+                        {{--let html = '';--}}
+						            {{--data.brands.forEach(function (detail, i) {--}}
+                            {{--html += `<option value=${detail.id}>${detail.name}</option>`;					--}}
+                        {{--});--}}
+                        {{--$('#brand').append(html);--}}
+                    {{--}--}}
+                {{--},--}}
+                {{--error: function (request, status, error) {--}}
+                    {{--console.log('PostAdd status = ', status);--}}
+                    {{--console.log('PostAdd error = ', error);--}}
+                {{--}--}}
+            {{--});--}}
+        {{--}--}}
+    {{--</script>--}}
   </body>
 </html>

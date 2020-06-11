@@ -56,8 +56,7 @@ class AdminController extends CBController {
 		$validator = Validator::make(Request::all(),			
 			[
 			'email'=>'required|email|exists:'.config('crudbooster.USER_TABLE'),
-			'password'=>'required',
-			'brand'=>'required'	
+			'password'=>'required'
 			]
 		);
 		
@@ -69,12 +68,12 @@ class AdminController extends CBController {
 
 		$email 		= Request::input("email");
 		$password 	= Request::input("password");
-		$brand 	= Request::input("brand");
+//		$brand 	= Request::input("brand");
 		$users 		= DB::table(config('crudbooster.USER_TABLE'))->where("email",$email)->first(); 		
 
 		if(\Hash::check($password,$users->password)) {
 			$priv = DB::table("cms_privileges")->where("id",$users->id_cms_privileges)->first();
-			$br = DB::table("gold_brands")->where("id",$brand)->first();
+//			$br = DB::table("gold_brands")->where("id",$brand)->first();
 
 			$roles = DB::table('cms_privileges_roles')
 			->where('id_cms_privileges',$users->id_cms_privileges)
@@ -83,6 +82,12 @@ class AdminController extends CBController {
 			->get();
 			
 			$photo = ($users->photo)?asset($users->photo):asset('vendor/crudbooster/avatar.jpg');
+            if($users->brand_id) {
+                $brands = DB::table('gold_brands')->whereNull('deleted_at')->whereRaw('id in ('.$users->brand_id.')')->get();
+            }else{
+                $brands = DB::table('gold_brands')->whereNull('deleted_at')->get();
+            }
+
 			Session::put('admin_id',$users->id);			
 			Session::put('admin_is_superadmin',$priv->is_superadmin);
 			Session::put('admin_name',$users->name);	
@@ -91,8 +96,9 @@ class AdminController extends CBController {
 			Session::put("admin_privileges",$users->id_cms_privileges);
 			Session::put('admin_privileges_name',$priv->name);			
 			Session::put('admin_lock',0);
-			Session::put('admin_brand',$brand);
-			Session::put('admin_brand_name',$br->name);
+            Session::put('admin_brands',$brands);
+            Session::put('admin_brand',$brands[0]->id);
+			Session::put('admin_brand_name',$brands[0]->name);
 			Session::put('theme_color',$priv->theme_color);
 			Session::put("appname",CRUDBooster::getSetting('appname'));		
 
@@ -145,12 +151,10 @@ class AdminController extends CBController {
 	}	
 
 	public function getLogout() {
-		
 		$me = CRUDBooster::me();
 		CRUDBooster::insertLog(trans("crudbooster.log_logout",['email'=>$me->email]));
 
 		Session::flush();
 		return redirect()->route('getLogin')->with('message',trans("crudbooster.message_after_logout"));
 	}
-
 }

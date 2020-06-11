@@ -197,4 +197,15 @@ class AdminCmsUsersController extends CBExtendController {
             )
         );
     }
+
+    public function postSwitchToBrand(){
+        $para = Request::all();
+        $brand_id = $para['brand_id'];
+        $brand = DB::table('gold_brands')->where('id', $brand_id)->first();
+        if($brand) {
+            Session::put('admin_brand', $brand->id);
+            Session::put('admin_brand_name', $brand->name);
+        }
+        return response()->json(['result'=>true, 'brand'=>$brand]);
+    }
 }

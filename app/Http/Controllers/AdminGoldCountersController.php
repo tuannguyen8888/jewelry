@@ -42,6 +42,7 @@
 			$this->button_filter = false;
 			$this->button_import = false;
 			$this->button_export = true;
+            $this->is_search_form = true;
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
@@ -67,6 +68,9 @@
 			$this->col[] = ["label"=>"Ghi chú","name"=>"notes"];
 			// $this->col[] = ["label"=>"id","name"=>"id", "style='display: none'"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
+            $this->search_form = [];
+            $this->search_form[] = ["label"=>"Từ ngày", "name"=>"opened_at_from_date", "data_column"=>"opened_at", "search_type"=>"between_from","type"=>"date","width"=>"col-sm-2"];
+            $this->search_form[] = ["label"=>"Đến ngày", "name"=>"opened_at_to_date", "data_column"=>"opened_at", "search_type"=>"between_to","type"=>"date","width"=>"col-sm-2"];
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
@@ -236,6 +240,7 @@
 	        */
 	        $this->load_css = array();
 	        $this->load_css[] = asset("css/loading.css");
+            $this->load_css[] = asset("css/site.customize.css");
             $this->load_css[] = asset("vendor/crudbooster/assets/datetimepicker-master/jquery.datetimepicker.css");
 			$this->load_css[] = asset("vendor/crudbooster/assets/select2/dist/css/select2.min.css");
 		}

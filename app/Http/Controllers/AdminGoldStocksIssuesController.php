@@ -32,6 +32,7 @@
 			$this->button_import = false;
 			$this->button_export = true;
 			$this->table = "gold_stocks_issues";
+            $this->is_search_form = true;
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
@@ -47,6 +48,9 @@
 			$this->col[] = ["label"=>"Người sửa","name"=>"updated_by","join"=>"cms_users,name"];
 			$this->col[] = ["label"=>"T/g sửa","name"=>"updated_at","callback_php"=>'date_time_format($row->updated_at, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			# END COLUMNS DO NOT REMOVE THIS LINE
+            $this->search_form = [];
+            $this->search_form[] = ["label"=>"Từ ngày", "name"=>"order_date_from_date", "data_column"=>"order_date", "search_type"=>"between_from","type"=>"date","width"=>"col-sm-2"];
+            $this->search_form[] = ["label"=>"Đến ngày", "name"=>"order_date_to_date", "data_column"=>"order_date", "search_type"=>"between_to","type"=>"date","width"=>"col-sm-2"];
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
@@ -212,6 +216,7 @@
 	        */
 	        $this->load_css = array();
 	        $this->load_css[] = asset("css/loading.css");
+            $this->load_css[] = asset("css/site.customize.css");
             $this->load_css[] = asset("vendor/crudbooster/assets/datetimepicker-master/jquery.datetimepicker.css");
             $this->load_css[] = asset("vendor/crudbooster/assets/select2/dist/css/select2.min.css");
 	    }

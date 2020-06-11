@@ -459,7 +459,7 @@ $total = $result->total();
                     <div class="modal-header">
                         <button class="close" aria-label="Close" type="button" data-dismiss="modal">
                             <span aria-hidden="true">×</span></button>
-                        <h4 class="modal-title"><i class='fa fa-download'></i> {{trans("crudbooster.export_dialog_title")}}</h4>
+                        <h4 class="modal-title"><i class='fa fa-download'></i> {{trans("crudbooster.export_dialog_title")}} klklklk</h4>
                     </div>
 
                     <form method='post' target="_blank" action='{{ CRUDBooster::mainpath("export-data?t=".time()) }}'>
@@ -474,9 +474,9 @@ $total = $result->total();
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group" style="display: none;">
                                 <label>{{trans("crudbooster.export_dialog_maxdata")}}</label>
-                                <input type='number' name='limit' class='form-control' required value='100' max="100000" min="1"/>
+                                <input type='number' name='limit' class='form-control' required value='1000000000' max="1000000000" min="1"/>
                                 <div class='help-block'>{{trans("crudbooster.export_dialog_help_maxdata")}}</div>
                             </div>
 
@@ -492,7 +492,7 @@ $total = $result->total();
                                 <label>{{trans("crudbooster.export_dialog_format_export")}}</label>
                                 <select name='fileformat' class='form-control'>
                                     <option value='pdf'>PDF</option>
-                                    <option value='xls'>Microsoft Excel (xls)</option>
+                                    <option selected value='xls'>Microsoft Excel (xls)</option>
                                     <option value='csv'>CSV</option>
                                 </select>
                             </div>
@@ -504,7 +504,7 @@ $total = $result->total();
 
 
                                 <div class="form-group">
-                                    <label>{{trans("crudbooster.export_dialog_page_size")}}</label>
+                                    <label>{{trans("crudbooster.export_dialog_page_size")}} {{$setting->trong_luong_tem}}</label>
                                     <select class='form-control' name='page_size'>
                                         <option <?=($setting->default_paper_size == 'Letter') ? "selected" : ""?> value='Letter'>Letter</option>
                                         <option <?=($setting->default_paper_size == 'Legal') ? "selected" : ""?> value='Legal'>Legal</option>

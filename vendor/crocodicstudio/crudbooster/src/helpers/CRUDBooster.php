@@ -73,7 +73,10 @@ class CRUDBooster  {
 	    public static function myName() {
 	        return Session::get('admin_name');
 		}
-		
+
+        public static function myBrands() {
+            return Session::get('admin_brands');
+        }
 		public static function myBrand() {
 	        return Session::get('admin_brand');
 		}

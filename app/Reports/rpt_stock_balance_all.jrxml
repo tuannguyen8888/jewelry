@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Stock_Balance_All" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="559" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business_connection"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="253"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="740"/>
@@ -13,10 +13,7 @@
 		<defaultValueExpression><![CDATA["1,2,3,4"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_name" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["KIM VẠN PHƯỚC"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="comp_prefix" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ KIM VẠN PHƯỚC"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
@@ -27,21 +24,23 @@
 	<parameter name="logo" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["/storage/app/uploads/logo.png"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="brand_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT (SELECT GROUP_CONCAT(name SEPARATOR '; ') FROM gold_stocks WHERE FIND_IN_SET(id, $P{stock_ids}) > 0) AS stock_name, 
-	G.name AS group_name, SUM(A.qty) AS qty, SUM(A.total_weight) as total_weight, SUM(A.gem_weight) as gem_weight, 
+	B.name AS brand_name, G.name AS group_name, SUM(A.qty) AS qty, SUM(A.total_weight) as total_weight, SUM(A.gem_weight) as gem_weight, 
 	SUM(A.gold_weight) AS gold_weight, SUM(A.q10) AS q10, SUM(A.fund_fee) AS fund_fee, SUM(A.retail_fee) AS retail_fee
 FROM(
-	SELECT I.product_id, SUM(1) as qty, SUM(I.total_weight) as total_weight, SUM(I.gem_weight) as gem_weight,
+	SELECT R.brand_id, I.product_id, SUM(1) as qty, SUM(I.total_weight) as total_weight, SUM(I.gem_weight) as gem_weight,
 		SUM(I.gold_weight) as gold_weight, SUM(I.q10) as q10, SUM(I.fund_fee) as fund_fee, SUM(I.retail_fee) AS retail_fee
 	FROM gold_stocks_received R 
 		INNER JOIN gold_items I ON R.id = I.received_id
 	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND R.status <> 0
 		AND R.received_date < DATE_ADD($P{to_date} , INTERVAL 1 DAY)
 		AND FIND_IN_SET(R.stock_id, $P{stock_ids} ) > 0
-	GROUP BY I.product_id
+		AND R.brand_id = $P{brand_id}
+	GROUP BY R.brand_id, I.product_id
 	UNION ALL
-	SELECT I.product_id, SUM(-1) as qty, SUM(-I.total_weight) as total_weight, SUM(-I.gem_weight) as gem_weight,
+	SELECT R.brand_id, I.product_id, SUM(-1) as qty, SUM(-I.total_weight) as total_weight, SUM(-I.gem_weight) as gem_weight,
 		SUM(-I.gold_weight) as gold_weight, SUM(-I.q10) as q10, SUM(-I.fund_fee) as fund_fee, SUM(-I.retail_fee) AS retail_fee
 	FROM gold_sale_orders R
 		INNER JOIN gold_sale_order_details OD ON R.id = OD.order_id
@@ -49,9 +48,10 @@ FROM(
 	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND OD.deleted_at IS NULL AND R.order_type <> 0
 		AND R.order_date < DATE_ADD($P{to_date} ,INTERVAL 1 DAY)
 		AND FIND_IN_SET(I.stock_id, $P{stock_ids}) > 0
-	GROUP BY I.product_id
+		AND R.brand_id = $P{brand_id}
+	GROUP BY R.brand_id, I.product_id
 	UNION ALL
-	SELECT I.product_id, SUM(-1) as i_qty, SUM(-I.total_weight) as total_weight, SUM(-I.gem_weight) as gem_weight,
+	SELECT R.brand_id, I.product_id, SUM(-1) as i_qty, SUM(-I.total_weight) as total_weight, SUM(-I.gem_weight) as gem_weight,
 		SUM(-I.gold_weight) as gold_weight, SUM(-I.q10) as q10, SUM(-I.fund_fee) as fund_fee, SUM(-I.retail_fee) AS retail_fee
 	FROM gold_stocks_issues R
 		INNER JOIN gold_stocks_issue_detail OD ON R.id = OD.order_id
@@ -59,16 +59,22 @@ FROM(
 	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND OD.deleted_at IS NULL AND R.status <> 0
 		AND R.order_date < DATE_ADD($P{to_date} ,INTERVAL 1 DAY)
 		AND FIND_IN_SET(I.stock_id, $P{stock_ids}) > 0
-	GROUP BY I.product_id
+		AND R.brand_id = $P{brand_id}
+	GROUP BY R.brand_id, I.product_id
 ) A INNER JOIN gold_products P ON A.product_id = P.id
+	INNER JOIN gold_brands B ON A.brand_id = B.id
 	LEFT OUTER JOIN gold_product_groups G ON P.product_group_id = G.id
 WHERE P.deleted_at IS NULL
-GROUP BY G.name
+GROUP BY B.name, G.name
 HAVING SUM(qty) <> 0
 ORDER BY group_name]]>
 	</queryString>
 	<field name="stock_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="stock_name"/>
+	</field>
+	<field name="brand_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="brand_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_brands"/>
 	</field>
 	<field name="group_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="group_name"/>
@@ -129,7 +135,7 @@ ORDER BY group_name]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{comp_prefix}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="60" y="33" width="440" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
@@ -186,7 +192,7 @@ ORDER BY group_name]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="16" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{brand_name}]]></textFieldExpression>
 			</textField>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
 				<reportElement x="0" y="0" width="60" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">

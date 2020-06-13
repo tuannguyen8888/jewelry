@@ -438,8 +438,8 @@
             $parameter = [
 				'from_date'=>$para_values[0],
 				'to_date'=>$para_values[1],
-				'stock_ids'=>$para_values[2],
-				// 'brand_id'=>$para_values[3],
+				'brand_id'=>$para_values[2],
+				'stock_ids'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
 
@@ -472,8 +472,8 @@
             $parameter = [
 				'from_date'=>$para_values[0],
 				'to_date'=>$para_values[1],
-				'stock_ids'=>$para_values[2],
-				// 'brand_id'=>$para_values[3],
+				'brand_id'=>$para_values[2],
+				'stock_ids'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
 
@@ -503,8 +503,8 @@
             $parameter = [
 				'from_date'=>$para_values[0],
 				'to_date'=>$para_values[1],
-				'stock_ids'=>$para_values[2],
-				// 'brand_id'=>$para_values[3],
+				'brand_id'=>$para_values[2],
+				'stock_ids'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
 
@@ -535,8 +535,8 @@
             $parameter = [
 				'from_date'=>$para_values[0],
 				'to_date'=>$para_values[1],
-				'stock_ids'=>$para_values[2],
-				// 'brand_id'=>$para_values[3],
+				'brand_id'=>$para_values[2],
+				'stock_ids'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
 
@@ -574,8 +574,8 @@
             $parameter = [
 				'from_date'=>$para_values[0],
 				'to_date'=>$para_values[1],
-				'supplier_ids'=>$para_values[2],
-				// 'brand_id'=>$para_values[3],
+				'brand_id'=>$para_values[2],
+				'supplier_ids'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
 
@@ -605,8 +605,8 @@
             $parameter = [
 				'from_date'=>$para_values[0],
 				'to_date'=>$para_values[1],
-				'supplier_ids'=>$para_values[2],
-				// 'brand_id'=>$para_values[3],
+				'brand_id'=>$para_values[2],
+				'supplier_ids'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
 

@@ -2,8 +2,8 @@
 <!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Stock_Balance_Detail" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="559" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business_connection"/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
 	<style name="Table_CH" mode="Transparent" backcolor="#BFE1FF" vTextAlign="Middle" vImageAlign="Middle" isBlankWhenNull="false">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -15,10 +15,11 @@
 	</style>
 	<subDataset name="dsDetails" uuid="3455ee47-1b45-4294-bd69-78cf769ef53e">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business_connection"/>
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="289"/>
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="700"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
 		<parameter name="stock_id" class="java.lang.Integer"/>
+		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT I.bar_code, P.product_code, P.product_name, T.name AS product_type, 
 	I.total_weight, I.gem_weight, I.gold_weight, I.qty, G.name AS group_name, I.q10
@@ -26,7 +27,7 @@ FROM gold_items I
 	LEFT OUTER JOIN gold_products P ON I.product_id = P.id
 	LEFT OUTER JOIN gold_product_types T ON I.product_type_id = T.id
 	LEFT OUTER JOIN gold_product_groups G ON I.product_group_id = G.id
-WHERE I.deleted_at is null AND I.qty > 0 AND I.stock_id = $P{stock_id} 
+WHERE I.deleted_at is null AND I.qty > 0 AND I.stock_id = $P{stock_id}
 ORDER BY T.name, G.name, I.id]]>
 		</queryString>
 		<field name="bar_code" class="java.lang.String">
@@ -108,10 +109,7 @@ ORDER BY T.name, G.name, I.id]]>
 	</subDataset>
 	<parameter name="id" class="java.lang.Integer"/>
 	<parameter name="comp_name" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["KIM VẠN PHƯỚC"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="comp_prefix" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ KIM VẠN PHƯỚC"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
@@ -122,8 +120,9 @@ ORDER BY T.name, G.name, I.id]]>
 	<parameter name="logo" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["/storage/app/uploads/logo.png"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="brand_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT code, name 
+		<![CDATA[SELECT code, name, (SELECT name FROM gold_brands WHERE id = $P{brand_id}) AS brand_name
 FROM gold_stocks
 WHERE id =  $P{id}]]>
 	</queryString>
@@ -134,6 +133,9 @@ WHERE id =  $P{id}]]>
 	<field name="name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="gold_stocks"/>
+	</field>
+	<field name="brand_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="brand_name"/>
 	</field>
 	<title>
 		<band height="115" splitType="Stretch">
@@ -148,7 +150,7 @@ WHERE id =  $P{id}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{comp_prefix}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="33" width="559" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
@@ -206,7 +208,7 @@ WHERE id =  $P{id}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="16" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{brand_name}]]></textFieldExpression>
 			</textField>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
 				<reportElement x="0" y="0" width="60" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
@@ -402,9 +404,12 @@ WHERE id =  $P{id}]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dsDetails" uuid="9dc00493-32ca-4b0b-ba5c-30feeb48069c">
+					<datasetRun subDataset="dsDetails" uuid="32e699a2-ac3c-4074-a275-c665f6cfa144">
 						<datasetParameter name="stock_id">
 							<datasetParameterExpression><![CDATA[$P{id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="brand_id">
+							<datasetParameterExpression><![CDATA[$P{brand_id}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>

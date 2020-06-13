@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Stock_Movement" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="806" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business_connection"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="253"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="740"/>
@@ -24,11 +24,9 @@
 	<parameter name="stock_ids" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1,2,3,4"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="brand_id" class="java.lang.Integer"/>
 	<parameter name="comp_name" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["KIM VẠN PHƯỚC"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="comp_prefix" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ KIM VẠN PHƯỚC"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
@@ -40,13 +38,13 @@
 		<defaultValueExpression><![CDATA["/storage/app/uploads/logo.png"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[SELECT S.name AS stock_name, G.name AS group_name, 
+		<![CDATA[SELECT S.name AS stock_name, G.name AS group_name, B.name AS brand_name, 
 		SUM(o_qty) AS o_qty, SUM(r_qty) AS r_qty, SUM(i_qty) AS i_qty,
 		SUM(o_total_weight) as o_total_weight, SUM(r_total_weight) AS r_total_weight, SUM(i_total_weight) AS i_total_weight,
 		SUM(o_gem_weight) as o_gem_weight, SUM(r_gem_weight) AS r_gem_weight, SUM(i_gem_weight) AS i_gem_weight,
 		SUM(o_gold_weight) AS o_gold_weight, SUM(r_gold_weight) AS r_gold_weight, SUM(i_gold_weight) AS i_gold_weight
 FROM(
-	SELECT R.stock_id, I.product_id, SUM(1) AS o_qty, 0 as r_qty, 0 as i_qty,
+	SELECT R.brand_id, R.stock_id, I.product_id, SUM(1) AS o_qty, 0 as r_qty, 0 as i_qty,
 		SUM(I.total_weight) as o_total_weight, 0 as r_total_weight, 0 as i_total_weight,
 		SUM(I.gem_weight) as o_gem_weight, 0 as r_gem_weight, 0 as i_gem_weight,
 		SUM(I.gold_weight) as o_gold_weight, 0 as r_gold_weight, 0 as i_gold_weight
@@ -55,9 +53,10 @@ FROM(
 	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND R.status <> 0
 		AND R.received_date < $P{from_date} 
 		AND FIND_IN_SET(R.stock_id, $P{stock_ids} ) > 0
-	GROUP BY R.stock_id, I.product_id
+		AND R.brand_id = $P{brand_id} 
+	GROUP BY R.brand_id, R.stock_id, I.product_id
 	UNION ALL
-	SELECT R.stock_id, I.product_id, 0 AS o_qty, SUM(1) as r_qty, 0 as i_qty,
+	SELECT R.brand_id, R.stock_id, I.product_id, 0 AS o_qty, SUM(1) as r_qty, 0 as i_qty,
 		0 as o_total_weight, SUM(I.total_weight) as r_total_weight, 0 as i_total_weight,
 		0 as o_gem_weight, SUM(I.gem_weight) as r_gem_weight, 0 as i_gem_weight,
 		0 as o_gold_weight, SUM(I.gold_weight) as r_gold_weight, 0 as i_gold_weight
@@ -66,9 +65,10 @@ FROM(
 	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND R.status <> 0
 		AND R.received_date >= $P{from_date}  AND R.received_date < DATE_ADD($P{to_date} , INTERVAL 1 DAY)
 		AND FIND_IN_SET(R.stock_id, $P{stock_ids} ) > 0
-	GROUP BY R.stock_id, I.product_id
+		AND R.brand_id = $P{brand_id}
+	GROUP BY R.brand_id, R.stock_id, I.product_id
 	UNION ALL
-	SELECT I.stock_id, I.product_id, SUM(-1) AS o_qty, 0 as r_qty, 0 as i_qty,
+	SELECT R.brand_id, I.stock_id, I.product_id, SUM(-1) AS o_qty, 0 as r_qty, 0 as i_qty,
 		SUM(-I.total_weight) as o_total_weight, 0 as r_total_weight, 0 as i_total_weight,
 		SUM(-I.gem_weight) as o_gem_weight, 0 as r_gem_weight, 0 as i_gem_weight,
 		SUM(-I.gold_weight) as o_gold_weight, 0 as r_gold_weight, 0 as i_gold_weight
@@ -78,9 +78,10 @@ FROM(
 	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND OD.deleted_at IS NULL AND R.order_type <> 0
 		AND R.order_date < $P{from_date} 
 		AND FIND_IN_SET(I.stock_id, $P{stock_ids}) > 0
-	GROUP BY I.stock_id, I.product_id
+		AND R.brand_id = $P{brand_id}
+	GROUP BY R.brand_id, I.stock_id, I.product_id
 	UNION ALL
-	SELECT I.stock_id, I.product_id, 0 AS o_qty, 0 as r_qty, SUM(1) as i_qty,
+	SELECT R.brand_id, I.stock_id, I.product_id, 0 AS o_qty, 0 as r_qty, SUM(1) as i_qty,
 		0 as o_total_weight, 0 as r_total_weight, SUM(I.total_weight) as i_total_weight,
 		0 as o_gem_weight, 0 as r_gem_weight, SUM(I.gem_weight) as i_gem_weight,
 		0 as o_gold_weight, 0 as r_gold_weight, SUM(I.gold_weight) as i_gold_weight
@@ -90,9 +91,10 @@ FROM(
 	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND OD.deleted_at IS NULL AND R.order_type <> 0
 		AND R.order_date >= $P{from_date}  AND R.order_date < DATE_ADD($P{to_date} ,INTERVAL 1 DAY)
 		AND FIND_IN_SET(I.stock_id, $P{stock_ids}) > 0
-	GROUP BY I.stock_id, I.product_id
+		AND R.brand_id = $P{brand_id}
+	GROUP BY R.brand_id, I.stock_id, I.product_id
 	UNION ALL
-	SELECT I.stock_id, I.product_id, SUM(-1) AS o_qty, 0 as r_qty, 0 as i_qty,
+	SELECT R.brand_id, I.stock_id, I.product_id, SUM(-1) AS o_qty, 0 as r_qty, 0 as i_qty,
 		SUM(-I.total_weight) as o_total_weight, 0 as r_total_weight, 0 as i_total_weight,
 		SUM(-I.gem_weight) as o_gem_weight, 0 as r_gem_weight, 0 as i_gem_weight,
 		SUM(-I.gold_weight) as o_gold_weight, 0 as r_gold_weight, 0 as i_gold_weight
@@ -102,9 +104,10 @@ FROM(
 	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND OD.deleted_at IS NULL AND R.status <> 0
 		AND R.order_date < $P{from_date} 
 		AND FIND_IN_SET(I.stock_id, $P{stock_ids}) > 0
-	GROUP BY I.stock_id, I.product_id
+		AND R.brand_id = $P{brand_id}
+	GROUP BY R.brand_id, I.stock_id, I.product_id
 	UNION ALL
-	SELECT I.stock_id, I.product_id, 0 AS o_qty, 0 as r_qty, SUM(1) as i_qty,
+	SELECT R.brand_id, I.stock_id, I.product_id, 0 AS o_qty, 0 as r_qty, SUM(1) as i_qty,
 		0 as o_total_weight, 0 as r_total_weight, SUM(I.total_weight) as i_total_weight,
 		0 as o_gem_weight, 0 as r_gem_weight, SUM(I.gem_weight) as i_gem_weight,
 		0 as o_gold_weight, 0 as r_gold_weight, SUM(I.gold_weight) as i_gold_weight
@@ -114,15 +117,17 @@ FROM(
 	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND OD.deleted_at IS NULL AND R.status <> 0
 		AND R.order_date >= $P{from_date}  AND R.order_date < DATE_ADD($P{to_date} ,INTERVAL 1 DAY)
 		AND FIND_IN_SET(I.stock_id, $P{stock_ids}) > 0
-	GROUP BY I.stock_id, I.product_id
+		AND R.brand_id = $P{brand_id}
+	GROUP BY R.brand_id, I.stock_id, I.product_id
 ) A INNER JOIN gold_stocks S ON A.stock_id = S.id
 	INNER JOIN gold_products P ON A.product_id = P.id
+	INNER JOIN gold_brands B ON A.brand_id = B.id
 	LEFT OUTER JOIN gold_product_groups G ON P.product_group_id = G.id
 	LEFT OUTER JOIN gold_product_units U ON P.product_unit_id = U.id
 WHERE S.deleted_at IS NULL AND P.deleted_at IS NULL
-GROUP BY S.name, G.name
+GROUP BY B.name, S.name, G.name
 HAVING SUM(o_qty) <> 0 OR SUM(r_qty) <> 0 OR SUM(i_qty) <> 0
-ORDER BY S.name, G.name]]>
+ORDER BY B.name, S.name, G.name]]>
 	</queryString>
 	<field name="stock_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="stock_name"/>
@@ -131,6 +136,10 @@ ORDER BY S.name, G.name]]>
 	<field name="group_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="group_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="gold_product_groups"/>
+	</field>
+	<field name="brand_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="brand_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_brands"/>
 	</field>
 	<field name="o_qty" class="java.lang.Double">
 		<property name="com.jaspersoft.studio.field.label" value="o_qty"/>
@@ -230,7 +239,7 @@ ORDER BY S.name, G.name]]>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Arial" size="12" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{comp_prefix}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="60" y="33" width="680" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
@@ -286,7 +295,7 @@ ORDER BY S.name, G.name]]>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Arial" size="16" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{brand_name}]]></textFieldExpression>
 				</textField>
 				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
 					<reportElement x="0" y="0" width="60" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">

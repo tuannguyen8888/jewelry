@@ -19,6 +19,7 @@
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="289"/>
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="700"/>
 		<parameter name="stock_id" class="java.lang.Integer"/>
+		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT I.bar_code, P.product_code, P.product_name, T.name AS product_type, 
 	I.total_weight, I.gem_weight, I.gold_weight, I.qty, G.name AS group_name, I.q10
@@ -89,11 +90,8 @@ ORDER BY T.name, G.name, I.id]]>
 		</variable>
 	</subDataset>
 	<parameter name="id" class="java.lang.Integer"/>
-	<parameter name="comp_name" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["KIM VẠN PHƯỚC"]]></defaultValueExpression>
-	</parameter>
 	<parameter name="comp_prefix" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ KIM VẠN PHƯỚC"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
@@ -104,6 +102,7 @@ ORDER BY T.name, G.name, I.id]]>
 	<parameter name="logo" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["/storage/app/uploads/logo.png"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="brand_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT code, name 
 FROM gold_stocks
@@ -291,9 +290,12 @@ WHERE id =  $P{id}]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dsDetails" uuid="9dc00493-32ca-4b0b-ba5c-30feeb48069c">
+					<datasetRun subDataset="dsDetails" uuid="8945936e-c593-4a46-9525-8e327c2a01eb">
 						<datasetParameter name="stock_id">
 							<datasetParameterExpression><![CDATA[$P{id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="brand_id">
+							<datasetParameterExpression><![CDATA[$P{brand_id}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>

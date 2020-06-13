@@ -372,8 +372,8 @@
 					'order_date AS trans_date',
 					'pay_gold_amount AS purchase_amount',
 					DB::raw('1 AS trans_type, 0 as pawn_amount, 0 as interested_amount, 0 AS liquidation_amount, 0 AS withdrawal_in, 0 AS withdrawal_out,
-						CASE WHEN payment_method = 0 THEN (gold_amount + fee - discount_amount - reduce - use_points + balance) ELSE 0 END AS sales_amount,
-						CASE WHEN payment_method = 1 THEN (gold_amount + fee - discount_amount - reduce - use_points + balance) ELSE 0 END AS bank_amount'))
+						CASE payment_method WHEN 0 THEN (gold_amount + fee - discount_amount - reduce - use_points + balance) WHEN 1 THEN pay_gold_amount ELSE 0 END AS sales_amount,
+						CASE WHEN payment_method = 1 THEN (gold_amount + fee - discount_amount - reduce - use_points + balance - pay_gold_amount) ELSE 0 END AS bank_amount'))
 				->get();
 			$purchase = DB::table('gold_purchase_orders')
 				->whereRaw('deleted_at is null')

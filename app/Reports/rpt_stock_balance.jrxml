@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.12.2.final using JasperReports Library version 6.12.2-75c5e90a222ab406e416cbf590a5397028a52de3  -->
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Stock_Balance" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="559" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
-	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="108"/>
-	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="885"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="253"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="740"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
 	<parameter name="to_date" class="java.util.Date" isForPrompting="false">
 		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
 	</parameter>
@@ -13,7 +13,7 @@
 		<defaultValueExpression><![CDATA["1,2,3,4"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_name" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ KIM VẠN PHƯỚC"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
@@ -28,22 +28,21 @@
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[SELECT S.name AS stock_name, G.name AS group_name, 
+		<![CDATA[SELECT B.name AS brand_name, S.name AS stock_name, G.name AS group_name, 
 		SUM(A.qty) AS qty, SUM(A.total_weight) as total_weight, SUM(A.gem_weight) as gem_weight,
-		SUM(A.gold_weight) AS gold_weight, SUM(A.q10) AS q10, SUM(A.fund_fee) AS fund_fee, SUM(A.retail_fee) AS retail_fee,
-		(SELECT name FROM gold_brands WHERE id = $P{brand_id} ) AS brand_name
+		SUM(A.gold_weight) AS gold_weight, SUM(A.q10) AS q10, SUM(A.fund_fee) AS fund_fee, SUM(A.retail_fee) AS retail_fee		
 FROM(
-	SELECT R.stock_id, I.product_id, SUM(1) as qty, SUM(I.total_weight) as total_weight, SUM(I.gem_weight) as gem_weight, 
+	SELECT R.brand_id, R.stock_id, I.product_id, SUM(1) as qty, SUM(I.total_weight) as total_weight, SUM(I.gem_weight) as gem_weight, 
 		SUM(I.gold_weight) as gold_weight, SUM(I.q10) as q10, SUM(I.fund_fee) as fund_fee, SUM(I.retail_fee) AS retail_fee
 	FROM gold_stocks_received R 
 		INNER JOIN gold_items I ON R.id = I.received_id
 	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND R.status <> 0
 		AND R.received_date < DATE_ADD($P{to_date} , INTERVAL 1 DAY)
 		AND FIND_IN_SET(R.stock_id, $P{stock_ids} ) > 0
-		AND R.brand_id = $P{brand_id} 
-	GROUP BY R.stock_id, I.product_id
+		AND R.brand_id = $P{brand_id}
+	GROUP BY R.brand_id, R.stock_id, I.product_id
 	UNION ALL
-	SELECT I.stock_id, I.product_id, SUM(-1) as qty, SUM(-I.total_weight) as total_weight, SUM(-I.gem_weight) as gem_weight,
+	SELECT R.brand_id, I.stock_id, I.product_id, SUM(-1) as qty, SUM(-I.total_weight) as total_weight, SUM(-I.gem_weight) as gem_weight,
 		SUM(-I.gold_weight) as gold_weight, SUM(-I.q10) as q10, SUM(-I.fund_fee) as fund_fee, SUM(-I.retail_fee) AS retail_fee
 	FROM gold_sale_orders R
 		INNER JOIN gold_sale_order_details OD ON R.id = OD.order_id
@@ -51,10 +50,10 @@ FROM(
 	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND OD.deleted_at IS NULL AND R.order_type <> 0
 		AND R.order_date < DATE_ADD($P{to_date} ,INTERVAL 1 DAY)
 		AND FIND_IN_SET(I.stock_id, $P{stock_ids}) > 0
-		AND R.brand_id = $P{brand_id} 
-	GROUP BY I.stock_id, I.product_id
+		AND R.brand_id = $P{brand_id}
+	GROUP BY R.brand_id, I.stock_id, I.product_id
 	UNION ALL
-	SELECT I.stock_id, I.product_id, SUM(-1) as qty, SUM(-I.total_weight) as total_weight, SUM(-I.gem_weight) as gem_weight,
+	SELECT R.brand_id, I.stock_id, I.product_id, SUM(-1) as qty, SUM(-I.total_weight) as total_weight, SUM(-I.gem_weight) as gem_weight,
 		SUM(-I.gold_weight) as gold_weight, SUM(-I.q10) as q10, SUM(-I.fund_fee) as fund_fee, SUM(-I.retail_fee) AS retail_fee
 	FROM gold_stocks_issues R
 		INNER JOIN gold_stocks_issue_detail OD ON R.id = OD.order_id
@@ -62,17 +61,22 @@ FROM(
 	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND OD.deleted_at IS NULL AND R.status <> 0
 		AND R.order_date < DATE_ADD($P{to_date} ,INTERVAL 1 DAY)
 		AND FIND_IN_SET(I.stock_id, $P{stock_ids}) > 0
-		AND R.brand_id = $P{brand_id} 
-	GROUP BY I.stock_id, I.product_id
+		AND R.brand_id = $P{brand_id}
+	GROUP BY R.brand_id, I.stock_id, I.product_id
 ) A INNER JOIN gold_stocks S ON A.stock_id = S.id
 	INNER JOIN gold_products P ON A.product_id = P.id
+	INNER JOIN gold_brands B ON A.brand_id = B.id
 	LEFT OUTER JOIN gold_product_groups G ON P.product_group_id = G.id
 	LEFT OUTER JOIN gold_product_units U ON P.product_unit_id = U.id
 WHERE S.deleted_at IS NULL AND P.deleted_at IS NULL
-GROUP BY S.name, G.name
+GROUP BY S.name, G.name, B.name
 HAVING SUM(qty) <> 0
 ORDER BY S.name, G.name]]>
 	</queryString>
+	<field name="brand_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="brand_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_brands"/>
+	</field>
 	<field name="stock_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="stock_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="gold_stocks"/>
@@ -101,9 +105,6 @@ ORDER BY S.name, G.name]]>
 	</field>
 	<field name="retail_fee" class="java.lang.Double">
 		<property name="com.jaspersoft.studio.field.label" value="retail_fee"/>
-	</field>
-	<field name="brand_name" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="brand_name"/>
 	</field>
 	<variable name="fTotal_Qty" class="java.lang.Double" resetType="Group" resetGroup="Stock" calculation="Sum">
 		<variableExpression><![CDATA[$F{qty}]]></variableExpression>
@@ -206,7 +207,7 @@ ORDER BY S.name, G.name]]>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
-					<imageExpression><![CDATA["C:/jewelry/storage/app/uploads/logo.png"]]></imageExpression>
+					<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 				</image>
 				<textField isBlankWhenNull="true">
 					<reportElement x="0" y="93" width="560" height="15" uuid="78133698-7297-4fd5-b1af-1b5de18b8cf1">
@@ -397,7 +398,7 @@ ORDER BY S.name, G.name]]>
 					</textElement>
 					<text><![CDATA[(Ký, họ tên)]]></text>
 				</staticText>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="0" y="0" width="100" height="15" uuid="54e04491-1584-4d3a-a4c9-d3d5a710ab2f">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -411,7 +412,7 @@ ORDER BY S.name, G.name]]>
 					</textElement>
 					<textFieldExpression><![CDATA["Tổng cộng"]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="100" y="0" width="40" height="15" uuid="ee1d7483-3470-4c5c-a0ff-bd5ff0490929">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -427,7 +428,7 @@ ORDER BY S.name, G.name]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{fTotal_Qty} != 0 ? TEXT($V{fTotal_Qty}, "#,###") : ""]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="385" y="0" width="85" height="15" uuid="97b12ca9-3998-4da1-bb92-064bbedcee62">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -442,7 +443,7 @@ ORDER BY S.name, G.name]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{fTotal_Fund_Fee} != 0 ? TEXT($V{fTotal_Fund_Fee}, "#,###") : ""]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="140" y="0" width="65" height="15" uuid="ab00bae6-de56-4148-8e54-eaf31cd50563">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -458,7 +459,7 @@ ORDER BY S.name, G.name]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{fTotal_Total_Weight} != 0 ? TEXT($V{fTotal_Total_Weight}, "#,###.####") : ""]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="320" y="0" width="65" height="15" uuid="1ce9baf1-bbf1-4c03-8abf-40a11dc45dfb">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -473,7 +474,7 @@ ORDER BY S.name, G.name]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{fTotal_Q10} != 0 ? TEXT($V{fTotal_Q10}, "#,###.####") : ""]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="205" y="0" width="50" height="15" uuid="74ece0ad-cb1a-4673-9ddd-04a29940db2a">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -488,7 +489,7 @@ ORDER BY S.name, G.name]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{fTotal_Gem_Weight} != 0 ? TEXT($V{fTotal_Gem_Weight}, "#,###.####") : ""]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="255" y="0" width="65" height="15" uuid="e69edcae-d8a0-4c7d-acbf-79c2f479b452">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -504,7 +505,7 @@ ORDER BY S.name, G.name]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{fTotal_Gold_Weight} != 0 ? TEXT($V{fTotal_Gold_Weight}, "#,###.####") : ""]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="470" y="0" width="90" height="15" uuid="c55161a2-3e64-4334-83a8-b363655086d8">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -525,7 +526,7 @@ ORDER BY S.name, G.name]]>
 	<detail>
 		<band height="15">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="100" height="15" uuid="b331cc34-c38e-410c-9358-1c857f1dc453">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -544,7 +545,7 @@ ORDER BY S.name, G.name]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{group_name}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="100" y="0" width="40" height="15" uuid="e067d8c3-b697-4c72-8615-a1b031812995">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -563,7 +564,7 @@ ORDER BY S.name, G.name]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{qty} != 0 ? TEXT($F{qty}, "#,###") : ""]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="320" y="0" width="65" height="15" uuid="066e6f4c-2847-46f0-a7c4-454e0abed631">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -582,7 +583,7 @@ ORDER BY S.name, G.name]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{q10} != 0 ? TEXT($F{q10}, "#,###.####") : ""]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="385" y="0" width="85" height="15" uuid="76f22a5b-07d1-460d-8903-59089b451c7d">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -602,7 +603,7 @@ ORDER BY S.name, G.name]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fund_fee} != 0 ? TEXT($F{fund_fee}, "#,###") : ""]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="140" y="0" width="65" height="15" uuid="b97e45b1-4c25-4839-be3b-a0dcfa04186f">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -620,7 +621,7 @@ ORDER BY S.name, G.name]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_weight} != 0 ? TEXT($F{total_weight}, "#,###.####") : ""]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="205" y="0" width="50" height="15" uuid="0d5229af-6785-475c-9473-8b89068a7979">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -638,7 +639,7 @@ ORDER BY S.name, G.name]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{gem_weight} != 0 ? TEXT($F{gem_weight}, "#,###.####") : ""]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="255" y="0" width="65" height="15" uuid="edccd799-7f08-4426-a949-97ec4698c408">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -657,7 +658,7 @@ ORDER BY S.name, G.name]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{gold_weight} != 0 ? TEXT($F{gold_weight}, "#,###.####") : ""]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="470" y="0" width="90" height="15" uuid="cc00b862-c550-4de3-93ba-1fba5df685ae">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>

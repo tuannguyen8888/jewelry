@@ -514,6 +514,7 @@
                         ->first();
                     if($counter){
                         DB::table($this->table)->where('id', $order_id)->update(['counter_id' => $counter->id]);
+                        $user = DB::table('cms_users')->where('id', $counter->saler_id)->first();
                         // Log::debug('$counter = ' . Json::encode($counter));
                         if($new_order['payment_method'] == 0){
                             DB::table('gold_counters')->where('id', $counter->id)->update([
@@ -521,17 +522,20 @@
                                 'purchase_amount'=>$counter->purchase_amount + $new_order['pay_gold_amount']
                             ]);
 
-                            $user = DB::table('cms_users')->where('id', $counter->saler_id)->first();
-                            if($user){
-                                DB::table('cms_users')->where('id', $user->id)->update([
-                                    'balance'=>$user->balance + $total_sales - $new_order['pay_gold_amount'],
-                                    'q10'=>$user->q10 + $total_q10
-                                ]);
-                            }
+                            DB::table('cms_users')->where('id', $user->id)->update([
+                                'balance'=>$user->balance + $total_sales - $new_order['pay_gold_amount']
+                            ]);
                         }else{
                             DB::table('gold_counters')->where('id', $counter->id)->update([
-                                'bank_amount'=>$counter->bank_amount + $total_sales,
+                                'bank_amount'=>$counter->bank_amount + ($total_sales - $new_order['pay_gold_amount']),
+                                'sales_amount'=>$counter->sales_amount + $new_order['pay_gold_amount'],
                                 'purchase_amount'=>$counter->purchase_amount + $new_order['pay_gold_amount']
+                            ]);
+                        }
+
+                        if($total_q10 != 0){
+                            DB::table('cms_users')->where('id', $user->id)->update([
+                                'q10'=>$user->q10 + $total_q10
                             ]);
                         }
                     }
@@ -1043,9 +1047,16 @@
                     }
                 }
 
+                $pays = DB::table('gold_sale_order_pays')->whereRaw('deleted_at is null')
+                    ->where('order_id', $order->id)->select(DB::raw('SUM(q10) as q10'))->first();
+                if($pays && $pays->q10){
+                    $q10 += $pays->q10;
+                }
+
                 $counter = DB::table('gold_counters')->where('id', $order->counter_id)->first();    
                 // Log::debug('$counter = ' . Json::encode($counter));
                 if($counter){
+                    $user = DB::table('cms_users')->where('id', $counter->saler_id)->first();
                     $total_sales = $order->gold_amount + $order->fee + $order->balance - $order->discount_amount - $order->reduce - $order->use_points;
                     if($order->payment_method == 0){
                         DB::table('gold_counters')->where('id', $counter->id)->update([
@@ -1053,24 +1064,19 @@
                             'purchase_amount' => $counter->purchase_amount - $order->pay_gold_amount
                         ]);
 
-                        $pays = DB::table('gold_sale_order_pays')->whereRaw('deleted_at is null')
-                            ->where('order_id', $order->id)->select(DB::raw('SUM(q10) as q10'))->first();
-                        if($pays && $pays->q10){
-                            $q10 += $pays->q10;
-                        }
-
-                        $user = DB::table('cms_users')->where('id', $counter->saler_id)->first();
-                        if($user){
-                            DB::table('cms_users')->where('id', $user->id)->update([
-                                'balance' => $user->balance - $total_sales + $order->pay_gold_amount,
-                                'q10' => $user->q10 - $q10
-                            ]);
-                        }
+                        DB::table('cms_users')->where('id', $user->id)->update([
+                            'balance' => $user->balance - ($total_sales - $order->pay_gold_amount)
+                        ]);
                     }else{
                         DB::table('gold_counters')->where('id', $counter->id)->update([
-                            'bank_amount' => $counter->bank_amount - $total_sales,
+                            'bank_amount' => $counter->bank_amount - ($total_sales - $order->pay_gold_amount),
+                            'sales_amount' => $counter->sales_amount - $order->pay_gold_amount,
                             'purchase_amount' => $counter->purchase_amount - $order->pay_gold_amount
                         ]);
+                    }
+
+                    if($q10 != 0){
+                        DB::table('cms_users')->where('id', $user->id)->update(['q10' => $user->q10 - $q10]);
                     }
                 }
 

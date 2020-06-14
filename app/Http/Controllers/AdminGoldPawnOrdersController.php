@@ -77,7 +77,10 @@
             $this->search_form[] = ["label"=>"Từ ngày", "name"=>"order_date_from_date", "data_column"=>"order_date", "search_type"=>"between_from","type"=>"date","width"=>"col-sm-2"];
             $this->search_form[] = ["label"=>"Đến ngày", "name"=>"order_date_to_date", "data_column"=>"order_date", "search_type"=>"between_to","type"=>"date","width"=>"col-sm-2"];
 			$this->search_form[] = ["label"=>"Trạng thái","name"=>"status_search","data_column"=>'gold_pawn_orders.status', "search_type"=>"equals_raw", "type"=>"select","width"=>"col-sm-2",'dataenum'=>\Enums::$PAWN_STATUS];
-			# START FORM DO NOT  REMOVE THIS LINE
+            if(CRUDBooster::myPrivilegeId() == 1 || CRUDBooster::myPrivilegeId() == 4){
+                $this->search_form[] = ["label" => "Cửa hàng", "name" => "brand_id", "data_column"=>$this->table.".brand_id", "search_type"=>"equals_raw", "type" => "select2", "width" => "col-sm-2", 'datatable' => 'gold_brands,name', 'datatable_where' => 'deleted_at is null'];
+            }
+            # START FORM DO NOT  REMOVE THIS LINE
 			$this->form = [];
 			$this->form[] = ['label'=>'Số phiếu','name'=>'order_no','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
             $this->form[] = ['label'=>'Ngày cầm','name'=>'order_date','type'=>'date','validation'=>'required|date_format:Y-m-d H:i:s','width'=>'col-sm-10','help'=>'Số đơn hàng sẽ tự phát sinh khi bạn lưu','readonly'=>'true'];

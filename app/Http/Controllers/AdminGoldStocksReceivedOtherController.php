@@ -32,6 +32,7 @@
 			$this->button_import = false;
 			$this->button_export = true;
 			$this->table = "gold_stocks_received";
+            $this->is_search_form = true;
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
@@ -48,7 +49,12 @@
 			$this->col[] = ["label"=>"Người sửa","name"=>"updated_by","join"=>"cms_users,name"];
 			$this->col[] = ["label"=>"T/g sửa","name"=>"updated_at","callback_php"=>'date_time_format($row->updated_at, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			# END COLUMNS DO NOT REMOVE THIS LINE
-
+            $this->search_form = [];
+            $this->search_form[] = ["label"=>"Từ ngày", "name"=>"received_date_from_date", "data_column"=>"received_date", "search_type"=>"between_from","type"=>"date","width"=>"col-sm-2"];
+            $this->search_form[] = ["label"=>"Đến ngày", "name"=>"received_date_to_date", "data_column"=>"received_date", "search_type"=>"between_to","type"=>"date","width"=>"col-sm-2"];
+            if(CRUDBooster::myPrivilegeId() == 1 || CRUDBooster::myPrivilegeId() == 4){
+                $this->search_form[] = ["label" => "Cửa hàng", "name" => "brand_id", "data_column"=>$this->table.".brand_id", "search_type"=>"equals_raw", "type" => "select2", "width" => "col-sm-2", 'datatable' => 'gold_brands,name', 'datatable_where' => 'deleted_at is null'];
+            }
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
 			$this->form[] = ['label'=>'Số phiếu','name'=>'received_no','type'=>'text','validation'=>'required|min:1|max:20','width'=>'col-sm-4'];
@@ -265,6 +271,11 @@
 	    public function hook_query_index(&$query) {
 	        //Your code here
 	        $query->where('gold_stocks_received.order_type', 1);
+            $current_brand = CRUDBooster::myBrand();
+            $privilegeId = CRUDBooster::myPrivilegeId();
+            if($current_brand && $privilegeId != 1 && $privilegeId != 4){
+                $query->where($this->table.'.brand_id', '=', $current_brand);
+            }
 	    }
 
 	    /*

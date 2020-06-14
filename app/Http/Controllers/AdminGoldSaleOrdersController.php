@@ -72,7 +72,9 @@
                 sub_query=>"(select D.id from gold_sale_order_details as D left join gold_items as I on D.item_id = I.id where ".$this->table.".id = D.order_id and CONVERT(I.total_weight, CHAR) = '[value_search]' limit 1) is not null"];
             $this->search_form[] = ["label"=>"Trọng lượng đá", "name"=>"gem_weight_search","type"=>"text","width"=>"col-sm-2", "search_type"=>"in_details", "mark_value"=>"[value_search]",
                 sub_query=>"(select D.id from gold_sale_order_details as D left join gold_items as I on D.item_id = I.id where ".$this->table.".id = D.order_id and CONVERT(I.gem_weight, CHAR) = '[value_search]' limit 1) is not null"];
-
+            if(CRUDBooster::myPrivilegeId() == 1 || CRUDBooster::myPrivilegeId() == 4){
+                $this->search_form[] = ["label" => "Cửa hàng", "name" => "brand_id", "data_column"=>$this->table.".brand_id", "search_type"=>"equals_raw", "type" => "select2", "width" => "col-sm-2", 'datatable' => 'gold_brands,name', 'datatable_where' => 'deleted_at is null'];
+            }
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];

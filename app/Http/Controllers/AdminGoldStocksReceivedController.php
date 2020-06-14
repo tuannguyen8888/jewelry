@@ -68,7 +68,7 @@
 			$this->form = [];
 			$this->form[] = ['label'=>'Số phiếu','name'=>'received_no','type'=>'text','validation'=>'required|min:1|max:20','width'=>'col-sm-4'];
 			$this->form[] = ['label'=>'Ngày nhập','name'=>'received_date','type'=>'datetime','validation'=>'required|date_format:Y-m-d H:i:s','width'=>'col-sm-4'];
-			$this->form[] = ['label'=>'Nhà chung cấp','name'=>'supplier_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'gold_suppliers,name'];
+			$this->form[] = ['label'=>'Nhà cung cấp','name'=>'supplier_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'gold_suppliers,name'];
 			$this->form[] = ['label'=>'Kho','name'=>'stock_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'gold_stocks,name'];
 			$this->form[] = ['label'=>'Ghi chú','name'=>'notes','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE

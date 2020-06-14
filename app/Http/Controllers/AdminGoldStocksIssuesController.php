@@ -290,6 +290,11 @@
                 $join->on('U.id', '=', $this->table.'.object_id')
                     ->where($this->table.'.object_type', '=', '3');
             });
+            $current_brand = CRUDBooster::myBrand();
+            $privilegeId = CRUDBooster::myPrivilegeId();
+            if($current_brand && $privilegeId != 1 && $privilegeId != 4){
+                $query->where($this->table.'.brand_id', '=', $current_brand);
+            }
             $query->addSelect(DB::raw('CASE WHEN object_type = 0 THEN gold_customers.name WHEN object_type = 1 THEN gold_suppliers.name WHEN object_type = 2 THEN gold_investors.name WHEN object_type = 3 THEN U.name ELSE \'Lỗi\' END as object_name'));
 
         }

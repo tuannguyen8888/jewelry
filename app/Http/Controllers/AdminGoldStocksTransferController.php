@@ -269,7 +269,12 @@
 	    */
 	    public function hook_query_index(&$query) {
 	        //Your code here
-	        
+
+            $current_brand = CRUDBooster::myBrand();
+            $privilegeId = CRUDBooster::myPrivilegeId();
+            if($current_brand && $privilegeId != 1 && $privilegeId != 4){
+                $query->where($this->table.'.brand_id', '=', $current_brand);
+            }
 	    }
 
 	    /*

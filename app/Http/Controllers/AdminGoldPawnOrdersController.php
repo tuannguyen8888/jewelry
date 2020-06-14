@@ -304,6 +304,11 @@
             {
                 $query->where('gold_pawn_orders.saler_id', CRUDBooster::myId());
             }
+            $current_brand = CRUDBooster::myBrand();
+            $privilegeId = CRUDBooster::myPrivilegeId();
+            if($current_brand && $privilegeId != 1 && $privilegeId != 4){
+                $query->where($this->table.'.brand_id', '=', $current_brand);
+            }
 	    }
 
 	    /*

@@ -39,12 +39,12 @@
 			$this->col[] = ["label"=>"Số phiếu","name"=>"order_no"];
 			$this->col[] = ["label"=>"T/g chuyển","name"=>"order_date","callback_php"=>'date_time_format($row->order_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			$this->col[] = ["label"=>"Trạng thái","name"=>"status","callback_php"=>'get_input_status($row->status);'];
-			$this->col[] = ["label"=>"Đối tượng","name"=>"object_id","join"=>"gold_suppliers,name"];
+            $this->col[] = ["label"=>"Đối tượng","name"=>"object_id","callback_php"=>'$row->object_name'];
 			$this->col[] = ["label"=>"Q10","name"=>"q10","callback_php"=>'number_format($row->q10)'];
 			$this->col[] = ["label"=>"Đơn giá","name"=>"price","callback_php"=>'number_format($row->price)'];
 			$this->col[] = ["label"=>"Thành tiền","name"=>"amount","callback_php"=>'number_format($row->amount)'];
 			$this->col[] = ["label"=>"Nội dung","name"=>"notes"];
-			$this->col[] = ["label"=>"Cửa hàng","name"=>"brand_id","join"=>"gold_brands,name"];
+			// $this->col[] = ["label"=>"Cửa hàng","name"=>"brand_id","join"=>"gold_brands,name"];
 			$this->col[] = ["label"=>"Người tạo","name"=>"created_by","join"=>"cms_users,name"];
 			$this->col[] = ["label"=>"T/g tạo","name"=>"created_at","callback_php"=>'date_time_format($row->created_at, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			$this->col[] = ["label"=>"Người sửa","name"=>"updated_by","join"=>"cms_users,name"];
@@ -265,6 +265,23 @@
 	    public function hook_query_index(&$query) {
 	        //Your code here
 			// $query->where('gold_transfer_balance.order_type', 0);
+            $query->leftJoin('gold_customers', function($join)
+            {
+                $join->on('gold_customers.id', '=', $this->table.'.object_id')
+                    ->where($this->table.'.object_type', '=', '0');
+            })->leftJoin('gold_suppliers', function($join)
+            {
+                $join->on('gold_suppliers.id', '=', $this->table.'.object_id')
+                    ->where($this->table.'.object_type', '=', '1');
+            })->leftJoin('gold_investors', function($join)
+            {
+                $join->on('gold_investors.id', '=', $this->table.'.object_id')
+                    ->where($this->table.'.object_type', '=', '2');
+            })->leftJoin('cms_users as U', function($join)
+            {
+                $join->on('U.id', '=', $this->table.'.object_id')
+                    ->where($this->table.'.object_type', '=', '3');
+            });
 	    }
 
 	    /*

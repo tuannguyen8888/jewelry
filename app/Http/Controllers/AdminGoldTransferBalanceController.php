@@ -44,7 +44,7 @@
 			$this->col[] = ["label"=>"Đơn giá","name"=>"price","callback_php"=>'number_format($row->price)'];
 			$this->col[] = ["label"=>"Thành tiền","name"=>"amount","callback_php"=>'number_format($row->amount)'];
 			$this->col[] = ["label"=>"Nội dung","name"=>"notes"];
-			// $this->col[] = ["label"=>"Cửa hàng","name"=>"brand_id","join"=>"gold_brands,name"];
+			$this->col[] = ["label"=>"Cửa hàng","name"=>"brand_id","join"=>"gold_brands,name"];
 			$this->col[] = ["label"=>"Người tạo","name"=>"created_by","join"=>"cms_users,name"];
 			$this->col[] = ["label"=>"T/g tạo","name"=>"created_at","callback_php"=>'date_time_format($row->created_at, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			$this->col[] = ["label"=>"Người sửa","name"=>"updated_by","join"=>"cms_users,name"];
@@ -282,6 +282,7 @@
                 $join->on('U.id', '=', $this->table.'.object_id')
                     ->where($this->table.'.object_type', '=', '3');
             });
+            $query->addSelect(DB::raw('CASE WHEN object_type = 0 THEN gold_customers.name WHEN object_type = 1 THEN gold_suppliers.name WHEN object_type = 2 THEN gold_investors.name WHEN object_type = 3 THEN U.name ELSE \'Lỗi\' END as object_name'));
 	    }
 
 	    /*

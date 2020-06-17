@@ -356,11 +356,15 @@
 				if($order['liquidation_method'] == "0"){
 					$counter['liquidation_amount'] = $counter['liquidation_amount'] + $order['amount'];
 					$amount = $interested['amount'] - $order['amount'];
+					$order['status'] = 3;
                 }
 				if($order['liquidation_method'] == "0" || $order['liquidation_method'] == "1"){
 					$order['liquidation_at'] = $interested['interested_date'];
 					$order['liquidation_by'] = CRUDBooster::myId();
-					$order['status'] = 2;
+
+					if($order['liquidation_method'] == "1"){
+						$order['status'] = 2;
+					}
 				}else{
 					$order['liquidation_method'] = null;
 				}

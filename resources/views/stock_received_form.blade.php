@@ -1242,7 +1242,7 @@
                             console.log('data = ', data);
                             if (data) {
                                 result = data.weight ? Number(data.weight) : 0;
-                                result = parseFloat(result).toPrecision(4);
+                                result = parseFloat(result);
                                 console.log('Gia trị từ dữ liệu = ', result);
                             }
                         },
@@ -1308,7 +1308,8 @@
                                 console.log('data = ', data);
                                 if (data) {
                                     result = data.weight ? Number(data.weight) : 0;
-                                    result = parseFloat(result).toPrecision(4);
+                                    //result = parseFloat(result).toPrecision(4);
+				    result = parseFloat(result);
                                     console.log('Gia trị từ dữ liệu = ', result);
                                 }
                             },

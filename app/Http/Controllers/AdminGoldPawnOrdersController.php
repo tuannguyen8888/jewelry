@@ -59,7 +59,7 @@
 			$this->col[] = ["label"=>"Nhà ĐT","name"=>"investor_id","join"=>"gold_investors,name"];
 			$this->col[] = ["label"=>"Đóng lãi lần cuối","name"=>"last_interested_at","callback_php"=>'date_time_format($row->last_interested_at, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			$this->col[] = ["label"=>"T/g thanh lý","name"=>"liquidation_at","callback_php"=>'date_time_format($row->liquidation_at, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
-			$this->col[] = ["label"=>"HTTL","name"=>"liquidation_method","callback_php"=>'get_liquidation_method($row->liquidation_method);'];
+			// $this->col[] = ["label"=>"HTTL","name"=>"liquidation_method","callback_php"=>'get_liquidation_method($row->liquidation_method);'];
 			$this->col[] = ["label"=>"Nhân viên","name"=>"saler_id","join"=>"cms_users,name"];
 			$this->col[] = ["label"=>"Cửa hàng","name"=>"brand_id","join"=>"gold_brands,name"];
 			# END COLUMNS DO NOT REMOVE THIS LINE

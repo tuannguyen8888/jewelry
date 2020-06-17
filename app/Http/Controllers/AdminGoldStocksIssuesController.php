@@ -420,7 +420,7 @@
 						]);
 					}
 					if(intval($order['object_type']) == 1) {
-                        $supplier = DB::table('gold_suppliers')->where('id', $order['supplier_id'])->first();
+                        $supplier = DB::table('gold_suppliers')->where('id', $order['object_id'])->first();
                         if ($supplier) {
                             DB::table('gold_suppliers')->where('id', $supplier->id)->update([
                                 'q10' => $supplier->q10 - $q10,
@@ -707,7 +707,7 @@
 							'notes' => 'Hủy phiếu xuất [' . $order->order_no . ']'
 						]);
                         if($order->object_type == 1) {
-                            $supplier = DB::table('gold_suppliers')->where('id', $order->supplier_id)->first();
+                            $supplier = DB::table('gold_suppliers')->where('id', $order->object_id)->first();
                             if ($supplier) {
                                 DB::table('gold_suppliers')->where('id', $supplier->id)->update([
                                     'q10' => $supplier->q10 + $detail->q10,

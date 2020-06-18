@@ -1,22 +1,14 @@
 <?php namespace App\Http\Controllers;
-
-	// use Session;
-	// use Request;
-	// use DB;
-	// use CRUDBooster;
-	// use Enums;
-	use Enums;
 	use Psy\Util\Json;
-    use Session;
+	use Session;
 	use Request;
 	use DB;
 	use CRUDBooster;
-    use DateTime;
-    use Illuminate\Support\Facades\Log;
-    use JasperPHP\JasperPHP;
-    use Illuminate\Support\Facades\File;
-    use Response;
-
+	use DateTime;
+	use Illuminate\Support\Facades\Log;
+	use JasperPHP\JasperPHP;
+	use Illuminate\Support\Facades\File;
+	use Response;
 
 	class AdminGoldSuppliersController extends CBExtendController {
 
@@ -363,42 +355,9 @@
 		
 		public function getBalance() {
 			//            $para = Request::all();
-		    file_put_contents('php://stderr', print_r("Data unit=".$data."\n", TRUE));
 			$data = [];
 			$data['page_title'] = 'Công nợ nhà cung cấp';
 			$this->cbView('supplier_balance_form', $data);
-		}
-
-		public function getBalanceDetail($startDate,$endDate = 0) {
-		    //            $para = Request::all();
-		    //First, Add an auth
-		    file_put_contents('php://stderr', print_r("getBalanceDetail(".$startDate.",".$endDate.")\n", TRUE));
-		    if(!CRUDBooster::isView()) CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
-// 		    if(CRUDBooster::myPrivilegeId() == 1) {
-// 		        $users = DB::table('gold_suppliers')->orderBy('employee_code')->get();
-// 		    }else{
-// 		        $users = DB::table('cms_users')->whereRaw('id <> 1')->orderBy('employee_code')->get();
-// 		    }
-		    file_put_contents('php://stderr', print_r("Query Database\n", TRUE));
-		    $balance = DB::table('gold_suppliers')
-		    ->join('gold_sale_orders', 'gold_suppliers.id', '=', 'gold_sale_orders.customer_id')
-		    // ->select('gold_suppliers.code', 'gold_suppliers.name' , DB::raw('MAX(gold_sale_orders.order_date) AS most_recent_date'),
- 		    //     DB::raw('(gold_sale_orders.gold_amount + gold_sale_orders.fee) AS deposit'), 
-			//     'gold_suppliers.balance')
-			->selectRaw('gold_suppliers.code, gold_suppliers.name ,MAX(gold_sale_orders.order_date) AS most_recent_date,
-			(gold_sale_orders.gold_amount + gold_sale_orders.fee) AS deposit, 
-		   gold_suppliers.balance,gold_suppliers.q10')
-// 		    ->where(  ['most_recent_date', '>=', $startDate], ['most_recent_date', '<=', $endDate])
-     ->whereBetween('gold_sale_orders.order_date', [$startDate, $endDate])//Very stupid???????most_recent_date?
-->groupBy('gold_suppliers.id','deposit')
-		    ->get();
-// $balance = DB::raw(" SELECT `gold_suppliers`.`code` , `gold_suppliers`.`name` , MAX(`gold_sale_orders`.`order_date`) AS 'ngay mua gan nhat`gold_sale_orders`',
-// `gold_sale_orders`.`gold_amount` + `gold_sale_orders`.`fee` AS 'tra truoc nha cung cap', `gold_suppliers`.`balance` , `gold_suppliers`.`q10`
-// FROM `gold_suppliers` INNER JOIN `gold_sale_orders` ON `gold_suppliers`.`id` = gold_sale_orders.`customer_id`
-// GROUP BY `gold_suppliers`.`id`
-// ;");
-		    file_put_contents('php://stderr', print_r("Query Done\n", TRUE));
-		    return ['balance'=>$balance];
 		}
 		
 		public function getPrintList($id) {
@@ -427,18 +386,19 @@
             );
 		}
 
-		public function getPrintBalance($startDate,$endDate = 0) {
+		public function getPrintBalance($para) {
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
 			$filename = 'SB_'.time();
-			$parameter = [
-				'from_date'=>$startDate,
-				'to_date'=>$endDate,
-				// 'ids'=>'123456789',
-                 'logo'=>storage_path().'/app/uploads/logo.png'
+			$para_values = explode("@", $para);
+            $parameter = [
+				'to_date'=>$para_values[0],
+				'brand_id'=>$para_values[1],
+				'ids'=>$para_values[2],
+                'logo'=>storage_path().'/app/uploads/logo.png'
 			];
 
-            $input = base_path().'/app/Reports/rpt_suppliers_balance_all.jasper';
+            $input = base_path().'/app/Reports/rpt_supplier_balance.jasper';
             $output = public_path().'/output_reports/'.$filename;
             $jasper->process($input, $output, array('pdf'), $parameter, $database)->execute();
 
@@ -452,6 +412,37 @@
                 array(
                     'Content-type' => 'application/pdf',
                     'Content-Disposition' => 'filename="'.$filename.'.pdf"'
+                )
+            );
+		}
+
+		public function getPrintBalanceXlsx($para) {
+            $jasper = new JasperPHP();
+            $database = \Config::get('database.connections.mysql');
+			$filename = 'SB_'.time();
+            $para_values = explode("@", $para);
+            $parameter = [
+				// 'from_date'=>$para_values[0],
+				'to_date'=>$para_values[0],
+				'brand_id'=>$para_values[1],
+				'ids'=>$para_values[2],
+                'logo'=>storage_path().'/app/uploads/logo.png'
+			];
+            $input = base_path().'/app/Reports/rpt_supplier_balance.jasper';
+            $output = public_path().'/output_reports/'.$filename;
+            $jasper->process($input, $output, array('xlsx'), $parameter, $database)->execute();
+
+            while (!file_exists($output . '.xlsx' )){
+                sleep(1);
+            }
+
+            $file = File::get( $output . '.xlsx' );
+            unlink($output . '.xlsx');
+
+            return Response::make($file, 200,
+                array(
+                    'Content-type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'Content-Disposition' => 'filename="'.$filename.'.xlsx"'
                 )
             );
 		}

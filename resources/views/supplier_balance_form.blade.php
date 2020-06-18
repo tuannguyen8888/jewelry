@@ -13,7 +13,7 @@
 					<div class="col-sm-12">
 						<div class="row">
 							<div class="col-sm-4">
-								<div class="row">
+								<!-- <div class="row">
 									<label class="control-label col-sm-4">Từ ngày <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
 									<div class="col-sm-7">
 										<div class="input-group" >
@@ -23,7 +23,7 @@
 											</div>
 										</div>
 									</div>
-								</div>
+								</div> -->
 								<div class="row">
 									<label class="control-label col-sm-4">Đến ngày <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
 									<div class="col-sm-7">
@@ -33,6 +33,12 @@
 												<i class="fa fa-calendar"></i>
 											</div>
 										</div>
+									</div>
+								</div>
+								<div class="row">
+									<label class="control-label col-sm-4">Cửa hàng <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
+									<div class="col-sm-7">
+										<select id="brand_id" class="form-control"></select>
 									</div>
 								</div>
 								<div class="row">
@@ -46,43 +52,56 @@
 									</div>
 								</div>
 							</div>
+							<div class="col-sm-8">
+								<div class="row">
+									<table id="table_suppliers" class='table table-bordered'>
+										<thead>
+										<tr class="bg-success">
+											<th class="action no-padding text-center"><input id="check_all" type="checkbox" checked="1" onchange="checkAll();" required></th>
+											<th class="sort_no">Stt</th>
+											<th class="supplier_code">Mã nhà cung cấp</th>
+											<th>Tên nhà cung cấp</th>
+										</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+								</div>
+							</div>
 						</div>
 					</div>
 				</form>
 			</div>
 		</div>
-		
 	</div>
-
-	
 	<div class="loading"></div>
 @endsection
 
 @push('bottom')
 	<style>
-		#table_users tbody {
+		#table_suppliers tbody {
 			display:block;
 			max-height:600px;
 			overflow:auto;
 		}
-		#table_users thead, #table_users tfoot, #table_users  tbody tr {
+		#table_suppliers thead, #table_suppliers tfoot, #table_suppliers  tbody tr {
 			display:table;
 			width:100%;
 			table-layout:fixed;
 		}
-		#table_users thead, #table_users tfoot {
+		#table_suppliers thead, #table_suppliers tfoot {
 			width: 100%
 		}
-		#table_users table {
+		#table_suppliers table {
 			width:100%;
 		}
-		#table_users .action{
+		#table_suppliers .action{
 			width: 30px;
 		}
-		#table_users .sort_no{
+		#table_suppliers .sort_no{
 			width: 30px;
 		}
-		#table_users .user_code{
+		#table_suppliers .supplier_code{
 			width: 150px;
 		}
 		.row{
@@ -97,30 +116,15 @@
 	</style>
 
 	<script type="application/javascript">
-		users = [];
-		$('#from_date').datepicker({
-            format:'dd/mm/yyyy',
-            autoclose:true,
-            todayHighlight:true,
-            showOnFocus:false
-        });
-        $('#from_date').val(moment('01/' + moment().format('MM/YYYY'), 'DD/MM/YYYY').format('DD/MM/YYYY'))
-
-		$('#to_date').datepicker({
-            format:'dd/mm/yyyy',
-            autoclose:true,
-            todayHighlight:true,
-            showOnFocus:false
-        });
-        $('#to_date').val(moment().format('DD/MM/YYYY'))
+		suppliers = [];
         $(function (){
-            $('#from_date').datepicker({
-                format:'dd/mm/yyyy',
-                autoclose:true,
-                todayHighlight:true,
-                showOnFocus:false
-            });
-            $('#from_date').val(moment('01/' + moment().format('MM/YYYY'), 'DD/MM/YYYY').format('DD/MM/YYYY'))
+            // $('#from_date').datepicker({
+            //     format:'dd/mm/yyyy',
+            //     autoclose:true,
+            //     todayHighlight:true,
+            //     showOnFocus:false
+            // });
+            // $('#from_date').val(moment('01/' + moment().format('MM/YYYY'), 'DD/MM/YYYY').format('DD/MM/YYYY'))
 
 			$('#to_date').datepicker({
                 format:'dd/mm/yyyy',
@@ -128,55 +132,79 @@
                 todayHighlight:true,
                 showOnFocus:false
             });
-            $('#to_date').val(moment().format('DD/MM/YYYY'))
+			$('#to_date').val(moment().format('DD/MM/YYYY'))
+			loadBrands();
 
-// 			$.ajax({
-//                 method: "GET",
-//                 url: '{{Route("AdminCmsUsersControllerGetUsers")}}',
-//                 data: {
-//                     _token: '{{ csrf_token() }}'
-//                 },
-//                 dataType: "json",
-//                 async: false,
-//                 success: function (data) {
-//                     if (data && data.users) {
-// 						users = data.users;
-// 						loadUser();
-//                     }
-//                 },
-//                 error: function (request, status, error) {
-//                     console.log('PostAdd status = ', status);
-//                     console.log('PostAdd error = ', error);
-//                 }
-//             });
+			$.ajax({
+                method: "GET",
+                url: '{{Route("AdminGoldSuppliersControllerGetSuppliers")}}',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data && data.suppliers) {
+						suppliers = data.suppliers;
+						loadSupplier();
+                    }
+                },
+                error: function (request, status, error) {
+                    console.log('PostAdd status = ', status);
+                    console.log('PostAdd error = ', error);
+                }
+            });
 		});
 
-// 		function loadUser() {
-// 			if (users && users.length > 0) {
-// 				let html = '';
-// 				users.forEach(function (detail, i) {
-// 					html += `<tr id="user_index_${detail.id}">
-// 						<th class="action no-padding text-center"><input id="user_${detail.id}_check" type="checkbox" checked="1" required></th>
-// 						<th class="sort_no text-right">${i + 1}</th>
-// 						<th class="user_code">${detail.employee_code}</th>
-// 						<th>${detail.name}</th>
-// 					</tr>`;					
-// 				});
-// 				// console.log('html = ', html)
-// 				$('#table_users tbody').append(html);
-// 			}
-//         }
+		function loadSupplier() {
+			if (suppliers && suppliers.length > 0) {
+				let html = '';
+				suppliers.forEach(function (detail, i) {
+					html += `<tr id="supplier_index_${detail.id}">
+						<th class="action no-padding text-center"><input id="supplier_${detail.id}_check" type="checkbox" checked="1" required></th>
+						<th class="sort_no text-right">${i + 1}</th>
+						<th class="supplier_code">${detail.code}</th>
+						<th>${detail.name}</th>
+					</tr>`;					
+				});
+				// console.log('html = ', html)
+				$('#table_suppliers tbody').append(html);
+			}
+		}
+		
+		function loadBrands() {
+            $.ajax({
+                method: "GET",
+                url: '{{Route("AdminGoldBrandsControllerGetBrands")}}',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data && data.brands && data.brands.length > 0) {
+                        let html = '';
+						data.brands.forEach(function (detail, i) {
+                            html += `<option value=${detail.id}>${detail.name}</option>`;					
+                        });
+                        $('#brand_id').append(html);
+                    }
+                },
+                error: function (request, status, error) {
+                    console.log('PostAdd status = ', status);
+                    console.log('PostAdd error = ', error);
+                }
+            });
+        }
 
-// 		function checkAll() {
-// 			console.log('checkAll');
-// 			if (users && users.length > 0) {
-// 				// $.ajax({
-// 					users.forEach(function (detail, i) {
-// 						$(`#user_${detail.id}_check`).prop('checked', $(`#check_all`).is(":checked"));
-// 					});
-// 				// });
-// 			}
-//         }
+		function checkAll() {
+			console.log('checkAll');
+			if (suppliers && suppliers.length > 0) {
+				suppliers.forEach(function (detail, i) {
+					$(`#supplier_${detail.id}_check`).prop('checked', $(`#check_all`).is(":checked"));
+				});
+			}
+        }
 
         function popupWindow(url,windowName) {
             window.open(url,windowName,'height=500,width=600');
@@ -184,100 +212,36 @@
         }
 
         function printReport(print) {
-            if(!$('#from_date').val()){
-				alert("Bạn phải chọn từ ngày!");
-				$('#from_date').focus();
-			}else if(!$('#to_date').val()){
+            // if(!$('#from_date').val()){
+			// 	alert("Bạn phải chọn từ ngày!");
+			// 	$('#from_date').focus();
+			// }else 
+			if(!$('#to_date').val()){
 				alert("Bạn phải chọn đến ngày!");
 				$('#to_date').focus();
             }else{
-// 				var user_ids = '';
-// 				if(users && users.length > 0) {
-// 					users.forEach(function (detail, i) {
-// 						if($(`#user_${detail.id}_check`).is(":checked")) {
-// 							if(user_ids){
-// 								user_ids += ',';
-// 							}
-// 							user_ids += detail.id;
-// 						}
-// 					});
-// 				}
-// 				// console.log('user_ids = ', user_ids);
-// 				if(user_ids) {
-// 					var from_date = moment($('#from_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
-// 					var to_date = moment($('#to_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
-// 					// console.log('from_date = ', from_date);
-// 					// console.log('to_date = ', to_date);
-// 					if(print){
-// 						if($('#rpt_type').val() == 0){
-// 							popupWindow("{{action('AdminGoldSaleOrdersController@getPrintSales')}}/P@" + from_date + "@" + to_date + "@" + user_ids,"print");
-// 						}else{
-// 							popupWindow("{{action('AdminGoldSaleOrdersController@getPrintSalesDetail')}}/P@" + from_date + "@" + to_date + "@" + user_ids,"print");
-// 						}
-// 					}else{
-// 						if($('#rpt_type').val() == 0){
-// 							popupWindow("{{action('AdminGoldSaleOrdersController@getPrintSales')}}/X@" + from_date + "@" + to_date + "@" + user_ids,"print");
-// 						}else{
-// 							popupWindow("{{action('AdminGoldSaleOrdersController@getPrintSalesDetail')}}/X@" + from_date + "@" + to_date + "@" + user_ids,"print");
-// 						}
-// 					}
-// 				}else{
-// 					alert("Bạn phải chọn ít nhất 1 kho!");
-// 				}
-				var from_date = moment($('#from_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
-				var to_date = moment($('#to_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
-				// $.ajax({
-                // method: "GET",
-                // url: '{{Route("AdminGoldSuppliersControllerGetBalanceDetail")}}/' + from_date + '/' + to_date,
-                // data: {
-                //     _token: '{{ csrf_token() }}'
-                // },
-                // dataType: "json",
-                // async: false,
-                // success: function (data) {
-                    
-                // 	console.log('getBalanceDetail success with data= ', data);
-                // },
-                // error: function (request, status, error) {
-                //     console.log('PostAdd status = ', status);
-                //     console.log('PostAdd error = ', error);
-                // }
-            	// });
-
-				////Use jasper
-				popupWindow("{{action('AdminGoldSuppliersController@getPrintBalance')}}/" + from_date + "/" + to_date,"print");
-            }
-        }
-
-		function printDetail(isSales) {
-            if(!$('#from_date').val()){
-				alert("Bạn phải chọn từ ngày!");
-				$('#from_date').focus();
-			}else if(!$('#to_date').val()){
-				alert("Bạn phải chọn đến ngày!");
-				$('#to_date').focus();
-            }else{
-				var user_ids = '';
-				if(users && users.length > 0) {
-					users.forEach(function (detail, i) {
-						if($(`#user_${detail.id}_check`).is(":checked")) {
-							if(user_ids){
-								user_ids += ',';
+				var ids = '';
+				if(suppliers && suppliers.length > 0) {
+					suppliers.forEach(function (detail, i) {
+						if($(`#supplier_${detail.id}_check`).is(":checked")) {
+							if(ids){
+								ids += ',';
 							}
-							user_ids += detail.id;
+							ids += detail.id;
 						}
 					});
 				}
-				if(user_ids) {
-					var from_date = moment($('#from_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
+				// console.log('ids = ', ids);
+				if(ids) {
+					// var from_date = moment($('#from_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
 					var to_date = moment($('#to_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
-					if(isSales){
-						popupWindow("{{action('AdminGoldSaleOrdersController@getExportDetail')}}/S@" + from_date + "@" + to_date + "@" + user_ids,"print");
+					if(print){
+						popupWindow("{{action('AdminGoldSuppliersController@getPrintBalance')}}/" + to_date + "@" + $('#brand_id').val() + "@" + ids,"print");
 					}else{
-						popupWindow("{{action('AdminGoldSaleOrdersController@getExportDetail')}}/P@" + from_date + "@" + to_date + "@" + user_ids,"print");
+						popupWindow("{{action('AdminGoldSuppliersController@getPrintBalanceXlsx')}}/" + to_date + "@" + $('#brand_id').val() + "@" +ids,"export");
 					}
 				}else{
-					alert("Bạn phải chọn ít nhất 1 kho!");
+					alert("Bạn phải chọn ít nhất 1 NCC!");
 				}
             }
         }

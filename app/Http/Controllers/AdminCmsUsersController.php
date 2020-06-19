@@ -181,7 +181,7 @@ class AdminCmsUsersController extends CBExtendController {
             'logo'=>storage_path().'/app/uploads/logo.png'
         ];
 
-        $input = base_path().'/app/Reports/rpt_supplier_balance.jasper';
+        $input = base_path().'/app/Reports/rpt_user_balance.jasper';
         $output = public_path().'/output_reports/'.$filename;
         $jasper->process($input, $output, array('pdf'), $parameter, $database)->execute();
 
@@ -211,7 +211,7 @@ class AdminCmsUsersController extends CBExtendController {
             'ids'=>$para_values[2],
             'logo'=>storage_path().'/app/uploads/logo.png'
         ];
-        $input = base_path().'/app/Reports/rpt_supplier_balance.jasper';
+        $input = base_path().'/app/Reports/rpt_user_balance.jasper';
         $output = public_path().'/output_reports/'.$filename;
         $jasper->process($input, $output, array('xlsx'), $parameter, $database)->execute();
 
@@ -243,7 +243,7 @@ class AdminCmsUsersController extends CBExtendController {
             'logo'=>storage_path().'/app/uploads/logo.png'
         ];
 
-        $input = base_path().'/app/Reports/rpt_supplier_balance_detail.jasper';
+        $input = base_path().'/app/Reports/rpt_user_balance_detail.jasper';
         $output = public_path().'/output_reports/'.$filename;
         $jasper->process($input, $output, array('pdf'), $parameter, $database)->execute();
 
@@ -273,7 +273,7 @@ class AdminCmsUsersController extends CBExtendController {
             'ids'=>$para_values[3],
             'logo'=>storage_path().'/app/uploads/logo.png'
         ];
-        $input = base_path().'/app/Reports/rpt_supplier_balance_detail.jasper';
+        $input = base_path().'/app/Reports/rpt_user_balance_detail.jasper';
         $output = public_path().'/output_reports/'.$filename;
         $jasper->process($input, $output, array('xlsx'), $parameter, $database)->execute();
 

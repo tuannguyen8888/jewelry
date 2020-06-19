@@ -359,6 +359,13 @@
 			$data['page_title'] = 'Công nợ nhà cung cấp';
 			$this->cbView('supplier_balance_form', $data);
 		}
+
+		public function getUserBalance() {
+			//            $para = Request::all();
+			$data = [];
+			$data['page_title'] = 'Công nợ nhân viên';
+			$this->cbView('user_balance_form', $data);
+		}
 		
 		public function getPrintList($id) {
             $jasper = new JasperPHP();

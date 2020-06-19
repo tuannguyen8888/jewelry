@@ -39,8 +39,8 @@
 									<label class="control-label col-sm-4">Loại báo cáo <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
 									<div class="col-sm-7">
 										<select id="rpt_type" class="form-control">
-											<option value=0>Tổng hợp</option>
-											<option value=1>Chi tiết</option>
+											<option value=0>Công nợ</option>
+											<option value=1>Bảng đối chiếu công nợ</option>
 										</select>
 									</div>
 								</div>

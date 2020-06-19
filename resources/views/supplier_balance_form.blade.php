@@ -13,7 +13,7 @@
 					<div class="col-sm-12">
 						<div class="row">
 							<div class="col-sm-4">
-								<!-- <div class="row">
+								<div class="row">
 									<label class="control-label col-sm-4">Từ ngày <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
 									<div class="col-sm-7">
 										<div class="input-group" >
@@ -23,7 +23,7 @@
 											</div>
 										</div>
 									</div>
-								</div> -->
+								</div>
 								<div class="row">
 									<label class="control-label col-sm-4">Đến ngày <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
 									<div class="col-sm-7">
@@ -33,6 +33,15 @@
 												<i class="fa fa-calendar"></i>
 											</div>
 										</div>
+									</div>
+								</div>
+								<div class="row">
+									<label class="control-label col-sm-4">Loại báo cáo <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
+									<div class="col-sm-7">
+										<select id="rpt_type" class="form-control">
+											<option value=0>Tổng hợp</option>
+											<option value=1>Chi tiết</option>
+										</select>
 									</div>
 								</div>
 								<div class="row">
@@ -118,13 +127,13 @@
 	<script type="application/javascript">
 		suppliers = [];
         $(function (){
-            // $('#from_date').datepicker({
-            //     format:'dd/mm/yyyy',
-            //     autoclose:true,
-            //     todayHighlight:true,
-            //     showOnFocus:false
-            // });
-            // $('#from_date').val(moment('01/' + moment().format('MM/YYYY'), 'DD/MM/YYYY').format('DD/MM/YYYY'))
+            $('#from_date').datepicker({
+                format:'dd/mm/yyyy',
+                autoclose:true,
+                todayHighlight:true,
+                showOnFocus:false
+            });
+            $('#from_date').val(moment('01/' + moment().format('MM/YYYY'), 'DD/MM/YYYY').format('DD/MM/YYYY'))
 
 			$('#to_date').datepicker({
                 format:'dd/mm/yyyy',
@@ -212,11 +221,10 @@
         }
 
         function printReport(print) {
-            // if(!$('#from_date').val()){
-			// 	alert("Bạn phải chọn từ ngày!");
-			// 	$('#from_date').focus();
-			// }else 
-			if(!$('#to_date').val()){
+            if(!$('#from_date').val()){
+				alert("Bạn phải chọn từ ngày!");
+				$('#from_date').focus();
+			}else if(!$('#to_date').val()){
 				alert("Bạn phải chọn đến ngày!");
 				$('#to_date').focus();
             }else{
@@ -233,12 +241,20 @@
 				}
 				// console.log('ids = ', ids);
 				if(ids) {
-					// var from_date = moment($('#from_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
+					var from_date = moment($('#from_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
 					var to_date = moment($('#to_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
 					if(print){
-						popupWindow("{{action('AdminGoldSuppliersController@getPrintBalance')}}/" + to_date + "@" + $('#brand_id').val() + "@" + ids,"print");
+						if($('#rpt_type').val() == 0){
+							popupWindow("{{action('AdminGoldSuppliersController@getPrintBalance')}}/" + to_date + "@" + $('#brand_id').val() + "@" + ids,"print");
+						}else{
+							popupWindow("{{action('AdminGoldSuppliersController@getPrintBalanceDetail')}}/" + from_date + "@" + to_date + "@" + $('#brand_id').val() + "@" + ids,"print");
+						}
 					}else{
-						popupWindow("{{action('AdminGoldSuppliersController@getPrintBalanceXlsx')}}/" + to_date + "@" + $('#brand_id').val() + "@" +ids,"export");
+						if($('#rpt_type').val() == 0){
+							popupWindow("{{action('AdminGoldSuppliersController@getPrintBalanceXlsx')}}/" + to_date + "@" + $('#brand_id').val() + "@" +ids,"export");
+						}else{
+							popupWindow("{{action('AdminGoldSuppliersController@getPrintBalanceDetailXlsx')}}/" + from_date + "@" + to_date + "@" + $('#brand_id').val() + "@" +ids,"export");
+						}
 					}
 				}else{
 					alert("Bạn phải chọn ít nhất 1 NCC!");

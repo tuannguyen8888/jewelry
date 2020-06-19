@@ -446,4 +446,66 @@
                 )
             );
 		}
+
+		public function getPrintBalanceDetail($para) {
+            $jasper = new JasperPHP();
+            $database = \Config::get('database.connections.mysql');
+			$filename = 'SB_'.time();
+			$para_values = explode("@", $para);
+            $parameter = [
+				'from_date'=>$para_values[0],
+				'to_date'=>$para_values[1],
+				'brand_id'=>$para_values[2],
+				'ids'=>$para_values[3],
+                'logo'=>storage_path().'/app/uploads/logo.png'
+			];
+
+            $input = base_path().'/app/Reports/rpt_supplier_balance_detail.jasper';
+            $output = public_path().'/output_reports/'.$filename;
+            $jasper->process($input, $output, array('pdf'), $parameter, $database)->execute();
+
+            while (!file_exists($output.'.pdf' )){
+                sleep(1);
+            }
+
+            $file = File::get( $output.'.pdf' );
+
+            return Response::make($file, 200,
+                array(
+                    'Content-type' => 'application/pdf',
+                    'Content-Disposition' => 'filename="'.$filename.'.pdf"'
+                )
+            );
+		}
+
+		public function getPrintBalanceDetailXlsx($para) {
+            $jasper = new JasperPHP();
+            $database = \Config::get('database.connections.mysql');
+			$filename = 'SB_'.time();
+            $para_values = explode("@", $para);
+            $parameter = [
+				'from_date'=>$para_values[0],
+				'to_date'=>$para_values[1],
+				'brand_id'=>$para_values[2],
+				'ids'=>$para_values[3],
+                'logo'=>storage_path().'/app/uploads/logo.png'
+			];
+            $input = base_path().'/app/Reports/rpt_supplier_balance_detail.jasper';
+            $output = public_path().'/output_reports/'.$filename;
+            $jasper->process($input, $output, array('xlsx'), $parameter, $database)->execute();
+
+            while (!file_exists($output . '.xlsx' )){
+                sleep(1);
+            }
+
+            $file = File::get( $output . '.xlsx' );
+            unlink($output . '.xlsx');
+
+            return Response::make($file, 200,
+                array(
+                    'Content-type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'Content-Disposition' => 'filename="'.$filename.'.xlsx"'
+                )
+            );
+		}
 	}

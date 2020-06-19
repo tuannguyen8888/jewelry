@@ -316,11 +316,11 @@
                 valid = false;
                 $('#notes').addClass('invalid');
             }
-            if(($('#q10').val() ? Number($('#q10').val().replace(/,/g, '')) : 0) == 0){
+            if(($('#q10').val() ? AutoNumeric.getAutoNumericElement(`#q10`).getNumber() : 0) == 0){
                 valid = false;
                 $('#q10').addClass('invalid');
             }
-            if(($('#price').val() ? Number($('#price').val().replace(/,/g, '')) : 0) == 0){
+            if(($('#price').val() ? AutoNumeric.getAutoNumericElement(`#price`).getNumber() : 0) <= 0){
                 valid = false;
                 $('#price').addClass('invalid');
             }

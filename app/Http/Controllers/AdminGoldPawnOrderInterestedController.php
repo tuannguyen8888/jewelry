@@ -168,8 +168,8 @@
 	        */
 	        $this->index_statistic = array();
             $this->index_statistic[] = ['label'=>'Tổng số phiếu','use_main_query'=>true,'operator'=>'count','icon'=>'fa fa-newspaper-o','color'=>'success'];
-            $this->index_statistic[] = ['label'=>'Tổng số tiền cầm','use_main_query'=>true,'operator'=>'sum','field'=>'gold_pawn_orders.amount','icon'=>'fa fa-usd','color'=>'danger'];
-            $this->index_statistic[] = ['label'=>'Tổng số tiền lãi','use_main_query'=>true,'operator'=>'sum','field'=>'gold_pawn_order_interested.amount','icon'=>'fa fa-money','color'=>'warning'];
+            $this->index_statistic[] = ['label'=>'Tổng số tiền cầm','use_main_query'=>true,'operator'=>'sum','field'=>'gold_pawn_order_interested.pawn_amount','icon'=>'fa fa-usd','color'=>'danger'];
+            $this->index_statistic[] = ['label'=>'Tổng số tiền lãi','use_main_query'=>true,'operator'=>'sum','field'=>'gold_pawn_order_interested.interested_amount','icon'=>'fa fa-money','color'=>'warning'];
             $this->index_statistic[] = ['label'=>'Số khách hàng','use_main_query'=>true,'operator'=>'count_distinct','field'=>'gold_pawn_order_interested.customer_id','icon'=>'fa fa-users','color'=>'info'];
 
 

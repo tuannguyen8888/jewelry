@@ -6,6 +6,7 @@ class Enums{
     public static $INPUT_STATUS = "0|<label class='label label-success label-status' data-code='0'>Đang nhập</label>;1|<label class='label label-primary label-status' data-code='1'>Hoàn tất</label>;2|<label class='label label-warning label-status' data-code='2'>Đã bán</label>;3|<label class='label label-warning label-status' data-code='3'>Đã trả hàng</label>";
     public static $COUNTER_STATUS = "0|<label class='label label-info label-status' data-code='0'>Mở sổ</label>;1|<label class='label label-primary label-status' data-code='1'>Đóng sổ</label>;2|<label class='label label-success label-status' data-code='2'>Khóa sổ</label>";
     public static $PAWN_STATUS = "0|<label class='label label-info label-status' data-code='0'>Đang nhập</label>;1|<label class='label label-warning label-status' data-code='1'>Đang cầm</label>;2|<label class='label label-primary label-status' data-code='2'>Đã thanh lý</label>;3|<label class='label label-success label-status' data-code='3'>Đã tất toán</label>";
+    public static $DUE_STATUS = "1|<label class='label label-primary label-status' data-code='1'>Đúng hạn</label>;2|<label class='label label-danger label-status' data-code='2'>Quá hạn</label>";
     public static $CUSTOMER_TYPE = "0|<label class='label label-info'>Thường</label>;1|<label class='label label-primary'>VIP</label>";
     public static $LIQUIDATION_METHOD = "0|<label class='label label-success'>Tất toán</label>;1|<label class='label label-primary'>Thanh lý</label>";
     public static $PAYMENT_METHOD = "0|<label class='label label-success'>Tiền mặt</label>;1|<label class='label label-primary'>Chuyển khoản</label>";
@@ -82,6 +83,11 @@ if (!function_exists('get_input_status')) {
 if (!function_exists('get_pawn_status')) {
     function get_pawn_status($status) {
         return get_string_in_array (Enums::$PAWN_STATUS, $status);
+    }
+}
+if (!function_exists('get_due_status')) {
+    function get_due_status($status) {
+        return '<br>'.get_string_in_array (Enums::$DUE_STATUS, $status);
     }
 }
 

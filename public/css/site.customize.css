@@ -65,3 +65,7 @@
 .invisible{
     visibility: hidden;;
 }
+
+#search-form .input-group input.form-control.notfocus.invisible{
+    display: none !important;
+}

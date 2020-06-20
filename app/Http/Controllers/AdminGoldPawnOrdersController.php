@@ -50,7 +50,7 @@
 			$this->col = [];
 			$this->col[] = ["label"=>"Số phiếu","name"=>"order_no","width"=>"100"];
 			$this->col[] = ["label"=>"T/g cầm","name"=>"order_date","callback_php"=>'date_time_format($row->order_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
-			$this->col[] = ["label"=>"Trạng thái","name"=>"status","callback_php"=>'get_pawn_status($row->status);'];
+			$this->col[] = ["label"=>"Trạng thái","name"=>"status","callback_php"=>'get_pawn_status($row->status).get_due_status($row->due_status)'];
 			$this->col[] = ["label"=>"Mã KH","name"=>"customer_id","join"=>"gold_customers,code"];
 			$this->col[] = ["label"=>"Tên KH","name"=>"customer_id","join"=>"gold_customers,name"];
 			$this->col[] = ["label"=>"Số tiền","name"=>"amount", "callback_php"=>'number_format($row->amount)'];
@@ -76,10 +76,17 @@
             $this->search_form[] = ["label"=>"Nhân viên", "name"=>"saler", "data_column"=>"gold_pawn_orders.saler_id", "search_type"=>"equals_raw","type"=>"select2","width"=>"col-sm-2", 'datatable'=>'cms_users,name', 'datatable_where'=>CRUDBooster::myPrivilegeId() == 2 ? 'id = '.CRUDBooster::myId() : 'id_cms_privileges in (2,3,4,5)', 'datatable_format'=>"employee_code,' - ',name,' (',email,')'"];
             $this->search_form[] = ["label"=>"Từ ngày", "name"=>"order_date_from_date", "data_column"=>"order_date", "search_type"=>"between_from","type"=>"date","width"=>"col-sm-2"];
             $this->search_form[] = ["label"=>"Đến ngày", "name"=>"order_date_to_date", "data_column"=>"order_date", "search_type"=>"between_to","type"=>"date","width"=>"col-sm-2"];
-			$this->search_form[] = ["label"=>"Trạng thái","name"=>"status_search","data_column"=>'gold_pawn_orders.status', "search_type"=>"equals_raw", "type"=>"select","width"=>"col-sm-2",'dataenum'=>\Enums::$PAWN_STATUS];
+
             if(CRUDBooster::myPrivilegeId() == 1 || CRUDBooster::myPrivilegeId() == 4){
                 $this->search_form[] = ["label" => "Cửa hàng", "name" => "brand_id", "data_column"=>$this->table.".brand_id", "search_type"=>"equals_raw", "type" => "select2", "width" => "col-sm-2", 'datatable' => 'gold_brands,name', 'datatable_where' => 'deleted_at is null'];
             }
+            $this->search_form[] = ["label"=>"Xuống dòng", "name"=>"break_line", "type"=>"break_line"];
+
+			$this->search_form[] = ["label"=>"Trạng thái","name"=>"status_search","data_column"=>'gold_pawn_orders.status', "search_type"=>"equals_raw", "type"=>"select","width"=>"col-sm-2",'dataenum'=>\Enums::$PAWN_STATUS];
+            $this->search_form[] = ["label"=>"Đúng hạn/Quá hạn", "name"=>"due_date","type"=>"select","width"=>"col-sm-2",'dataenum'=>\Enums::$DUE_STATUS, "search_type"=>"in_details", "mark_value"=>"[value_search]",
+                sub_query=>"CASE WHEN gold_pawn_orders.status = 1 THEN (CASE WHEN ((gold_pawn_orders.last_interested_at is null and DATEDIFF(NOW(),gold_pawn_orders.order_date) > 30) or (gold_pawn_orders.last_interested_at is not null and  DATEDIFF(NOW(),gold_pawn_orders.last_interested_at) > 30)) THEN 2 ELSE 1 END) ELSE 0 END = [value_search]"
+            ];
+
             # START FORM DO NOT  REMOVE THIS LINE
 			$this->form = [];
 			$this->form[] = ['label'=>'Số phiếu','name'=>'order_no','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
@@ -312,6 +319,7 @@
             if($current_brand && $privilegeId != 1 && $privilegeId != 4){
                 $query->where($this->table.'.brand_id', '=', $current_brand);
             }
+            $query->addSelect(DB::raw('CASE WHEN gold_pawn_orders.status = 1 THEN (CASE WHEN ((gold_pawn_orders.last_interested_at is null and DATEDIFF(NOW(),gold_pawn_orders.order_date) > 30) or (gold_pawn_orders.last_interested_at is not null and  DATEDIFF(NOW(),gold_pawn_orders.last_interested_at) > 30)) THEN 2 ELSE 1 END) ELSE 0 END as due_status'));
 	    }
 
 	    /*

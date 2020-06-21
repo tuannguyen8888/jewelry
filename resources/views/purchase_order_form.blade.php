@@ -74,6 +74,7 @@
                                     <th>Tuổi vàng</th>
                                     <th>Q10</th>
                                     <th>Đơn giá</th>
+                                    <th>Tiền công</th>
                                     <th>Thành tiền</th>
                                     <th>Ghi chú</th>
                                 </tr>
@@ -84,7 +85,7 @@
                                 <tfoot>
                                 <tr>
                                     <th class="text-center"><a onclick="addNewPayDetail()" class="text-blue" style="cursor: pointer;"><i class="fa fa-plus"></i></a></th>
-                                    <th colspan="8"></th>
+                                    <th colspan="9"></th>
                                 </tr>
                                 <tr class="bg-gray-active">
                                     <th colspan="3" class="text-center">Tổng cộng</th>
@@ -95,16 +96,17 @@
                                     <th></th>
                                     <th id="total_pay_q10" class="text-right">0</th>
                                     <th></th>
+                                    <th id="total_pay_gold_fee" class="text-right">0</th>
                                     <th id="total_pay_gold_amount" class="text-right">0</th>
                                     <th></th>
                                 </tr>
                                 <tr class="bg-success">
-                                    <th colspan="10" class="text-right">Phí dịch vụ</th>
+                                    <th colspan="11" class="text-right">Phí dịch vụ</th>
                                     <th class="no-padding"><input type="text" name="fee" id="fee" onchange="calcTotalOfPays()" class="form-control money"></th>
                                     <th></th>
                                 </tr>
                                 <tr class="bg-danger">
-                                    <th colspan="10" class="text-right">Tổng tiền trả cho khách</th>
+                                    <th colspan="11" class="text-right">Tổng tiền trả cho khách</th>
                                     <th id="total_pay_amount" class="text-right" style="color:#f30707">0</th>
                                     <th></th>
                                 </tr>
@@ -219,6 +221,7 @@
 			abate_weight: 0,
             gold_weight: 0,
             gold_amount: 0,
+            gold_fee: 0,
             q10: 0,
             fee: 0
         };
@@ -314,6 +317,7 @@
                                 total_pay.abate_weight += detail.abate_weight;
                                 total_pay.gold_weight += detail.gold_weight;
                                 total_pay.gold_amount += detail.amount;
+                                total_pay.gold_fee += detail.fee;
                                 total_pay.q10 += detail.q10;
                                 loadPayDetail(detail);
                             });
@@ -421,6 +425,7 @@
                     <th class="no-padding"><input id="pay${data.id}_age" onchange="pay_age_change(${data.id})" type="text" class="form-control money" value="${data.age}"></th>
                     <th class="text-right" id="pay${data.id}_q10">${data.q10}</th>
                     <th class="no-padding"><input id="pay${data.id}_price" onchange="pay_price_change(${data.id})" type="text" class="form-control money" value="${data.price}"></th>
+                    <th class="no-padding"><input id="pay${data.id}_fee" onchange="pay_price_change(${data.id})" type="text" class="form-control money" value="${data.fee}"></th>
                     <th class="text-right" id="pay${data.id}_amount">${data.amount.toLocaleString('en-US')}</th>
                     <th class="no-padding"><input id="pay${data.id}_notes" onchange="pay_notes_change(${data.id})" type="text" class="form-control value="${data.notes}"></th>
                 </tr>`;
@@ -464,6 +469,7 @@
                     <th class="no-padding"><input id="pay${tmp_id}_age" onchange="pay_age_change(${tmp_id})" type="text" class="form-control money" value="${tmp_age.toLocaleString('en-US')}"></th>
                     <th class="text-right" id="pay${tmp_id}_q10">0</th>
                     <th class="no-padding"><input id="pay${tmp_id}_price" onchange="pay_price_change(${tmp_id})" type="text" class="form-control money" value="${tmp_price.toLocaleString('en-US')}"></th>
+                    <th class="no-padding"><input id="pay${tmp_id}_fee" onchange="pay_price_change(${tmp_id})" type="text" class="form-control money" value="0"></th>
                     <th class="text-right" id="pay${tmp_id}_amount">0</th>
                     <th class="no-padding"><input id="pay${tmp_id}_notes" onchange="pay_notes_change(${tmp_id})" type="text" class="form-control"></th>
                 </tr>`;
@@ -479,6 +485,7 @@
                 age: tmp_age,
                 q10: 0,
                 price: tmp_price,
+                fee: 0,
                 amount: 0,
             });
 
@@ -513,6 +520,7 @@
                 gold_weight: 0,
                 q10: 0,
                 gold_amount: 0,
+                gold_fee: 0,
             };
             order_pays.forEach(function (pay, i) {
                 total_pay.total_weight += pay.total_weight ? pay.total_weight : 0;
@@ -521,6 +529,7 @@
                 total_pay.gold_weight += pay.gold_weight ? pay.gold_weight : 0;
                 total_pay.q10 += pay.q10 ? pay.q10 : 0;
                 total_pay.gold_amount += pay.amount ? pay.amount : 0;
+                total_pay.gold_fee += pay.fee ? pay.fee : 0;
             });
             calcTotalOfPays();
         }
@@ -571,7 +580,7 @@
                     pay.total_weight = $(`#pay${pay.id}_total_weight`).val()?Number($(`#pay${pay.id}_total_weight`).val().replace(/,/g, '')):0;
                     pay.gold_weight = Math.round((pay.total_weight - pay.gem_weight - pay.abate_weight) * 10000) / 10000;
                     pay.q10 = Math.round((pay.gold_weight * pay.age / 100) * 10000) / 10000;
-                    pay.amount = Math.round(pay.gold_weight * pay.price);
+                    pay.amount = Math.round(pay.gold_weight * pay.price) + pay.fee;
 
                     $(`#pay${pay.id}_gold_weight`).html(pay.gold_weight.toLocaleString('en-US'));
                     $(`#pay${pay.id}_q10`).html(pay.q10.toLocaleString('en-US'));
@@ -596,7 +605,7 @@
                     pay.gem_weight = $(`#pay${pay.id}_gem_weight`).val()?Number($(`#pay${pay.id}_gem_weight`).val().replace(/,/g, '')):0;
                     pay.gold_weight = Math.round((pay.total_weight - pay.gem_weight - pay.abate_weight) * 10000) / 10000;
                     pay.q10 = Math.round((pay.gold_weight * pay.age / 100) * 10000) / 10000;
-                    pay.amount = Math.round(pay.gold_weight * pay.price);
+                    pay.amount = Math.round(pay.gold_weight * pay.price) + pay.fee;
 
                     $(`#pay${pay.id}_gold_weight`).html(pay.gold_weight.toLocaleString('en-US'));
                     $(`#pay${pay.id}_q10`).html(pay.q10.toLocaleString('en-US'));
@@ -621,7 +630,7 @@
                     pay.abate_weight = $(`#pay${pay.id}_abate_weight`).val()?Number($(`#pay${pay.id}_abate_weight`).val().replace(/,/g, '')):0;
                     pay.gold_weight = Math.round((pay.total_weight - pay.gem_weight - pay.abate_weight) * 10000) / 10000;
                     pay.q10 = Math.round((pay.gold_weight * pay.age / 100) * 10000) / 10000;
-                    pay.amount = Math.round(pay.gold_weight * pay.price);
+                    pay.amount = Math.round(pay.gold_weight * pay.price) + pay.fee;
 
                     $(`#pay${pay.id}_gold_weight`).html(pay.gold_weight.toLocaleString('en-US'));
                     $(`#pay${pay.id}_q10`).html(pay.q10.toLocaleString('en-US'));
@@ -652,15 +661,18 @@
 
         function pay_price_change(changeId) {
             total_pay.gold_amount = 0;
+            total_pay.gold_fee = 0;
 
             order_pays.forEach(function (pay, i) {
                 if(pay.id == changeId) {
                     pay.price = $(`#pay${pay.id}_price`).val()?Number($(`#pay${pay.id}_price`).val().replace(/,/g, '')):0;
-                    pay.amount = Math.round(pay.gold_weight * pay.price);
+                    pay.fee = $(`#pay${pay.id}_fee`).val()?Number($(`#pay${pay.id}_fee`).val().replace(/,/g, '')):0;
+                    pay.amount = Math.round(pay.gold_weight * pay.price) + pay.fee;
 
                     $(`#pay${pay.id}_amount`).html(pay.amount.toLocaleString('en-US'));
                 }
                 total_pay.gold_amount += pay.amount ? pay.amount : 0;
+                total_pay.gold_fee += pay.fee ? pay.fee : 0;
             });
             calcTotalOfPays();
         }
@@ -672,6 +684,7 @@
             $('#total_pay_gold_weight').html(total_pay.gold_weight ? total_pay.gold_weight.toLocaleString('en-US') : 0);
             $('#total_pay_q10').html(total_pay.q10 ? total_pay.q10.toLocaleString('en-US') : 0);
             $('#total_pay_gold_amount').html(total_pay.gold_amount ? total_pay.gold_amount.toLocaleString('en-US') : 0);
+            $('#total_pay_gold_fee').html(total_pay.gold_fee ? total_pay.gold_fee.toLocaleString('en-US') : 0);
 
             total_pay.fee = $('#fee').val() ? Number($('#fee').val().replace(/,/g, '')) : 0;
             $('#total_pay_amount').html(((total_pay.gold_amount ? total_pay.gold_amount : 0) - total_pay.fee).toLocaleString('en-US'));

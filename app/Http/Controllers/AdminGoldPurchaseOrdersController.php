@@ -52,6 +52,7 @@
             $this->col[] = ["label"=>"Ngày đơn hàng","name"=>"order_date","callback_php"=>'date_time_format($row->order_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			$this->col[] = ["label"=>"Mã khách hàng","name"=>"customer_id","join"=>"gold_customers,code"];
 			$this->col[] = ["label"=>"Tên khách hàng","name"=>"customer_id","join"=>"gold_customers,name"];
+			$this->col[] = ["label"=>"Số tiền","name"=>DB::raw('(amount + fee) as amount'),"callback_php"=>'number_format($row->amount)'];
 			$this->col[] = ["label"=>"Nhân viên","name"=>"purchase_id","join"=>"cms_users,name"];
 			$this->col[] = ["label"=>"Cửa hàng","name"=>"brand_id","join"=>"gold_brands,name"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
@@ -419,7 +420,8 @@
 								'gold_weight' => $pay['gold_weight'],
 								'age' => $pay['age'],
 								'q10' => $pay['q10'],
-                                'price' => $pay['price'],
+								'price' => $pay['price'],
+								'fee' => $pay['fee'],
                                 'amount' => $pay['amount'],
                                 'notes' => $pay['notes'],
                                 'created_by' => CRUDBooster::myId()
@@ -474,7 +476,8 @@
 					'SOP.abate_weight',
 					'SOP.age',
 					'SOP.q10',
-                    'SOP.price',
+					'SOP.price',
+					'SOP.fee',
                     'SOP.amount',
                     'SOP.notes')
                 ->get();
@@ -527,6 +530,7 @@
             $database = \Config::get('database.connections.mysql');
 			$filename = 'MHB_'.time();
 			$parameter = [
+				'brand_id'=>CRUDBooster::myBrand(),
                 'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'), 
                 'background'=>storage_path().'/app/'.CRUDBooster::getSetting('favicon'),
             ];

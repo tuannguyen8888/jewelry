@@ -1288,6 +1288,8 @@
             console.log('autoGetDataDevice()');
             if(cb.checked == true) {
                 console.log('checked event');
+                $('#device_data').prop('readonly', true);
+                $('#device_data').prop('disabled', true);
                 intervalId = setInterval(function()
                 {
                     if(local_server_active)
@@ -1327,6 +1329,8 @@
             }
             else {
                 console.log('unchecked event');
+                $('#device_data').prop('readonly', false);
+                $('#device_data').prop('disabled', false);
                 if(intervalId)
                 {
                     clearInterval(intervalId);

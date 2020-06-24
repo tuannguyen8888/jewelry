@@ -300,12 +300,14 @@
 					var from_date = moment($('#from_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
 					var to_date = moment($('#to_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
 					if(isSales){
-						popupWindow("{{action('AdminGoldSaleOrdersController@getExportDetail')}}/S@" + from_date + "@" + to_date + "@" + user_ids,"print");
+					    window.location.href = "{{action('AdminGoldSaleOrdersController@getReportDetails')}}/S@" + from_date + "@" + to_date + "@" + user_ids;
+						{{--popupWindow("{{action('AdminGoldSaleOrdersController@getReportDetails')}}/S@" + from_date + "@" + to_date + "@" + user_ids,"print");--}}
 					}else{
-						popupWindow("{{action('AdminGoldSaleOrdersController@getExportDetail')}}/P@" + from_date + "@" + to_date + "@" + user_ids,"print");
+                        window.location.href = "{{action('AdminGoldSaleOrdersController@getReportDetails')}}/P@" + from_date + "@" + to_date + "@" + user_ids;
+						{{--popupWindow("{{action('AdminGoldSaleOrdersController@getExportDetail')}}/P@" + from_date + "@" + to_date + "@" + user_ids,"print");--}}
 					}
 				}else{
-					alert("Bạn phải chọn ít nhất 1 kho!");
+					alert("Bạn phải chọn ít nhất 1 saler!");
 				}
             }
         }

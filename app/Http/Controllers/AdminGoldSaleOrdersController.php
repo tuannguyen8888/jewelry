@@ -979,6 +979,36 @@
                 )
             );
         }
+
+        public function getReportDetails($para){
+            $jasper = new JasperPHP();
+            $database = \Config::get('database.connections.mysql');
+            $filename = 'ED_'.time();
+            $paras = explode('@', $para);
+            $parameter = [
+                'from_date'=>$paras[1],
+                'to_date'=>$paras[2],
+                'user_ids'=>$paras[3],
+                'logo'=>storage_path().'/app/uploads/logo.png'
+            ];
+            $input = base_path().'/app/Reports/' . ($paras[0] == 'S' ? 'rpt_report_sales_details' : 'rpt_report_purchase_details') . '.jasper';
+            $output = public_path().'/output_reports/'.$filename;
+            $jasper->process($input, $output, array('xlsx'), $parameter, $database)->execute();
+
+            while (!file_exists($output . '.xlsx')){
+                sleep(1);
+            }
+
+            $file = File::get($output . '.xlsx');
+            unlink($output . '.xlsx');
+
+            return Response::make($file, 200,
+                array(
+                    'Content-type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'Content-Disposition' => 'filename="' . $filename . '.xlsx"'
+                )
+            );
+        }
 	    /* 
 	    | ---------------------------------------------------------------------- 
 	    | Hook for execute command after add public static function called 

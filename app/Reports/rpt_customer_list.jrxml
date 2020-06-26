@@ -2000,8 +2000,13 @@ WHERE C.id = $P{id}]]>
 								<rightPen lineWidth="1.0"/>
 							</box>
 							<textField>
-								<reportElement x="0" y="0" width="120" height="15" uuid="a260e95d-48b2-448f-917a-92a779d6522d"/>
-								<textElement verticalAlignment="Middle"/>
+								<reportElement x="0" y="0" width="120" height="15" uuid="a260e95d-48b2-448f-917a-92a779d6522d">
+									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+								</reportElement>
+								<textElement verticalAlignment="Middle">
+									<paragraph leftIndent="2" rightIndent="2"/>
+								</textElement>
 								<textFieldExpression><![CDATA[$F{order_date}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>

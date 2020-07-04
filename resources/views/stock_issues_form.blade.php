@@ -591,6 +591,10 @@
                 valid = false;
                 $('#order_date').addClass('invalid');
             }
+            if( '{{CRUDBooster::myPrivilegeId()}}'!='4' && !$('#object_id').val()){
+                valid = false;
+                $('#object_id').addClass('invalid');
+            }
 
             if(!valid) {
                 swal("Thông báo", "Dữ liệu chưa được nhập đầy đủ, vui lòng kiểm tra lại.", "warning");

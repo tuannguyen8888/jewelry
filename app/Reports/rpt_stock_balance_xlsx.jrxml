@@ -464,7 +464,7 @@ WHERE id =  $P{id}]]>
 									<font fontName="Arial" size="11" isBold="true" isItalic="false"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$V{fTotal_Total_Weight} != 0 ? TEXT($V{fTotal_Total_Weight}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{fTotal_Total_Weight} != 0 ? TEXT($V{fTotal_Total_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 							</textField>
 						</jr:tableFooter>
 						<jr:detailCell height="15">
@@ -483,7 +483,7 @@ WHERE id =  $P{id}]]>
 									<font fontName="Arial" size="11"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{total_weight} != 0 ? TEXT($F{total_weight}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{total_weight} != 0 ? TEXT($F{total_weight}, "#,##0.0000") : ""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -507,7 +507,7 @@ WHERE id =  $P{id}]]>
 									<font fontName="Arial" size="11" isBold="true" isItalic="false"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$V{fTotal_Gem_Weight} != 0 ? TEXT($V{fTotal_Gem_Weight}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{fTotal_Gem_Weight} != 0 ? TEXT($V{fTotal_Gem_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 							</textField>
 						</jr:tableFooter>
 						<jr:detailCell height="15">
@@ -525,7 +525,7 @@ WHERE id =  $P{id}]]>
 									<font fontName="Arial" size="11"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{gem_weight} != 0 ? TEXT($F{gem_weight}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{gem_weight} != 0 ? TEXT($F{gem_weight}, "#,##0.0000") : ""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -549,7 +549,7 @@ WHERE id =  $P{id}]]>
 									<font fontName="Arial" size="11" isBold="true" isItalic="false"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$V{fTotal_Gold_Weight} != 0 ? TEXT($V{fTotal_Gold_Weight}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{fTotal_Gold_Weight} != 0 ? TEXT($V{fTotal_Gold_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 							</textField>
 						</jr:tableFooter>
 						<jr:detailCell height="15">
@@ -567,7 +567,7 @@ WHERE id =  $P{id}]]>
 									<font fontName="Arial" size="11"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{gold_weight} != 0 ? TEXT($F{gold_weight}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{gold_weight} != 0 ? TEXT($F{gold_weight}, "#,##0.0000") : ""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -588,7 +588,7 @@ WHERE id =  $P{id}]]>
 									<font fontName="Arial" size="11" isBold="true" isItalic="false"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$V{fTotal_Q10} != 0 ? TEXT($V{fTotal_Q10}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{fTotal_Q10} != 0 ? TEXT($V{fTotal_Q10}, "#,##0.0000") : ""]]></textFieldExpression>
 							</textField>
 						</jr:tableFooter>
 						<jr:detailCell style="Table_CH" height="15">
@@ -606,7 +606,7 @@ WHERE id =  $P{id}]]>
 									<font fontName="Arial" size="11"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{q10} != 0 ? TEXT($F{q10}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{q10} != 0 ? TEXT($F{q10}, "#,##0.0000") : ""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

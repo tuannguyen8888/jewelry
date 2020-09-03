@@ -50,7 +50,7 @@
 			$this->col = [];
 			$this->col[] = ["label"=>"Số phiếu","name"=>"interested_no","width"=>"100"];
 			$this->col[] = ["label"=>"T/g đóng lãi","name"=>"interested_date","callback_php"=>'date_time_format($row->interested_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
-			$this->col[] = ["label"=>"Tiền lãi","name"=>"amount","callback_php"=>'number_format($row->amount)'];
+			$this->col[] = ["label"=>"Tiền lãi","name"=>"interested_amount","callback_php"=>'number_format($row->interested_amount)'];
 			$this->col[] = ["label"=>"Số hợp đồng","name"=>"order_id","join"=>"gold_pawn_orders,order_no","width"=>"100"];
 			$this->col[] = ["label"=>"T/g cầm","name"=>DB::raw('gold_pawn_orders.order_date'),"join"=>"gold_pawn_orders,order_date","callback_php"=>'date_time_format($row->interested_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			$this->col[] = ["label"=>"Tiền cầm","name"=>DB::raw('gold_pawn_orders.amount as pawn_amount'),"join"=>"gold_pawn_orders,amount","callback_php"=>'number_format($row->pawn_amount)'];
@@ -168,7 +168,7 @@
 	        */
 	        $this->index_statistic = array();
             $this->index_statistic[] = ['label'=>'Tổng số phiếu','use_main_query'=>true,'operator'=>'count','icon'=>'fa fa-newspaper-o','color'=>'success'];
-            $this->index_statistic[] = ['label'=>'Tổng số tiền cầm','use_main_query'=>true,'operator'=>'sum','field'=>'gold_pawn_order_interested.pawn_amount','icon'=>'fa fa-usd','color'=>'danger'];
+            $this->index_statistic[] = ['label'=>'Tổng số tiền cầm','use_main_query'=>true,'operator'=>'sum','field'=>'gold_pawn_orders.amount','icon'=>'fa fa-usd','color'=>'danger'];
             $this->index_statistic[] = ['label'=>'Tổng số tiền lãi','use_main_query'=>true,'operator'=>'sum','field'=>'gold_pawn_order_interested.interested_amount','icon'=>'fa fa-money','color'=>'warning'];
             $this->index_statistic[] = ['label'=>'Số khách hàng','use_main_query'=>true,'operator'=>'count_distinct','field'=>'gold_pawn_order_interested.customer_id','icon'=>'fa fa-users','color'=>'info'];
 
@@ -362,12 +362,18 @@
 					$order['liquidation_at'] = $interested['interested_date'];
 					$order['liquidation_by'] = CRUDBooster::myId();
 
+					$interested['pawn_amount'] = $order['amount'];
+					$interested['interested_amount'] = $interested['amount'] - $order['amount'];
+
 					if($order['liquidation_method'] == "1"){
 						$order['status'] = 2;
 					}
 				}else{
-					$order['liquidation_method'] = null;
+					$interested['interested_amount'] = $amount;
 				}
+				// }else{
+				// 	$order['liquidation_method'] = null;
+				// }
 				$order['last_interested_by'] = CRUDBooster::myId();
 				$order['last_interested_at'] = $interested['interested_date'];
 

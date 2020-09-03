@@ -29,7 +29,7 @@
 		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ KIM VẠN PHƯỚC"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["0886 768 769"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_address" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["57 Ấp Bình Tiền 2, Xã Đức Hoà Hạ, Huyện Đức Hoà, Tỉnh Long An"]]></defaultValueExpression>
@@ -44,81 +44,25 @@
 		SUM(o_gem_weight) as o_gem_weight, SUM(r_gem_weight) AS r_gem_weight, SUM(i_gem_weight) AS i_gem_weight,
 		SUM(o_gold_weight) AS o_gold_weight, SUM(r_gold_weight) AS r_gold_weight, SUM(i_gold_weight) AS i_gold_weight
 FROM(
-	SELECT R.brand_id, R.supplier_id, I.product_id, SUM(1) AS o_qty, 0 as r_qty, 0 as i_qty,
-		SUM(I.total_weight) as o_total_weight, 0 as r_total_weight, 0 as i_total_weight,
-		SUM(I.gem_weight) as o_gem_weight, 0 as r_gem_weight, 0 as i_gem_weight,
-		SUM(I.gold_weight) as o_gold_weight, 0 as r_gold_weight, 0 as i_gold_weight
-	FROM gold_stocks_received R 
-		INNER JOIN gold_items I ON R.id = I.received_id
-	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND R.status <> 0
-		AND R.received_date < $P{from_date} 
-		AND FIND_IN_SET(R.supplier_id, $P{supplier_ids} ) > 0
-		AND R.brand_id = $P{brand_id} 
-	GROUP BY R.brand_id, R.supplier_id, I.product_id
+	SELECT brand_id, supplier_id, product_id, SUM(r_qty - i_qty) AS o_qty, 0 as r_qty, 0 as i_qty,
+		SUM(r_total_weight - i_total_weight) as o_total_weight, 0 as r_total_weight, 0 as i_total_weight,
+		SUM(r_gem_weight - i_gem_weight) as o_gem_weight, 0 as r_gem_weight, 0 as i_gem_weight,
+		SUM(r_gold_weight - i_gold_weight) as o_gold_weight, 0 as r_gold_weight, 0 as i_gold_weight
+	FROM v_stock_trans
+	WHERE order_date < $P{from_date} 
+		AND FIND_IN_SET(supplier_id, $P{supplier_ids} ) > 0
+		AND brand_id = $P{brand_id} 
+	GROUP BY brand_id, supplier_id, product_id
 	UNION ALL
-	SELECT R.brand_id, R.supplier_id, I.product_id, 0 AS o_qty, SUM(1) as r_qty, 0 as i_qty,
-		0 as o_total_weight, SUM(I.total_weight) as r_total_weight, 0 as i_total_weight,
-		0 as o_gem_weight, SUM(I.gem_weight) as r_gem_weight, 0 as i_gem_weight,
-		0 as o_gold_weight, SUM(I.gold_weight) as r_gold_weight, 0 as i_gold_weight
-	FROM gold_stocks_received R 
-		INNER JOIN gold_items I ON R.id = I.received_id
-	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND R.status <> 0
-		AND R.received_date >= $P{from_date}  AND R.received_date < DATE_ADD($P{to_date} , INTERVAL 1 DAY)
-		AND FIND_IN_SET(R.supplier_id, $P{supplier_ids} ) > 0
-		AND R.brand_id = $P{brand_id}
-	GROUP BY R.brand_id, R.supplier_id, I.product_id
-	UNION ALL
-	SELECT R.brand_id, I.supplier_id, I.product_id, SUM(-1) AS o_qty, 0 as r_qty, 0 as i_qty,
-		SUM(-I.total_weight) as o_total_weight, 0 as r_total_weight, 0 as i_total_weight,
-		SUM(-I.gem_weight) as o_gem_weight, 0 as r_gem_weight, 0 as i_gem_weight,
-		SUM(-I.gold_weight) as o_gold_weight, 0 as r_gold_weight, 0 as i_gold_weight
-	FROM gold_sale_orders R
-		INNER JOIN gold_sale_order_details OD ON R.id = OD.order_id
-		INNER JOIN gold_items I ON OD.item_id = I.id
-	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND OD.deleted_at IS NULL AND R.order_type <> 0
-		AND R.order_date < $P{from_date} 
-		AND FIND_IN_SET(I.supplier_id, $P{supplier_ids}) > 0
-		AND R.brand_id = $P{brand_id}
-	GROUP BY R.brand_id, I.supplier_id, I.product_id
-	UNION ALL
-	SELECT R.brand_id, I.supplier_id, I.product_id, 0 AS o_qty, 0 as r_qty, SUM(1) as i_qty,
-		0 as o_total_weight, 0 as r_total_weight, SUM(I.total_weight) as i_total_weight,
-		0 as o_gem_weight, 0 as r_gem_weight, SUM(I.gem_weight) as i_gem_weight,
-		0 as o_gold_weight, 0 as r_gold_weight, SUM(I.gold_weight) as i_gold_weight
-	FROM gold_sale_orders R
-		INNER JOIN gold_sale_order_details OD ON R.id = OD.order_id
-		INNER JOIN gold_items I ON OD.item_id = I.id
-	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND OD.deleted_at IS NULL AND R.order_type <> 0
-		AND R.order_date >= $P{from_date}  AND R.order_date < DATE_ADD($P{to_date} ,INTERVAL 1 DAY)
-		AND FIND_IN_SET(I.supplier_id, $P{supplier_ids}) > 0
-		AND R.brand_id = $P{brand_id}
-	GROUP BY R.brand_id, I.supplier_id, I.product_id
-	UNION ALL
-	SELECT R.brand_id, I.supplier_id, I.product_id, SUM(-1) AS o_qty, 0 as r_qty, 0 as i_qty,
-		SUM(-I.total_weight) as o_total_weight, 0 as r_total_weight, 0 as i_total_weight,
-		SUM(-I.gem_weight) as o_gem_weight, 0 as r_gem_weight, 0 as i_gem_weight,
-		SUM(-I.gold_weight) as o_gold_weight, 0 as r_gold_weight, 0 as i_gold_weight
-	FROM gold_stocks_issues R
-		INNER JOIN gold_stocks_issue_detail OD ON R.id = OD.order_id
-		INNER JOIN gold_items I ON OD.item_id = I.id
-	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND OD.deleted_at IS NULL AND R.status <> 0
-		AND R.order_date < $P{from_date} 
-		AND FIND_IN_SET(I.supplier_id, $P{supplier_ids}) > 0
-		AND R.brand_id = $P{brand_id}
-	GROUP BY R.brand_id, I.supplier_id, I.product_id
-	UNION ALL
-	SELECT R.brand_id, I.supplier_id, I.product_id, 0 AS o_qty, 0 as r_qty, SUM(1) as i_qty,
-		0 as o_total_weight, 0 as r_total_weight, SUM(I.total_weight) as i_total_weight,
-		0 as o_gem_weight, 0 as r_gem_weight, SUM(I.gem_weight) as i_gem_weight,
-		0 as o_gold_weight, 0 as r_gold_weight, SUM(I.gold_weight) as i_gold_weight
-	FROM gold_stocks_issues R
-		INNER JOIN gold_stocks_issue_detail OD ON R.id = OD.order_id
-		INNER JOIN gold_items I ON OD.item_id = I.id
-	WHERE R.deleted_at IS NULL AND I.deleted_at IS NULL AND OD.deleted_at IS NULL AND R.status <> 0
-		AND R.order_date >= $P{from_date}  AND R.order_date < DATE_ADD($P{to_date} ,INTERVAL 1 DAY)
-		AND FIND_IN_SET(I.supplier_id, $P{supplier_ids}) > 0
-		AND R.brand_id = $P{brand_id}
-	GROUP BY R.brand_id, I.supplier_id, I.product_id
+	SELECT brand_id, supplier_id, product_id, 0 AS o_qty, SUM(r_qty) AS r_qty, SUM(i_qty) AS i_qty,
+		0 as o_total_weight, SUM(r_total_weight) as r_total_weight, SUM(i_total_weight) as i_total_weight,
+		0 as o_gem_weight, SUM(r_gem_weight) as r_gem_weight, SUM(i_gem_weight) as i_gem_weight,
+		0 as o_gold_weight, SUM(r_gold_weight) as r_gold_weight, SUM(i_gold_weight) as i_gold_weight
+	FROM v_stock_trans
+	WHERE order_date >= $P{from_date}  AND order_date < DATE_ADD($P{to_date} , INTERVAL 1 DAY)
+		AND FIND_IN_SET(supplier_id, $P{supplier_ids} ) > 0
+		AND brand_id = $P{brand_id}
+	GROUP BY brand_id, supplier_id, product_id
 ) A INNER JOIN gold_suppliers S ON A.supplier_id = S.id
 	INNER JOIN gold_products P ON A.product_id = P.id
 	INNER JOIN gold_brands B ON A.brand_id = B.id
@@ -229,7 +173,7 @@ ORDER BY B.name, S.name, G.name]]>
 		<groupHeader>
 			<band height="110">
 				<textField>
-					<reportElement x="60" y="0" width="680" height="14" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
+					<reportElement x="80" y="0" width="650" height="14" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -241,7 +185,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="60" y="33" width="680" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
+					<reportElement x="80" y="33" width="650" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -252,7 +196,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<textFieldExpression><![CDATA["Địa chỉ: " + $P{comp_address}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="60" y="45" width="680" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
+					<reportElement x="80" y="45" width="650" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -260,7 +204,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Arial" size="10" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Điện thoại: " + $P{comp_phone}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Hotline: " + $P{comp_phone}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="0" y="80" width="806" height="12" uuid="7186648e-d8d6-4ed8-b8d1-1fc154083664">
@@ -285,7 +229,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<text><![CDATA[NHẬP - XUẤT - TỒN THEO NHÀ CUNG CẤP]]></text>
 				</staticText>
 				<textField>
-					<reportElement mode="Transparent" x="60" y="14" width="680" height="19" forecolor="#FF0000" uuid="b312f102-c890-4bed-b699-b6c617993948">
+					<reportElement mode="Transparent" x="80" y="14" width="650" height="19" forecolor="#FF0000" uuid="b312f102-c890-4bed-b699-b6c617993948">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -297,7 +241,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<textFieldExpression><![CDATA[$F{brand_name}]]></textFieldExpression>
 				</textField>
 				<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
-					<reportElement x="0" y="0" width="60" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
+					<reportElement x="0" y="0" width="80" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -745,7 +689,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{fTotal_O_Total_Weight} != 0 ? TEXT($V{fTotal_O_Total_Weight}, "#,###.####") : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{fTotal_O_Total_Weight} != 0 ? TEXT($V{fTotal_O_Total_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="171" y="0" width="45" height="15" uuid="e6e6c107-9144-4d87-a9f0-4e2ba8d75c9c">
@@ -759,7 +703,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{fTotal_O_Gem_Weight} != 0 ? TEXT($V{fTotal_O_Gem_Weight}, "#,###.####") : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{fTotal_O_Gem_Weight} != 0 ? TEXT($V{fTotal_O_Gem_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="216" y="0" width="55" height="15" uuid="ab00bae6-de56-4148-8e54-eaf31cd50563">
@@ -774,7 +718,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{fTotal_O_Gold_Weight} != 0 ? TEXT($V{fTotal_O_Gold_Weight}, "#,###.####") : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{fTotal_O_Gold_Weight} != 0 ? TEXT($V{fTotal_O_Gold_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="271" y="0" width="30" height="15" uuid="264e866b-95f0-47b9-b053-9bb94f9c6d93">
@@ -802,7 +746,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{fTotal_R_Total_Weight} != 0 ? TEXT($V{fTotal_R_Total_Weight}, "#,###.####") : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{fTotal_R_Total_Weight} != 0 ? TEXT($V{fTotal_R_Total_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="351" y="0" width="45" height="15" uuid="74ece0ad-cb1a-4673-9ddd-04a29940db2a">
@@ -816,7 +760,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{fTotal_R_Gem_Weight} != 0 ? TEXT($V{fTotal_R_Gem_Weight}, "#,###.####") : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{fTotal_R_Gem_Weight} != 0 ? TEXT($V{fTotal_R_Gem_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="396" y="0" width="50" height="15" uuid="e69edcae-d8a0-4c7d-acbf-79c2f479b452">
@@ -831,7 +775,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{fTotal_R_Gold_Weight} != 0 ? TEXT($V{fTotal_R_Gold_Weight}, "#,###.####") : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{fTotal_R_Gold_Weight} != 0 ? TEXT($V{fTotal_R_Gold_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="446" y="0" width="30" height="15" uuid="dc66ad56-8bb6-4ec6-b1e4-11ebbf7a3f26">
@@ -859,7 +803,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{fTotal_I_Total_Weight} != 0 ? TEXT($V{fTotal_I_Total_Weight}, "#,###.####") : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{fTotal_I_Total_Weight} != 0 ? TEXT($V{fTotal_I_Total_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="526" y="0" width="45" height="15" uuid="047dea17-328e-44fe-aa05-c650d631c331">
@@ -872,7 +816,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{fTotal_I_Gem_Weight} != 0 ? TEXT($V{fTotal_I_Gem_Weight}, "#,###.####") : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{fTotal_I_Gem_Weight} != 0 ? TEXT($V{fTotal_I_Gem_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="571" y="0" width="50" height="15" uuid="0ed68d1c-724c-48b7-adc1-6fae1345d7ee">
@@ -887,7 +831,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{fTotal_I_Gold_Weight} != 0 ? TEXT($V{fTotal_I_Gold_Weight}, "#,###.####") : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{fTotal_I_Gold_Weight} != 0 ? TEXT($V{fTotal_I_Gold_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="621" y="0" width="30" height="15" uuid="8532049e-9d31-4dde-a6f8-d9e7f0b7627a">
@@ -914,7 +858,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{fTotal_C_Total_Weight} != 0 ? TEXT($V{fTotal_C_Total_Weight}, "#,###.####") : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{fTotal_C_Total_Weight} != 0 ? TEXT($V{fTotal_C_Total_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="706" y="0" width="45" height="15" uuid="55b8298f-ad58-4a9a-9ca7-6509ca92b972">
@@ -927,7 +871,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{fTotal_C_Gem_Weight} != 0 ? TEXT($V{fTotal_C_Gem_Weight}, "#,###.####") : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{fTotal_C_Gem_Weight} != 0 ? TEXT($V{fTotal_C_Gem_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="751" y="0" width="55" height="15" uuid="aeee3629-eafd-4d97-8655-b9d76ec340eb">
@@ -942,7 +886,7 @@ ORDER BY B.name, S.name, G.name]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{fTotal_C_Gold_Weight} != 0 ? TEXT($V{fTotal_C_Gold_Weight}, "#,###.####") : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{fTotal_C_Gold_Weight} != 0 ? TEXT($V{fTotal_C_Gold_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -1000,7 +944,7 @@ ORDER BY B.name, S.name, G.name]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{o_total_weight} != 0 ? TEXT($F{o_total_weight}, "#,###.####") : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{o_total_weight} != 0 ? TEXT($F{o_total_weight}, "#,##0.0000") : ""]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="171" y="0" width="45" height="15" uuid="8cca900a-dce8-485d-a120-945f14fb7a49">
@@ -1017,7 +961,7 @@ ORDER BY B.name, S.name, G.name]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{o_gem_weight} != 0 ? TEXT($F{o_gem_weight}, "#,###.####") : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{o_gem_weight} != 0 ? TEXT($F{o_gem_weight}, "#,##0.0000") : ""]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="216" y="0" width="55" height="15" uuid="76f22a5b-07d1-460d-8903-59089b451c7d">
@@ -1035,7 +979,7 @@ ORDER BY B.name, S.name, G.name]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{o_gold_weight} != 0 ? TEXT($F{o_gold_weight}, "#,###.####") : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{o_gold_weight} != 0 ? TEXT($F{o_gold_weight}, "#,##0.0000") : ""]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="271" y="0" width="30" height="15" uuid="fd0cda71-9d6e-48ed-a529-e66013dcab7e">
@@ -1069,7 +1013,7 @@ ORDER BY B.name, S.name, G.name]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{r_total_weight} != 0 ? TEXT($F{r_total_weight}, "#,###.####") : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{r_total_weight} != 0 ? TEXT($F{r_total_weight}, "#,##0.0000") : ""]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="351" y="0" width="45" height="15" uuid="0d5229af-6785-475c-9473-8b89068a7979">
@@ -1086,7 +1030,7 @@ ORDER BY B.name, S.name, G.name]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{r_gem_weight} != 0 ? TEXT($F{r_gem_weight}, "#,###.####") : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{r_gem_weight} != 0 ? TEXT($F{r_gem_weight}, "#,##0.0000") : ""]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="396" y="0" width="50" height="15" uuid="edccd799-7f08-4426-a949-97ec4698c408">
@@ -1104,7 +1048,7 @@ ORDER BY B.name, S.name, G.name]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{r_gold_weight} != 0 ? TEXT($F{r_gold_weight}, "#,###.####") : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{r_gold_weight} != 0 ? TEXT($F{r_gold_weight}, "#,##0.0000") : ""]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="446" y="0" width="30" height="15" uuid="828cecc2-9a26-4aae-9407-2dc3e90a8c11">
@@ -1138,7 +1082,7 @@ ORDER BY B.name, S.name, G.name]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{i_total_weight} != 0 ? TEXT($F{i_total_weight}, "#,###.####") : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{i_total_weight} != 0 ? TEXT($F{i_total_weight}, "#,##0.0000") : ""]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="526" y="0" width="45" height="15" uuid="66a3ec0e-d288-49d0-bd78-43056e7517bc">
@@ -1154,7 +1098,7 @@ ORDER BY B.name, S.name, G.name]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{i_gem_weight} != 0 ? TEXT($F{i_gem_weight}, "#,###.####") : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{i_gem_weight} != 0 ? TEXT($F{i_gem_weight}, "#,##0.0000") : ""]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="571" y="0" width="50" height="15" uuid="e0273032-a113-4dfa-a4e4-e63d4e304112">
@@ -1172,7 +1116,7 @@ ORDER BY B.name, S.name, G.name]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{i_gold_weight} != 0 ? TEXT($F{i_gold_weight}, "#,###.####") : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{i_gold_weight} != 0 ? TEXT($F{i_gold_weight}, "#,##0.0000") : ""]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="621" y="0" width="30" height="15" uuid="d2ea47fd-d381-4d5f-b76c-1270704ada21">
@@ -1205,7 +1149,7 @@ ORDER BY B.name, S.name, G.name]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{o_total_weight} + $F{r_total_weight} - $F{i_total_weight}) != 0 ? TEXT(($F{o_total_weight} + $F{r_total_weight} - $F{i_total_weight}), "#,###.####") : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{o_total_weight} + $F{r_total_weight} - $F{i_total_weight}) != 0 ? TEXT(($F{o_total_weight} + $F{r_total_weight} - $F{i_total_weight}), "#,##0.0000") : ""]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="706" y="0" width="45" height="15" uuid="03814cfd-f97f-453c-9e2b-57181a88d4e2">
@@ -1222,7 +1166,7 @@ ORDER BY B.name, S.name, G.name]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{o_gem_weight} + $F{r_gem_weight} - $F{i_gem_weight}) != 0 ? TEXT(($F{o_gem_weight} + $F{r_gem_weight} - $F{i_gem_weight}), "#,###.####") : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{o_gem_weight} + $F{r_gem_weight} - $F{i_gem_weight}) != 0 ? TEXT(($F{o_gem_weight} + $F{r_gem_weight} - $F{i_gem_weight}), "#,##0.0000") : ""]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="751" y="0" width="55" height="15" uuid="c8f2919e-d9b2-4178-800d-93c5b7cfc74e">
@@ -1240,7 +1184,7 @@ ORDER BY B.name, S.name, G.name]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="9" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{o_gold_weight} + $F{r_gold_weight} - $F{i_gold_weight}) != 0 ? TEXT(($F{o_gold_weight} + $F{r_gold_weight} - $F{i_gold_weight}), "#,###.####") : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{o_gold_weight} + $F{r_gold_weight} - $F{i_gold_weight}) != 0 ? TEXT(($F{o_gold_weight} + $F{r_gold_weight} - $F{i_gold_weight}), "#,##0.0000") : ""]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="1">

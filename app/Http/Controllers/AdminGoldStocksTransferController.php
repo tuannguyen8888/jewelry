@@ -44,6 +44,7 @@
 			$this->col[] = ["label"=>"Trạng thái","name"=>"status","callback_php"=>'get_input_status($row->status);'];
 			$this->col[] = ["label"=>"Lý do","name"=>"notes"];
 			$this->col[] = ["label"=>"Cửa hàng","name"=>"brand_id","join"=>"gold_brands,name"];
+			$this->col[] = ["label"=>"NCC","name"=>"supplier_id","join"=>"gold_suppliers,name"];
 			$this->col[] = ["label"=>"Người tạo","name"=>"created_by","join"=>"cms_users,name"];
 			$this->col[] = ["label"=>"T/g tạo","name"=>"created_at","callback_php"=>'date_time_format($row->created_at, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			$this->col[] = ["label"=>"Người sửa","name"=>"updated_by","join"=>"cms_users,name"];
@@ -369,6 +370,34 @@
 				DB::table('gold_items')
 					->whereRaw('id IN(SELECT item_id FROM gold_stocks_transfer_detail WHERE deleted_at is null AND order_id = '.$order["id"].')')
 					->update(['Stock_id' => $order["to_stock_id"], 'notes' => 'Chuyển kho số phiếu ['.$order['order_no'].']']);
+
+				if($order["status"] == 1){
+					$to_supplier = DB::table('gold_suppliers')->where('id', $order["supplier_id"])->first();
+					if($to_supplier){
+						$item = DB::table('gold_stocks_transfer_detail as D')
+							->leftJoin('gold_items as I', 'D.item_id', '=', 'I.id')
+							->whereRaw('D.deleted_at is null')
+							->where('D.order_id', $order["id"])
+							->select(DB::raw('SUM(I.q10) AS q10, SUM(I.fund_fee) as fee'))
+							->first();
+
+						DB::table('gold_suppliers')->where('id', $to_supplier->id)->update([
+							'q10' => $to_supplier->q10 - $item->q10, 
+							'balance' => $to_supplier->balance - $item->fee, 
+							'updated_at' => date('Y-m-d H:i:s'), 
+							'updated_by' => CRUDBooster::myId()
+						]);
+
+						$brand = DB::table('gold_brands')->where('id', $order["brand_id"])->first();
+						$supplier = DB::table('gold_suppliers')->where('id', $brand->supplier_id)->first();
+						DB::table('gold_suppliers')->where('id', $supplier->id)->update([
+							'q10' => $supplier->q10 + $item->q10, 
+							'balance' => $supplier->balance + $item->fee, 
+							'updated_at' => date('Y-m-d H:i:s'), 
+							'updated_by' => CRUDBooster::myId()
+						]);
+					}
+				}
             }
             catch( \Exception $e){
                 DB::rollback();
@@ -629,6 +658,32 @@
 				DB::table('gold_items')
 					->whereRaw('id IN(SELECT item_id FROM gold_stocks_transfer_detail WHERE deleted_at is null AND order_id = '.$id.')')
 					->update(['Stock_id' => $order->from_stock_id]);
+				
+				$to_supplier = DB::table('gold_suppliers')->where('id', $order->supplier_id)->first();
+				if($to_supplier){
+					$item = DB::table('gold_stocks_transfer_detail as D')
+						->leftJoin('gold_items as I', 'D.item_id', '=', 'I.id')
+						->whereRaw('D.deleted_at is null')
+						->where('D.order_id', $order->id)
+						->select(DB::raw('SUM(I.q10) AS q10, SUM(I.fund_fee) as fee'))
+						->first();
+
+					DB::table('gold_suppliers')->where('id', $to_supplier->id)->update([
+						'q10' => $to_supplier->q10 + $item->q10, 
+						'balance' => $to_supplier->balance + $item->fee, 
+						'updated_at' => date('Y-m-d H:i:s'), 
+						'updated_by' => CRUDBooster::myId()
+					]);
+
+					$brand = DB::table('gold_brands')->where('id', $order->brand_id)->first();
+					$supplier = DB::table('gold_suppliers')->where('id', $brand->supplier_id)->first();
+					DB::table('gold_suppliers')->where('id', $supplier->id)->update([
+						'q10' => $supplier->q10 - $item->q10, 
+						'balance' => $supplier->balance - $item->fee, 
+						'updated_at' => date('Y-m-d H:i:s'), 
+						'updated_by' => CRUDBooster::myId()
+					]);
+				}
             }
 	    }
 

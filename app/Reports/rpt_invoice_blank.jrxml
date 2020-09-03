@@ -20,7 +20,7 @@
 		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["0886 768 769"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_address" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["57 Ấp Bình Tiền 2, Xã Đức Hoà Hạ, Huyện Đức Hoà, Tỉnh Long An"]]></defaultValueExpression>
@@ -57,10 +57,10 @@
 		<band height="320" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement x="10" y="10" width="540" height="14" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<reportElement x="90" y="10" width="380" height="14" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
@@ -68,9 +68,10 @@
 				<textFieldExpression><![CDATA[$P{comp_prefix}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="10" y="43" width="540" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
+				<reportElement x="90" y="43" width="380" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
@@ -78,14 +79,15 @@
 				<textFieldExpression><![CDATA["Địa chỉ: " + $P{comp_address}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="10" y="55" width="540" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
+				<reportElement x="90" y="55" width="380" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Điện thoại: " + $P{comp_phone}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Hotline: " + $P{comp_phone}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="475" y="85" width="75" height="12" uuid="e251c692-8108-4b56-ab16-9ab8e5dbbd53">
@@ -141,8 +143,7 @@
 				<text><![CDATA[A. HÀNG BÁN:]]></text>
 			</staticText>
 			<textField>
-				<reportElement mode="Transparent" x="10" y="24" width="540" height="19" forecolor="#FF0000" uuid="b312f102-c890-4bed-b699-b6c617993948">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<reportElement mode="Transparent" x="90" y="24" width="380" height="19" forecolor="#FF0000" uuid="b312f102-c890-4bed-b699-b6c617993948">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -152,7 +153,7 @@
 				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
 			</textField>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
-				<reportElement x="10" y="10" width="60" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
+				<reportElement x="10" y="10" width="80" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>

@@ -5,6 +5,11 @@ use Request;
 use DB;
 use CRUDbooster;
 use Illuminate\Support\Facades\Log;
+use Psy\Util\Json;
+use DateTime;
+use JasperPHP\JasperPHP;
+use Illuminate\Support\Facades\File;
+use Response;
 
 class AdminCmsUsersController extends CBExtendController {
 
@@ -172,7 +177,7 @@ class AdminCmsUsersController extends CBExtendController {
     public function getPrintBalance($para) {
         $jasper = new JasperPHP();
         $database = \Config::get('database.connections.mysql');
-        $filename = 'SB_'.time();
+        $filename = 'EB_'.time();
         $para_values = explode("@", $para);
         $parameter = [
             'to_date'=>$para_values[0],

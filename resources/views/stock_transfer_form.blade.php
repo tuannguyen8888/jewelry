@@ -27,17 +27,19 @@
                             </div>
                             <div class="row">
                                 <label class="control-label col-sm-2">Xuất tại kho <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <select id="from_stock" class="form-control"></select>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <label class="control-label col-sm-2">Nhâp tại kho <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <select id="to_stock" class="form-control"></select>
                                 </div>
                             </div>
                             <div class="row">
+                                <label for="to_supplier_code" class="control-label col-sm-2">Nhà cung cấp</label>
+                                <div class="col-sm-4">
+                                    <select id="supplier_id" class="form-control"></select>
+                                </div>
                                 <label class="control-label col-sm-2">Mã vạch </label>
                                 <div class="col-sm-4">
                                     <div class="input-group">
@@ -241,6 +243,7 @@
             });
 
             loadStock();
+            loadSupplier();
 
             // AutoNumeric.multiple('.money', optionNumberInput);
             let resume_id = getUrlParameter('resume_id') ? getUrlParameter('resume_id') : '{{$resume_id}}';
@@ -268,6 +271,7 @@
                             $('#order_no').val(data.order.order_no);
                             $('#from_stock').val(data.order.from_stock_id);
                             $('#to_stock').val(data.order.to_stock_id);
+                            $('#supplier_id').val(data.order.supplier_id);
                             $('#notes').val(data.order.notes);
                         }
 						if(data.details && data.details.length > 0){
@@ -307,12 +311,41 @@
                 async: false,
                 success: function (data) {
                     if (data && data.stocks && data.stocks.length > 0) {
-                        let html = '';
+                        let from_html = '';
+                        let to_html = '';
 						data.stocks.forEach(function (detail, i) {
+                            if(detail.brand_id == Number('{{CRUDBooster::myBrand()}}')){
+                                from_html += `<option value=${detail.id}>${detail.name}</option>`;					
+                            }
+                            to_html += `<option value=${detail.id}>${detail.name}</option>`;					
+                        });
+                        $('#from_stock').append(from_html);
+                        $('#to_stock').append(to_html);
+                    }
+                },
+                error: function (request, status, error) {
+                    console.log('PostAdd status = ', status);
+                    console.log('PostAdd error = ', error);
+                }
+            });
+        }
+
+        function loadSupplier() {
+            $.ajax({
+                method: "GET",
+                url: '{{Route("AdminGoldSuppliersControllerGetSuppliers")}}',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data && data.suppliers && data.suppliers.length > 0) {
+                        let html = `<option value=0></option>`;
+						data.suppliers.forEach(function (detail, i) {
                             html += `<option value=${detail.id}>${detail.name}</option>`;					
                         });
-                        $('#from_stock').append(html);
-                        $('#to_stock').append(html);
+                        $('#supplier_id').append(html);
                     }
                 },
                 error: function (request, status, error) {
@@ -509,6 +542,7 @@
                 status: finish ? 1 : 0,
                 from_stock_id: $('#from_stock').val() ? Number($('#from_stock').val()) : null,
                 to_stock_id: $('#to_stock').val() ? Number($('#to_stock').val()) : null,
+                supplier_id: $('#supplier_id').val() ? Number($('#supplier_id').val()) : null,
                 order_date: moment($('#order_date').val(), 'DD/MM/YYYY HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'),
                 order_no: $('#order_no').val(),
                 notes: $('#notes').val()

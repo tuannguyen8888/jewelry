@@ -67,7 +67,7 @@ WHERE SOP.deleted_at IS NULL
 		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ KIM VẠN PHƯỚC"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["0886 768 769"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_address" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["57 Ấp Bình Tiền 2, Xã Đức Hoà Hạ, Huyện Đức Hoà, Tỉnh Long An"]]></defaultValueExpression>
@@ -82,13 +82,14 @@ WHERE SOP.deleted_at IS NULL
 	<queryString language="SQL">
 		<![CDATA[SELECT SO.order_no, SO.order_date, COUNT(SOD.id) AS No, C.name AS customer_name, C.address, C.zalo_phone, C.tax_no, B.name AS brand_name,
 	SUM(SOD.total_weight - SOD.abate_weight) AS total_weight, SUM(SOD.gem_weight) AS gem_weight, SUM(SOD.gold_weight) AS gold_weight, 
-	SUM(SOD.fee) AS gold_fee, SO.fee, SO.amount
+	SUM(SOD.fee) AS gold_fee, SO.fee, SO.amount, U.name AS user_name
 FROM gold_purchase_orders SO
 	LEFT OUTER JOIN gold_purchase_order_details SOD ON SO.id = SOD.order_id
 	LEFT OUTER JOIN gold_customers C ON SO.customer_id = C.id
 	LEFT OUTER JOIN gold_brands B ON SO.brand_id = B.id
+	LEFT OUTER JOIN cms_users U ON SO.purchase_id = U.id
 WHERE SO.id =  $P{id} 
-GROUP BY SO.order_no, SO.order_date, SO.fee, SO.amount, C.name, C.address, C.zalo_phone, C.tax_no, B.name]]>
+GROUP BY SO.order_no, SO.order_date, SO.fee, SO.amount, C.name, C.address, C.zalo_phone, C.tax_no, B.name, U.name]]>
 	</queryString>
 	<field name="order_no" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="order_no"/>
@@ -141,6 +142,10 @@ GROUP BY SO.order_no, SO.order_date, SO.fee, SO.amount, C.name, C.address, C.zal
 		<property name="com.jaspersoft.studio.field.label" value="amount"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="gold_purchase_orders"/>
 	</field>
+	<field name="user_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="user_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cms_users"/>
+	</field>
 	<background>
 		<band height="384" splitType="Stretch">
 			<frame>
@@ -164,7 +169,7 @@ GROUP BY SO.order_no, SO.order_date, SO.fee, SO.amount, C.name, C.address, C.zal
 		<band height="155" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement x="10" y="10" width="540" height="14" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
+				<reportElement x="90" y="10" width="380" height="14" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -175,7 +180,7 @@ GROUP BY SO.order_no, SO.order_date, SO.fee, SO.amount, C.name, C.address, C.zal
 				<textFieldExpression><![CDATA[$P{comp_prefix}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="10" y="43" width="540" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
+				<reportElement x="90" y="43" width="380" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -185,14 +190,14 @@ GROUP BY SO.order_no, SO.order_date, SO.fee, SO.amount, C.name, C.address, C.zal
 				<textFieldExpression><![CDATA["Địa chỉ: " + $P{comp_address}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="10" y="55" width="540" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
+				<reportElement x="90" y="55" width="380" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Điện thoại: " + $P{comp_phone}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Hotline: " + $P{comp_phone}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="460" y="90" width="90" height="15" uuid="e251c692-8108-4b56-ab16-9ab8e5dbbd53"/>
@@ -241,7 +246,7 @@ GROUP BY SO.order_no, SO.order_date, SO.fee, SO.amount, C.name, C.address, C.zal
 				<text><![CDATA[Số:]]></text>
 			</staticText>
 			<textField>
-				<reportElement mode="Transparent" x="10" y="24" width="540" height="19" forecolor="#FF0000" uuid="b312f102-c890-4bed-b699-b6c617993948">
+				<reportElement mode="Transparent" x="90" y="24" width="380" height="19" forecolor="#FF0000" uuid="b312f102-c890-4bed-b699-b6c617993948">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -252,7 +257,7 @@ GROUP BY SO.order_no, SO.order_date, SO.fee, SO.amount, C.name, C.address, C.zal
 				<textFieldExpression><![CDATA[$F{brand_name}]]></textFieldExpression>
 			</textField>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
-				<reportElement x="10" y="10" width="60" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
+				<reportElement x="10" y="10" width="80" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -710,7 +715,7 @@ GROUP BY SO.order_no, SO.order_date, SO.fee, SO.amount, C.name, C.address, C.zal
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="60">
+		<band height="100">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement x="350" y="30" width="200" height="15" uuid="16b7fe4d-510a-4a06-ad54-3db86989727a">
@@ -749,8 +754,8 @@ GROUP BY SO.order_no, SO.order_date, SO.fee, SO.amount, C.name, C.address, C.zal
 				<reportElement x="10" y="45" width="200" height="15" uuid="45b57081-6bec-48d8-97d3-c31040a592c4">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="11" isBold="false" isItalic="true"/>
@@ -909,6 +914,36 @@ GROUP BY SO.order_no, SO.order_date, SO.fee, SO.amount, C.name, C.address, C.zal
 					<paragraph rightIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{gold_fee} != 0 ? TEXT($F{gold_fee}, "#,###") : ""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="10" y="85" width="200" height="15" uuid="f72fbd8b-b537-4465-84e8-fef27730188e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="352" y="85" width="200" height="15" uuid="32313e18-0ae8-47b6-9058-44bf6185a618">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

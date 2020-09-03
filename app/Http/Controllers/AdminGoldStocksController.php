@@ -39,6 +39,7 @@
 			$this->col[] = ["label"=>"Mã kho","name"=>"code"];
 			$this->col[] = ["label"=>"Tên kho","name"=>"name"];
 			$this->col[] = ["label"=>"Ghi chú","name"=>"notes"];
+			$this->col[] = ["label"=>"Cửa hàng","name"=>"brand_id","join"=>"gold_brands,name"];
             $this->col[] = ["label"=>"Người tạo","name"=>"created_by","join"=>"cms_users,name"];
             $this->col[] = ["label"=>"Ngày tạo","name"=>"created_at","callback_php"=>'date_time_format($row->created_at, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
             $this->col[] = ["label"=>"Người sửa","name"=>"updated_by","join"=>"cms_users,name"];
@@ -49,6 +50,7 @@
 			$this->form = [];
 			$this->form[] = ['label'=>'Mã kho','name'=>'code','type'=>'text','validation'=>'required|string|min:1|max:10','width'=>'col-sm-4','placeholder'=>'Nhập mã kho'];
 			$this->form[] = ['label'=>'Tên kho','name'=>'name','type'=>'text','validation'=>'required|string|min:1|max:100','width'=>'col-sm-10','placeholder'=>'Nhập tên kho'];
+			$this->form[] = ['label'=>'Cửa hàng','name'=>'brand_id','type'=>'select2','validation'=>'required|integer|min:0','width'=>'col-sm-10','datatable'=>'gold_brands,name'];
 			$this->form[] = ['label'=>'Ghi chú','name'=>'notes','type'=>'text','validation'=>'min:1|max:255','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE
 
@@ -347,13 +349,23 @@
 		public function getStocks(){
             //First, Add an auth
             if(!CRUDBooster::isView()) CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
-            $stocks = DB::table('gold_stocks')
-                ->whereRaw('deleted_at is null')
-				->orderBy('code')
-				->select('id',
-                    'code',
-					'name')
-                ->get();
+            $stocks = DB::table('gold_stocks')->whereRaw('deleted_at is null')->orderBy('code')->get();
+            return ['stocks'=>$stocks];
+		}
+
+		public function getStocksByBrand(){
+            //First, Add an auth
+			if(!CRUDBooster::isView()) CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
+			$para = Request::all();
+			$brand_id = $para['brand_id'];
+			if($brand_id){
+				$stocks = DB::table('gold_stocks')->whereRaw('deleted_at is null')
+					->where('brand_id', $brand_id)->orderBy('code')->get();
+			}else{
+				$stocks = DB::table('gold_stocks')->whereRaw('deleted_at is null')
+					->where('brand_id', CRUDBooster::myBrand())->orderBy('code')->get();
+			}
+			
             return ['stocks'=>$stocks];
 		}
 		

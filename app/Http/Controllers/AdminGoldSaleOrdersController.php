@@ -390,7 +390,7 @@
                     $new_order_no = '';
                     if ($last_order) {
                         $sno = explode('-', $last_order->order_no);
-                        $old_no = intval($sno[count($sno)-1]);
+                        $old_no = intval($sno[count($sno)-1]); 
                         $new_order_no = '000' . ($old_no + 1);
                         $new_order_no = substr($new_order_no, strlen($new_order_no) - 3, 3);
                         $new_order_no = 'BH' . $order_date->format('ymd') . '-'. CRUDBooster::myBrand() . '-' . $new_order_no;

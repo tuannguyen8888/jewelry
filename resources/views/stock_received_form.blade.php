@@ -479,7 +479,7 @@
         function loadStock() {
             $.ajax({
                 method: "GET",
-                url: '{{Route("AdminGoldStocksControllerGetStocks")}}',
+                url: '{{Route("AdminGoldStocksControllerGetStocksByBrand")}}',
                 data: {
                     _token: '{{ csrf_token() }}'
                 },
@@ -516,6 +516,9 @@
 						data.suppliers.forEach(function (detail, i) {
                             html += `<option value=${detail.id}>${detail.name}</option>`;					
                         });
+                        if('{{CRUDBooster::myPrivilegeId()}}'=='4' || '{{CRUDBooster::myPrivilegeId()}}'=='1'){
+                            html += `<option value=0></option>`;					
+                        }
                         $('#supplier_id').append(html);
                     }
                 },
@@ -855,7 +858,7 @@
                 }
                 let total_weight = $('#total_weight').val() ? Number($('#total_weight').val().replace(/,/g, '')) : 0;
                 let gold_weight = $('#gold_weight').val() ? Number($('#gold_weight').val().replace(/,/g, '')) : 0;
-                if(total_weight <= 0 || gold_weight <= 0){
+                if(total_weight < 0 || gold_weight < 0){
                     valid = false;
                     $('#total_weight').addClass('invalid');
                     $(`#total_weight`).focus();
@@ -870,7 +873,7 @@
         function validate() {
 			let valid = true;
             $('#form input').removeClass('invalid');
-			if(!$('#supplier_id').val()){
+			if(!$('#supplier_id').val() && '{{CRUDBooster::myPrivilegeId()}}'!='4' && '{{CRUDBooster::myPrivilegeId()}}'!='1'){
                 valid = false;
                 $('#supplier_id').addClass('invalid');
                 $(`#supplier_id`).focus();

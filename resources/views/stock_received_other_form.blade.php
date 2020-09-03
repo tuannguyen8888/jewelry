@@ -463,7 +463,7 @@
         function loadStock() {
             $.ajax({
                 method: "GET",
-                url: '{{Route("AdminGoldStocksControllerGetStocks")}}',
+                url: '{{Route("AdminGoldStocksControllerGetStocksByBrand")}}',
                 data: {
                     _token: '{{ csrf_token() }}'
                 },

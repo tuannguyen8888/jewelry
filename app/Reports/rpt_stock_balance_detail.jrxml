@@ -112,7 +112,7 @@ ORDER BY T.name, G.name, I.id]]>
 		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ KIM VẠN PHƯỚC"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["0886 768 769"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_address" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["57 Ấp Bình Tiền 2, Xã Đức Hoà Hạ, Huyện Đức Hoà, Tỉnh Long An"]]></defaultValueExpression>
@@ -141,7 +141,7 @@ WHERE id =  $P{id}]]>
 		<band height="115" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement x="0" y="0" width="559" height="14" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
+				<reportElement x="80" y="0" width="380" height="14" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -153,7 +153,7 @@ WHERE id =  $P{id}]]>
 				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="33" width="559" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
+				<reportElement x="80" y="33" width="380" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -165,7 +165,7 @@ WHERE id =  $P{id}]]>
 				<textFieldExpression><![CDATA["Địa chỉ: " + $P{comp_address}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="45" width="559" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
+				<reportElement x="80" y="45" width="380" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -174,7 +174,7 @@ WHERE id =  $P{id}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Điện thoại: " + $P{comp_phone}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Hotline: " + $P{comp_phone}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="78" width="559" height="15" uuid="7186648e-d8d6-4ed8-b8d1-1fc154083664">
@@ -200,7 +200,7 @@ WHERE id =  $P{id}]]>
 				<text><![CDATA[TỒN KHO]]></text>
 			</staticText>
 			<textField>
-				<reportElement mode="Transparent" x="0" y="14" width="559" height="19" forecolor="#FF0000" uuid="b312f102-c890-4bed-b699-b6c617993948">
+				<reportElement mode="Transparent" x="80" y="14" width="380" height="19" forecolor="#FF0000" uuid="b312f102-c890-4bed-b699-b6c617993948">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -211,7 +211,7 @@ WHERE id =  $P{id}]]>
 				<textFieldExpression><![CDATA[$F{brand_name}]]></textFieldExpression>
 			</textField>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
-				<reportElement x="0" y="0" width="60" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
+				<reportElement x="0" y="0" width="80" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -593,7 +593,7 @@ WHERE id =  $P{id}]]>
 									<font fontName="Arial" size="11" isBold="true" isItalic="false"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$V{fTotal_Total_Weight} != 0 ? TEXT($V{fTotal_Total_Weight}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{fTotal_Total_Weight} != 0 ? TEXT($V{fTotal_Total_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 							</textField>
 						</jr:tableFooter>
 						<jr:groupFooter groupName="Product_Group">
@@ -612,7 +612,7 @@ WHERE id =  $P{id}]]>
 										<font fontName="Arial" size="11" isBold="true" isItalic="false"/>
 										<paragraph rightIndent="2"/>
 									</textElement>
-									<textFieldExpression><![CDATA[$V{fTotal_Weight} != 0 ? TEXT($V{fTotal_Weight}, "#,###.####") : ""]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$V{fTotal_Weight} != 0 ? TEXT($V{fTotal_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 								</textField>
 							</jr:cell>
 						</jr:groupFooter>
@@ -632,7 +632,7 @@ WHERE id =  $P{id}]]>
 									<font fontName="Arial" size="11"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{total_weight} != 0 ? TEXT($F{total_weight}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{total_weight} != 0 ? TEXT($F{total_weight}, "#,##0.0000") : ""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -656,7 +656,7 @@ WHERE id =  $P{id}]]>
 									<font fontName="Arial" size="11" isBold="true" isItalic="false"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$V{fTotal_Gem_Weight} != 0 ? TEXT($V{fTotal_Gem_Weight}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{fTotal_Gem_Weight} != 0 ? TEXT($V{fTotal_Gem_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 							</textField>
 						</jr:tableFooter>
 						<jr:groupFooter groupName="Product_Group">
@@ -675,7 +675,7 @@ WHERE id =  $P{id}]]>
 										<font fontName="Arial" size="11" isBold="true" isItalic="false"/>
 										<paragraph rightIndent="2"/>
 									</textElement>
-									<textFieldExpression><![CDATA[$V{fGem_Weight} != 0 ? TEXT($V{fGem_Weight}, "#,###.####") : ""]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$V{fGem_Weight} != 0 ? TEXT($V{fGem_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 								</textField>
 							</jr:cell>
 						</jr:groupFooter>
@@ -694,7 +694,7 @@ WHERE id =  $P{id}]]>
 									<font fontName="Arial" size="11"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{gem_weight} != 0 ? TEXT($F{gem_weight}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{gem_weight} != 0 ? TEXT($F{gem_weight}, "#,##0.0000") : ""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -718,7 +718,7 @@ WHERE id =  $P{id}]]>
 									<font fontName="Arial" size="11" isBold="true" isItalic="false"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$V{fTotal_Gold_Weight} != 0 ? TEXT($V{fTotal_Gold_Weight}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{fTotal_Gold_Weight} != 0 ? TEXT($V{fTotal_Gold_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 							</textField>
 						</jr:tableFooter>
 						<jr:groupFooter groupName="Product_Group">
@@ -737,7 +737,7 @@ WHERE id =  $P{id}]]>
 										<font fontName="Arial" size="11" isBold="true" isItalic="false"/>
 										<paragraph rightIndent="2"/>
 									</textElement>
-									<textFieldExpression><![CDATA[$V{fGold_Weight} != 0 ? TEXT($V{fGold_Weight}, "#,###.####") : ""]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$V{fGold_Weight} != 0 ? TEXT($V{fGold_Weight}, "#,##0.0000") : ""]]></textFieldExpression>
 								</textField>
 							</jr:cell>
 						</jr:groupFooter>
@@ -756,7 +756,7 @@ WHERE id =  $P{id}]]>
 									<font fontName="Arial" size="11"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{gold_weight} != 0 ? TEXT($F{gold_weight}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{gold_weight} != 0 ? TEXT($F{gold_weight}, "#,##0.0000") : ""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -777,7 +777,7 @@ WHERE id =  $P{id}]]>
 									<font fontName="Arial" size="11" isBold="true" isItalic="false"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$V{fTotal_Q10} != 0 ? TEXT($V{fTotal_Q10}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{fTotal_Q10} != 0 ? TEXT($V{fTotal_Q10}, "#,##0.0000") : ""]]></textFieldExpression>
 							</textField>
 						</jr:tableFooter>
 						<jr:groupFooter groupName="Product_Group">
@@ -796,7 +796,7 @@ WHERE id =  $P{id}]]>
 										<font fontName="Arial" size="11" isBold="true" isItalic="false"/>
 										<paragraph rightIndent="2"/>
 									</textElement>
-									<textFieldExpression><![CDATA[$V{fQ10} != 0 ? TEXT($V{fQ10}, "#,###.####") : ""]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$V{fQ10} != 0 ? TEXT($V{fQ10}, "#,##0.0000") : ""]]></textFieldExpression>
 								</textField>
 							</jr:cell>
 						</jr:groupFooter>
@@ -815,7 +815,7 @@ WHERE id =  $P{id}]]>
 									<font fontName="Arial" size="11"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{q10} != 0 ? TEXT($F{q10}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{q10} != 0 ? TEXT($F{q10}, "#,##0.0000") : ""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

@@ -17,13 +17,10 @@
 	</style>
 	<parameter name="id" class="java.lang.Integer"/>
 	<parameter name="comp_name" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["KIM VẠN PHƯỚC"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="comp_prefix" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ KIM VẠN PHƯỚC"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["0886 768 769"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_address" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["57 Ấp Bình Tiền 2, Xã Đức Hoà Hạ, Huyện Đức Hoà, Tỉnh Long An"]]></defaultValueExpression>
@@ -35,13 +32,14 @@
 		<defaultValueExpression><![CDATA["Admin"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[SELECT V.order_no, V.order_date, V.amount, V.q10, V.price, V.notes,
+		<![CDATA[SELECT V.order_no, V.order_date, V.amount, V.q10, V.price, V.notes, B.name AS brand_name,
 	IFNULL(C.name, IFNULL(S.name, IFNULL(I.name, U.name))) AS object_name
 FROM gold_transfer_balance V
 	LEFT OUTER JOIN gold_customers C ON V.object_id = C.id AND V.object_type = 0
 	LEFT OUTER JOIN gold_suppliers S ON V.object_id = S.id AND V.object_type = 1
 	LEFT OUTER JOIN gold_investors I ON V.object_id = I.id AND V.object_type = 2
 	LEFT OUTER JOIN cms_users U ON V.object_id = U.id AND V.object_type = 3
+	LEFT OUTER JOIN gold_brands B ON V.brand_id = B.id
 WHERE V.id =  $P{id}]]>
 	</queryString>
 	<field name="order_no" class="java.lang.String">
@@ -68,6 +66,10 @@ WHERE V.id =  $P{id}]]>
 		<property name="com.jaspersoft.studio.field.label" value="notes"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="gold_transfer_balance"/>
 	</field>
+	<field name="brand_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="brand_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_brands"/>
+	</field>
 	<field name="object_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="object_name"/>
 	</field>
@@ -75,7 +77,7 @@ WHERE V.id =  $P{id}]]>
 		<band height="140" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement x="70" y="10" width="420" height="14" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
+				<reportElement x="90" y="10" width="380" height="14" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -83,10 +85,10 @@ WHERE V.id =  $P{id}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{comp_prefix}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="70" y="43" width="420" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
+				<reportElement x="90" y="43" width="380" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -96,14 +98,14 @@ WHERE V.id =  $P{id}]]>
 				<textFieldExpression><![CDATA["Địa chỉ: " + $P{comp_address}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="70" y="55" width="420" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
+				<reportElement x="90" y="55" width="380" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Điện thoại: " + $P{comp_phone}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Hotline: " + $P{comp_phone}]]></textFieldExpression>
 			</textField>
 			<componentElement>
 				<reportElement x="430" y="97" width="120" height="33" uuid="85a89373-63f9-4346-91be-93b4c759d040">
@@ -160,7 +162,7 @@ WHERE V.id =  $P{id}]]>
 				<text><![CDATA[Số:]]></text>
 			</staticText>
 			<textField>
-				<reportElement mode="Transparent" x="70" y="24" width="420" height="19" forecolor="#FF0000" uuid="b312f102-c890-4bed-b699-b6c617993948">
+				<reportElement mode="Transparent" x="90" y="24" width="380" height="19" forecolor="#FF0000" uuid="b312f102-c890-4bed-b699-b6c617993948">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -168,10 +170,10 @@ WHERE V.id =  $P{id}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="16" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{brand_name}]]></textFieldExpression>
 			</textField>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
-				<reportElement x="10" y="10" width="60" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
+				<reportElement x="10" y="10" width="80" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>

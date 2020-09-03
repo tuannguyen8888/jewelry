@@ -142,10 +142,11 @@
                         </div>
                         <strong><i class="fa fa-list-alt"></i> THÔNG TIN THANH LÝ</strong>
 						<div class="row">
-                            <label class="control-label col-sm-1">Hình thức</label>
+                            <label class="control-label col-sm-1">Hình thức <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
                             <div class="col-sm-2">
                                 <select id="liquidation_method" class="form-control" placeholder="Chọn hình thức thanh lý">
                                     <option value=-1></option>
+                                    <option value=3>Đóng lãi</option>
                                     <option value=0>Tất toán</option>
                                     <option value=1>Thanh lý</option>
                                 </select>
@@ -333,10 +334,8 @@
                             due_date.set(order.due_date);
                             const min_days = AutoNumeric.getAutoNumericElement('#min_days');
                             min_days.set(order.min_days);
-                            if(order.liquidation_at == data.interested.interested_date){
-                                $('#liquidation_method').val(order.liquidation_method);
-                                $('#liquidation_notes').val(order.liquidation_notes);
-                            }
+                            $('#liquidation_method').val(order.liquidation_method);
+                            $('#liquidation_notes').val(order.liquidation_notes);
                         }
                         if(data.customer){
                             $('#customer_code').val(data.customer.code);
@@ -534,6 +533,10 @@
                 valid = false;
                 $('#order_no').addClass('invalid');
                 $(`#order_no`).focus();
+            }
+            if($('#liquidation_method').val()==-1){
+                valid = false;
+                $('#liquidation_method').addClass('invalid');
             }
             if(!$('#interested_date').val()){
                 valid = false;

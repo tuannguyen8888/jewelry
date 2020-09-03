@@ -246,6 +246,13 @@
             $data['page_title'] = 'Xem phiếu chi';
             $data += ['mode' => 'view', 'resume_id' => $id];
             $this->cbView('payments_form', $data);
+		}
+		
+		public function getCost()
+        {
+            $data = [];
+            $data['page_title'] = 'Báo cáo chi phí';
+            $this->cbView('cost_form', $data);
         }
 
 	    /*
@@ -546,7 +553,68 @@
                     'Content-Disposition' => 'filename="'.$filename.'.pdf"'
                 )
             );
-        }
+		}
+		
+		public function getPrintCost($para) {
+            $jasper = new JasperPHP();
+            $database = \Config::get('database.connections.mysql');
+			$filename = 'C_'.time();
+	        $para_values = explode("@", $para);
+            $parameter = [
+				'from_date'=>$para_values[0],
+				'to_date'=>$para_values[1],
+				// 'type'=>$para_values[2],
+				'brand_id'=>$para_values[2],
+                'logo'=>storage_path().'/app/uploads/logo.png'
+			];
+            $input = base_path().'/app/Reports/rpt_cost.jasper';
+            $output = public_path().'/output_reports/'.$filename;
+            $jasper->process($input, $output, array('pdf'), $parameter, $database)->execute();
+
+            while (!file_exists($output.'.pdf' )){
+                sleep(1);
+            }
+
+            $file = File::get( $output.'.pdf' );
+
+            return Response::make($file, 200,
+                array(
+                    'Content-type' => 'application/pdf',
+                    'Content-Disposition' => 'filename="'.$filename.'.pdf"'
+                )
+            );
+		}
+
+		public function getPrintCostXlsx($para) {
+            $jasper = new JasperPHP();
+            $database = \Config::get('database.connections.mysql');
+			$filename = 'C_'.time();
+            $para_values = explode("@", $para);
+            $parameter = [
+				'from_date'=>$para_values[0],
+				'to_date'=>$para_values[1],
+				// 'type'=>$para_values[2],
+				'brand_id'=>$para_values[2],
+                'logo'=>storage_path().'/app/uploads/logo.png'
+			];
+            $input = base_path().'/app/Reports/rpt_cost.jasper';
+            $output = public_path().'/output_reports/'.$filename;
+            $jasper->process($input, $output, array('xlsx'), $parameter, $database)->execute();
+
+            while (!file_exists($output . '.xlsx' )){
+                sleep(1);
+            }
+
+            $file = File::get( $output . '.xlsx' );
+            unlink($output . '.xlsx');
+
+            return Response::make($file, 200,
+                array(
+                    'Content-type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'Content-Disposition' => 'filename="'.$filename.'.xlsx"'
+                )
+            );
+		}
         
 		/* 
 	    | ---------------------------------------------------------------------- 

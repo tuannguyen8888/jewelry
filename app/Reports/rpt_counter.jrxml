@@ -102,7 +102,7 @@ FROM gold_purchase_orders PO
 WHERE PO.deleted_at IS NULL AND POD.deleted_at IS NULL 
 	AND PO.counter_id = $P{counter_id} 
 UNION ALL
-SELECT PO.order_no, PO.order_date, POD.description, POD.amount, POD.fee,
+SELECT PO.order_no, PO.order_date, POD.description, POD.amount - POD.fee AS amount, POD.fee,
 	(POD.total_weight - POD.abate_weight) AS total_weight, POD.gem_weight, POD.gold_weight, POD.age, POD.q10
 FROM gold_sale_orders PO
 	INNER JOIN gold_sale_order_pays POD ON PO.id = POD.order_id
@@ -324,13 +324,10 @@ ORDER BY order_no]]>
 	</subDataset>
 	<parameter name="id" class="java.lang.Integer"/>
 	<parameter name="comp_name" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["KIM VẠN PHƯỚC"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="comp_prefix" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ KIM VẠN PHƯỚC"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["0886 768 769"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_address" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["57 Ấp Bình Tiền 2, Xã Đức Hoà Hạ, Huyện Đức Hoà, Tỉnh Long An"]]></defaultValueExpression>
@@ -340,16 +337,15 @@ ORDER BY order_no]]>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT C.counter_no, C.opened_at, C.closed_at, C.description, U.name AS saleman,
-	C.advance_amount, C.sales_amount, C.bank_amount, C.purchase_amount, 
-	C.pawn_amount, C.interested_amount, C.amount, C.liquidation_amount,
-	IFNULL(-SUM(O.balance), 0) as balance, C.withdrawal_in, C.withdrawal_out
+	C.advance_amount, SUM(CB.sales_amount) AS sales_amount, SUM(CB.bank_amount) AS bank_amount, SUM(CB.purchase_amount) AS purchase_amount, 
+	SUM(CB.pawn_amount) AS pawn_amount, SUM(CB.interested_amount) AS interested_amount, C.amount, SUM(CB.liquidation_amount) AS liquidation_amount,
+	IFNULL(-SUM(CB.balance), 0) as balance, SUM(CB.withdrawal_in) AS withdrawal_in, SUM(CB.withdrawal_out) AS withdrawal_out, B.name AS brand_name
 FROM gold_counters C
 	LEFT OUTER JOIN cms_users U ON C.saler_id = U.id
-	LEFT OUTER JOIN gold_sale_orders O ON C.id = O.counter_id AND O.deleted_at is null AND O.balance <> 0
+	LEFT OUTER JOIN gold_brands B ON C.brand_id = B.id
+	LEFT OUTER JOIN v_counter_total CB ON C.id = CB.counter_id
 WHERE C.id =  $P{id}
-GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name,
-	C.advance_amount, C.sales_amount, C.bank_amount, C.purchase_amount, 
-	C.pawn_amount, C.interested_amount, C.amount, C.liquidation_amount, C.withdrawal_in, C.withdrawal_out]]>
+GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advance_amount, C.amount, B.name]]>
 	</queryString>
 	<field name="counter_no" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="counter_no"/>
@@ -414,11 +410,15 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name,
 		<property name="com.jaspersoft.studio.field.label" value="withdrawal_out"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="gold_counters"/>
 	</field>
+	<field name="brand_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="brand_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_brands"/>
+	</field>
 	<title>
 		<band height="185" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement x="0" y="0" width="559" height="14" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
+				<reportElement x="80" y="0" width="400" height="14" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -427,10 +427,10 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name,
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{comp_prefix}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="33" width="559" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
+				<reportElement x="80" y="33" width="400" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -442,7 +442,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name,
 				<textFieldExpression><![CDATA["Địa chỉ: " + $P{comp_address}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="45" width="559" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
+				<reportElement x="80" y="45" width="400" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -451,7 +451,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name,
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Điện thoại: " + $P{comp_phone}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Hotline: " + $P{comp_phone}]]></textFieldExpression>
 			</textField>
 			<componentElement>
 				<reportElement x="422" y="51" width="137" height="30" uuid="85a89373-63f9-4346-91be-93b4c759d040">
@@ -508,7 +508,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name,
 				<text><![CDATA[Số phiếu:]]></text>
 			</staticText>
 			<textField>
-				<reportElement mode="Transparent" x="0" y="14" width="559" height="19" forecolor="#FF0000" uuid="b312f102-c890-4bed-b699-b6c617993948">
+				<reportElement mode="Transparent" x="80" y="14" width="400" height="19" forecolor="#FF0000" uuid="b312f102-c890-4bed-b699-b6c617993948">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -516,11 +516,11 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name,
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="16" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{brand_name}]]></textFieldExpression>
 			</textField>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
-				<reportElement x="0" y="0" width="60" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<reportElement x="0" y="0" width="80" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>

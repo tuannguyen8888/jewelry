@@ -98,7 +98,7 @@ ORDER BY name, age]]>
 		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["0886 768 769"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_address" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["57 Ấp Bình Tiền 2, Xã Đức Hoà Hạ, Huyện Đức Hoà, Tỉnh Long An"]]></defaultValueExpression>
@@ -129,7 +129,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 	<title>
 		<band height="110">
 			<textField>
-				<reportElement x="60" y="33" width="445" height="12" forecolor="#FFCC00" uuid="461f4c9b-9de4-4564-8821-b0f261f4f02e">
+				<reportElement x="80" y="33" width="410" height="12" forecolor="#FFCC00" uuid="461f4c9b-9de4-4564-8821-b0f261f4f02e">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -139,14 +139,14 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 				<textFieldExpression><![CDATA["Địa chỉ: " + $P{comp_address}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="60" y="45" width="445" height="12" forecolor="#FFCC00" uuid="eec71f2e-193d-4975-a08d-a9ac5f7a138f">
+				<reportElement x="80" y="45" width="410" height="12" forecolor="#FFCC00" uuid="eec71f2e-193d-4975-a08d-a9ac5f7a138f">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Điện thoại: " + $P{comp_phone}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Hotline: " + $P{comp_phone}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="80" width="565" height="15" uuid="4811ce57-e325-4f58-a329-465952dbdb4f">
@@ -172,7 +172,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 				<text><![CDATA[CHI TIẾT MUA HÀNG]]></text>
 			</staticText>
 			<textField>
-				<reportElement mode="Transparent" x="60" y="14" width="445" height="19" forecolor="#FF0000" uuid="10b0e3aa-86db-4c2d-ab00-9d786220591b">
+				<reportElement mode="Transparent" x="80" y="14" width="410" height="19" forecolor="#FF0000" uuid="10b0e3aa-86db-4c2d-ab00-9d786220591b">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -183,7 +183,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
 			</textField>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
-				<reportElement x="0" y="0" width="60" height="60" uuid="d3c88925-405f-4ae3-960c-5b88297b736c">
+				<reportElement x="0" y="0" width="80" height="60" uuid="d3c88925-405f-4ae3-960c-5b88297b736c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -211,7 +211,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 				<text><![CDATA[Nhân viên bán hàng:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="60" y="0" width="445" height="14" forecolor="#FFCC00" uuid="7e583e26-c50c-494d-90de-58ca2696864b">
+				<reportElement x="80" y="0" width="410" height="14" forecolor="#FFCC00" uuid="7e583e26-c50c-494d-90de-58ca2696864b">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>

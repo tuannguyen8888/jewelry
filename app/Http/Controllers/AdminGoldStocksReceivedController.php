@@ -461,8 +461,9 @@
                     $received_date = DateTime::createFromFormat('Y-m-d', $received_date_str);
                     // get new order no
                     $last_order = DB::table('gold_stocks_received')
-                        ->where('received_date', '>=', $received_date->format('Y-m-d') . ' 00:00:00')
-                        ->where('received_date', '<=', $received_date->format('Y-m-d') . ' 23:59:59')
+                        // ->where('received_no', '>=', $received_date->format('Y-m-d') . ' 00:00:00')
+                        // ->where('received_date', '<=', $received_date->format('Y-m-d') . ' 23:59:59')
+                        ->where('received_no', 'LIKE', 'PN'.$received_date->format('ymd').'-%')
                         ->orderBy('received_no', 'desc')
                         ->first();
                     if($last_order) {

@@ -40,7 +40,7 @@
 			$this->col[] = ["label"=>"T/g chuyển","name"=>"order_date","callback_php"=>'date_time_format($row->order_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			$this->col[] = ["label"=>"Trạng thái","name"=>"status","callback_php"=>'get_input_status($row->status);'];
             $this->col[] = ["label"=>"Đối tượng","name"=>"object_id","callback_php"=>'$row->object_name'];
-			$this->col[] = ["label"=>"Q10","name"=>"q10","callback_php"=>'number_format($row->q10)'];
+			$this->col[] = ["label"=>"Q10","name"=>"q10","callback_php"=>'number_format($row->q10, 4)'];
 			$this->col[] = ["label"=>"Đơn giá","name"=>"price","callback_php"=>'number_format($row->price)'];
 			$this->col[] = ["label"=>"Thành tiền","name"=>"amount","callback_php"=>'number_format($row->amount)'];
 			$this->col[] = ["label"=>"Nội dung","name"=>"notes"];
@@ -568,7 +568,7 @@
 					$supplier = DB::table('gold_suppliers')->where('id', $order->object_id)->first();
 					if($supplier){
 						DB::table('gold_suppliers')->where('id', $supplier->id)->update([
-							'q10' => $customer->q10 + $order->q10, 
+							'q10' => $supplier->q10 + $order->q10, 
 							'balance' => $supplier->balance - $order->amount, 
 							'updated_at' => date('Y-m-d H:i:s'), 
 							'updated_by' => CRUDBooster::myId()
@@ -578,7 +578,7 @@
 					$investor = DB::table('gold_investors')->where('id', $order->object_id)->first();
 					if($investor){
 						DB::table('gold_investors')->where('id', $investor->id)->update([
-							'q10' => $customer->q10 + $order->q10, 
+							'q10' => $investor->q10 + $order->q10, 
 							'balance' => $investor->balance - $order->amount, 
 							'updated_at' => date('Y-m-d H:i:s'), 
 							'updated_by' => CRUDBooster::myId()
@@ -588,7 +588,7 @@
 					$user = DB::table('cms_users')->where('id', $order->object_id)->first();
 					if($user){
 						DB::table('cms_users')->where('id', $user->id)->update([
-							'q10' => $customer->q10 + $order->q10, 
+							'q10' => $user->q10 + $order->q10, 
 							'balance' => $user->balance - $order->amount, 
 							'updated_at' => date('Y-m-d H:i:s')
 						]);

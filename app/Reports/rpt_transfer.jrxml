@@ -2,7 +2,6 @@
 <!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Issues" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business_connection"/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="253"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="740"/>
@@ -15,6 +14,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
 	<style name="Table_CH" mode="Transparent" backcolor="#BFE1FF" vTextAlign="Middle" vImageAlign="Middle" isBlankWhenNull="false">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -123,7 +123,7 @@ ORDER BY I.age, SR.id]]>
 		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["0886 768 769"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_address" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["57 Ấp Bình Tiền 2, Xã Đức Hoà Hạ, Huyện Đức Hoà, Tỉnh Long An"]]></defaultValueExpression>
@@ -132,10 +132,11 @@ ORDER BY I.age, SR.id]]>
 		<defaultValueExpression><![CDATA["/storage/app/uploads/logo.png"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[SELECT A.order_no, A.order_date, A.notes, FS.name AS from_stock_name, TS.name AS to_stock_name
+		<![CDATA[SELECT A.order_no, A.order_date, A.notes, FS.name AS from_stock_name, TS.name AS to_stock_name, S.name as supplier_name
 FROM gold_stocks_transfer A
 	LEFT OUTER JOIN gold_stocks FS ON A.from_stock_id = FS.id
 	LEFT OUTER JOIN gold_stocks TS ON A.to_stock_id = TS.id
+	LEFT OUTER JOIN gold_suppliers S ON A.supplier_id = S.id
 WHERE A.id =  $P{id}]]>
 	</queryString>
 	<field name="order_no" class="java.lang.String">
@@ -158,11 +159,15 @@ WHERE A.id =  $P{id}]]>
 		<property name="com.jaspersoft.studio.field.label" value="to_stock_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="gold_stocks"/>
 	</field>
+	<field name="supplier_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="supplier_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_suppliers"/>
+	</field>
 	<title>
-		<band height="140" splitType="Stretch">
+		<band height="155" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement x="60" y="0" width="445" height="15" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
+				<reportElement x="80" y="0" width="410" height="15" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -173,7 +178,7 @@ WHERE A.id =  $P{id}]]>
 				<textFieldExpression><![CDATA[$P{comp_prefix}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="60" y="35" width="445" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
+				<reportElement x="80" y="35" width="410" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -184,7 +189,7 @@ WHERE A.id =  $P{id}]]>
 				<textFieldExpression><![CDATA["Địa chỉ: " + $P{comp_address}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="60" y="47" width="445" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
+				<reportElement x="80" y="47" width="410" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -193,7 +198,7 @@ WHERE A.id =  $P{id}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Điện thoại: " + $P{comp_phone}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Hotline: " + $P{comp_phone}]]></textFieldExpression>
 			</textField>
 			<componentElement>
 				<reportElement x="440" y="92" width="125" height="30" uuid="85a89373-63f9-4346-91be-93b4c759d040">
@@ -249,7 +254,7 @@ WHERE A.id =  $P{id}]]>
 				<text><![CDATA[Số phiếu:]]></text>
 			</staticText>
 			<textField>
-				<reportElement mode="Transparent" x="60" y="15" width="445" height="20" forecolor="#FF0000" uuid="b312f102-c890-4bed-b699-b6c617993948">
+				<reportElement mode="Transparent" x="80" y="15" width="410" height="20" forecolor="#FF0000" uuid="b312f102-c890-4bed-b699-b6c617993948">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -259,7 +264,7 @@ WHERE A.id =  $P{id}]]>
 				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
 			</textField>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
-				<reportElement x="0" y="0" width="60" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
+				<reportElement x="0" y="0" width="80" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -288,7 +293,7 @@ WHERE A.id =  $P{id}]]>
 				<text><![CDATA[Xuất tại kho:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="55" y="125" width="510" height="15" uuid="6e14376c-812d-468a-ad7c-5bf9c3865edd">
+				<reportElement x="55" y="140" width="510" height="15" uuid="6e14376c-812d-468a-ad7c-5bf9c3865edd">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle">
@@ -297,7 +302,7 @@ WHERE A.id =  $P{id}]]>
 				<textFieldExpression><![CDATA[$F{notes}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="20" y="125" width="35" height="15" uuid="4a74668f-b55e-4c97-bf5a-c78915e34cd1">
+				<reportElement x="20" y="140" width="35" height="15" uuid="4a74668f-b55e-4c97-bf5a-c78915e34cd1">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -326,6 +331,26 @@ WHERE A.id =  $P{id}]]>
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{to_stock_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="125" width="80" height="15" uuid="e737bb48-b351-40b9-a923-c9ecbf7b65b7">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Nhà cung cấp:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="125" width="465" height="15" uuid="83d5ff39-9004-4cdf-854c-e6c182ddc203">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{supplier_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

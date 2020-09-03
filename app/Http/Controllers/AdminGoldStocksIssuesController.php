@@ -419,7 +419,17 @@
 							'updated_by' => CRUDBooster::myId()
 						]);
 					}
-					if(intval($order['object_type']) == 1) {
+					if(intval($order['object_type']) == 0) {
+                        $customer = DB::table('gold_customers')->where('id', $order['object_id'])->first();
+                        if ($customer) {
+                            DB::table('gold_customers')->where('id', $customer->id)->update([
+                                'q10' => $customer->q10 + $q10,
+                                'balance' => $customer->balance + $fee,
+                                'updated_at' => date('Y-m-d H:i:s'),
+                                'updated_by' => CRUDBooster::myId()
+                            ]);
+                        }
+                    }elseif(intval($order['object_type']) == 1) {
                         $supplier = DB::table('gold_suppliers')->where('id', $order['object_id'])->first();
                         if ($supplier) {
                             DB::table('gold_suppliers')->where('id', $supplier->id)->update([
@@ -427,6 +437,25 @@
                                 'balance' => $supplier->balance - $fee,
                                 'updated_at' => date('Y-m-d H:i:s'),
                                 'updated_by' => CRUDBooster::myId()
+                            ]);
+                        }
+                    }elseif(intval($order['object_type']) == 2) {
+                        $investor = DB::table('gold_investors')->where('id', $order['object_id'])->first();
+                        if ($investor) {
+                            DB::table('gold_investors')->where('id', $investor->id)->update([
+                                'q10' => $investor->q10 - $q10,
+                                'balance' => $investor->investor - $fee,
+                                'updated_at' => date('Y-m-d H:i:s'),
+                                'updated_by' => CRUDBooster::myId()
+                            ]);
+                        }
+                    }elseif(intval($order['object_type']) == 3) {
+                        $user = DB::table('cms_users')->where('id', $order['object_id'])->first();
+                        if ($user) {
+                            DB::table('cms_users')->where('id', $user->id)->update([
+                                'q10' => $user->q10 + $q10,
+                                'balance' => $user->balance + $fee,
+                                'updated_at' => date('Y-m-d H:i:s')
                             ]);
                         }
                     }
@@ -706,12 +735,36 @@
 							'status' => 1, 
 							'notes' => 'Hủy phiếu xuất [' . $order->order_no . ']'
 						]);
-                        if($order->object_type == 1) {
+                        if($order->object_type == 0) {
+                            $customer = DB::table('gold_customers')->where('id', $order->object_id)->first();
+                            if ($customer) {
+                                DB::table('gold_customers')->where('id', $customer->id)->update([
+                                    'q10' => $customer->q10 - $detail->q10,
+                                    'balance' => $customer->balance - $detail->fee
+                                ]);
+                            }
+                        }elseif($order->object_type == 1) {
                             $supplier = DB::table('gold_suppliers')->where('id', $order->object_id)->first();
                             if ($supplier) {
                                 DB::table('gold_suppliers')->where('id', $supplier->id)->update([
                                     'q10' => $supplier->q10 + $detail->q10,
                                     'balance' => $supplier->balance + $detail->fee
+                                ]);
+                            }
+                        }elseif($order->object_type == 2) {
+                            $investor = DB::table('gold_investors')->where('id', $order->object_id)->first();
+                            if ($investor) {
+                                DB::table('gold_investors')->where('id', $investor->id)->update([
+                                    'q10' => $investor->q10 + $detail->q10,
+                                    'balance' => $investor->balance + $detail->fee
+                                ]);
+                            }
+                        }elseif($order->object_type == 3) {
+                            $user = DB::table('cms_users')->where('id', $order->object_id)->first();
+                            if ($user) {
+                                DB::table('cms_users')->where('id', $user->id)->update([
+                                    'q10' => $user->q10 - $detail->q10,
+                                    'balance' => $user->balance - $detail->fee
                                 ]);
                             }
                         }

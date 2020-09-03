@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.2.1.final using JasperReports Library version 6.6.0  -->
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Report_Sales_Details" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="812" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business"/>
@@ -128,13 +128,13 @@ ORDER BY SO.order_no, SOD.sort_no]]>
 		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["0886 768 769"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_address" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["57 Ấp Bình Tiền 2, Xã Đức Hoà Hạ, Huyện Đức Hoà, Tỉnh Long An"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="logo" class="java.lang.String">
-		<defaultValueExpression><![CDATA["/Users/tuannguyen8888/WorkSpace/OutSource/jewelry/storage/app/uploads/logo.png"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["/storage/app/uploads/logo.png"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="from_date" class="java.util.Date">
 		<defaultValueExpression><![CDATA[DATE(2020,06,1)]]></defaultValueExpression>
@@ -159,7 +159,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 	<title>
 		<band height="110">
 			<textField>
-				<reportElement x="60" y="33" width="741" height="12" forecolor="#FFCC00" uuid="461f4c9b-9de4-4564-8821-b0f261f4f02e">
+				<reportElement x="80" y="33" width="640" height="12" forecolor="#FFCC00" uuid="461f4c9b-9de4-4564-8821-b0f261f4f02e">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -169,17 +169,17 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 				<textFieldExpression><![CDATA["Địa chỉ: " + $P{comp_address}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="60" y="45" width="741" height="12" forecolor="#FFCC00" uuid="eec71f2e-193d-4975-a08d-a9ac5f7a138f">
+				<reportElement x="80" y="45" width="640" height="12" forecolor="#FFCC00" uuid="eec71f2e-193d-4975-a08d-a9ac5f7a138f">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Điện thoại: " + $P{comp_phone}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Hotline: " + $P{comp_phone}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="60" y="80" width="741" height="15" uuid="4811ce57-e325-4f58-a329-465952dbdb4f">
+				<reportElement x="0" y="80" width="801" height="15" uuid="4811ce57-e325-4f58-a329-465952dbdb4f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -190,7 +190,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 				<textFieldExpression><![CDATA["Từ ngày: " +DATEFORMAT($P{from_date}, "dd/MM/yyyy") + "    Đến ngày: " + DATEFORMAT($P{to_date}, "dd/MM/yyyy")]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Transparent" x="60" y="60" width="741" height="20" forecolor="#FF0000" uuid="5a5c4011-6ec9-4fdb-bea4-ed988a032338">
+				<reportElement mode="Transparent" x="0" y="60" width="801" height="20" forecolor="#FF0000" uuid="5a5c4011-6ec9-4fdb-bea4-ed988a032338">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -202,7 +202,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 				<text><![CDATA[CHI TIẾT BÁN HÀNG]]></text>
 			</staticText>
 			<textField>
-				<reportElement mode="Transparent" x="60" y="14" width="741" height="19" forecolor="#FF0000" uuid="10b0e3aa-86db-4c2d-ab00-9d786220591b">
+				<reportElement mode="Transparent" x="80" y="14" width="640" height="19" forecolor="#FF0000" uuid="10b0e3aa-86db-4c2d-ab00-9d786220591b">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -213,7 +213,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
 			</textField>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
-				<reportElement x="0" y="0" width="60" height="60" uuid="d3c88925-405f-4ae3-960c-5b88297b736c">
+				<reportElement x="0" y="0" width="80" height="60" uuid="d3c88925-405f-4ae3-960c-5b88297b736c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -222,7 +222,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="60" y="95" width="741" height="15" uuid="4b42a5f9-c802-4ad5-b299-97d6b1fba3e7">
+				<reportElement x="0" y="95" width="801" height="15" uuid="4b42a5f9-c802-4ad5-b299-97d6b1fba3e7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
@@ -231,7 +231,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 				<textFieldExpression><![CDATA["Nhân viên bán hàng: "+$F{name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="60" y="0" width="742" height="14" forecolor="#FFCC00" uuid="7e583e26-c50c-494d-90de-58ca2696864b">
+				<reportElement x="80" y="0" width="640" height="14" forecolor="#FFCC00" uuid="7e583e26-c50c-494d-90de-58ca2696864b">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>

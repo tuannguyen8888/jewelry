@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Book_Cash" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Cost" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
@@ -24,40 +24,23 @@
 		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="366"/>
 		<parameter name="from_date" class="java.util.Date"/>
 		<parameter name="to_date" class="java.util.Date"/>
-		<parameter name="type" class="java.lang.Integer"/>
 		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
-			<![CDATA[SELECT NULL AS order_no, NULL as order_date, N'Số dư đầu kỳ' AS notes, NULL as object, 
-	SUM(in_amount) as in_amount, 0 as out_amount 
-FROM(
-	SELECT SUM(ROUND(amount * (1 - bank_fee / 100))) as in_amount
-	FROM gold_vouchers
-	WHERE deleted_at IS NULL AND status <> 0 	AND ($P{type} = -1 OR method = $P{type}) AND order_date < $P{from_date} 
-		AND brand_id = $P{brand_id} 
-	UNION ALL
-	SELECT SUM(ROUND((pay_amount - return_amount) * (1 - bank_fee / 100))) as in_amount
-	FROM gold_sale_orders
-	WHERE deleted_at IS NULL AND order_type <> 0 AND payment_method = 1 AND $P{type} <> 0 AND order_date < $P{from_date}
-		AND brand_id = $P{brand_id}
-) A
-HAVING SUM(in_amount) <> 0
+			<![CDATA[SELECT NULL AS order_no, NULL as order_date, N'Số dư đầu kỳ' AS notes, NULL as object
+	,SUM(in_amount) as in_amount, SUM(out_amount) as out_amount 
+FROM gold_vouchers
+WHERE deleted_at IS NULL AND status <> 0 	AND is_balance = 0 AND order_type IN(0, 1)
+	AND order_date < $P{from_date} AND brand_id = $P{brand_id} 
+HAVING SUM(in_amount) - SUM(out_amount) <> 0
 UNION ALL
-SELECT V.order_no, V.order_date, V.notes, IFNULL(C.name, IFNULL(S.name, IFNULL(I.name, U.name))) as object, 
-	ROUND(V.in_amount / (1 + V.bank_fee / 100)) as in_amount, V.out_amount 
+SELECT V.order_no, V.order_date, V.notes, IFNULL(C.name, IFNULL(S.name, IFNULL(I.name, U.name))) as object
+	,V.in_amount as in_amount, V.out_amount 
 FROM gold_vouchers V
 	LEFT OUTER JOIN gold_customers C ON V.object_id = C.id AND V.object_type = 0
 	LEFT OUTER JOIN gold_suppliers S ON V.object_id = S.id AND V.object_type = 1
 	LEFT OUTER JOIN gold_investors I ON V.object_id = I.id AND V.object_type = 2
 	LEFT OUTER JOIN cms_users U ON V.object_id = U.id AND V.object_type = 3
-WHERE V.deleted_at IS NULL AND V.status <> 0 AND ($P{type} = -1 OR V.method = $P{type})
-	AND V.order_date >= $P{from_date} AND V.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
-	AND V.brand_id = $P{brand_id}
-UNION ALL
-SELECT V.order_no, V.order_date, NULL AS notes, C.name as object, 
-	ROUND((V.pay_amount - V.return_amount) / (1 + V.bank_fee / 100)) as in_amount, 0 AS out_amount 
-FROM gold_sale_orders V
-	LEFT OUTER JOIN gold_customers C ON V.customer_id = C.id
-WHERE V.deleted_at IS NULL AND V.order_type <> 0 AND V.payment_method = 1 AND $P{type} <> 0
+WHERE V.deleted_at IS NULL AND V.status <> 0 AND V.is_balance = 0 AND V.order_type IN(0, 1)
 	AND V.order_date >= $P{from_date} AND V.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
 	AND V.brand_id = $P{brand_id}
 ORDER BY order_date, order_no]]>
@@ -110,9 +93,6 @@ ORDER BY order_date, order_no]]>
 	</parameter>
 	<parameter name="to_date" class="java.util.Date">
 		<defaultValueExpression><![CDATA[TODAY( )]]></defaultValueExpression>
-	</parameter>
-	<parameter name="type" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[-1]]></defaultValueExpression>
 	</parameter>
 	<parameter name="brand_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
@@ -202,15 +182,12 @@ ORDER BY order_date, order_no]]>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
-					<datasetRun subDataset="dsData" uuid="d37de020-145b-4fdd-9845-c9505672c28a">
+					<datasetRun subDataset="dsData" uuid="497ccbef-5a94-4d5c-80b9-b1b5e603db37">
 						<datasetParameter name="from_date">
 							<datasetParameterExpression><![CDATA[$P{from_date}]]></datasetParameterExpression>
 						</datasetParameter>
 						<datasetParameter name="to_date">
 							<datasetParameterExpression><![CDATA[$P{to_date}]]></datasetParameterExpression>
-						</datasetParameter>
-						<datasetParameter name="type">
-							<datasetParameterExpression><![CDATA[$P{type}]]></datasetParameterExpression>
 						</datasetParameter>
 						<datasetParameter name="brand_id">
 							<datasetParameterExpression><![CDATA[$P{brand_id}]]></datasetParameterExpression>
@@ -607,7 +584,7 @@ ORDER BY order_date, order_no]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="16" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{type} == 0 ? "SỔ QUỸ TIỀN MẶT" : ($P{type} == 1 ? "SỔ QUỸ NGÂN HÀNG" : "SỔ QUỸ")]]></textFieldExpression>
+				<textFieldExpression><![CDATA["BÁO CÁO CHI PHÍ"]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

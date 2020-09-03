@@ -182,13 +182,10 @@ GROUP BY SO.pay_amount, SO.return_amount, SO.balance]]>
 	</subDataset>
 	<parameter name="id" class="java.lang.Integer"/>
 	<parameter name="comp_name" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["KIM VẠN PHƯỚC"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="comp_prefix" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ KIM VẠN PHƯỚC"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["0898 666 057"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["0886 768 769"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="comp_address" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["57 Ấp Bình Tiền 2, Xã Đức Hoà Hạ, Huyện Đức Hoà, Tỉnh Long An"]]></defaultValueExpression>
@@ -205,14 +202,16 @@ GROUP BY SO.pay_amount, SO.return_amount, SO.balance]]>
 	SUM(SOD.fee) AS fee, SUM(SOD.discount) AS discount, SUM(SOD.amount) AS amount,
 	SO.reduce, SO.pay_gold_amount, SO.return_amount, SO.points, SO.payment_method, SO.balance, SO.use_points,
 	ROUND(SO.pay_amount - SO.return_amount) AS pay_amount, ROUND((SO.pay_amount - SO.return_amount) / (1 + SO.bank_fee / 100) * SO.bank_fee / 100) AS bank_amount,
-	(SELECT COUNT(id) FROM gold_sale_order_pays WHERE deleted_at IS NULL AND order_id = SO.id) AS pays, SO.bank_fee
+	(SELECT COUNT(id) FROM gold_sale_order_pays WHERE deleted_at IS NULL AND order_id = SO.id) AS pays, SO.bank_fee, U.name AS user_name, B.name AS brand_name
 FROM gold_sale_orders SO
 	LEFT OUTER JOIN gold_sale_order_details SOD ON SO.id = SOD.order_id
 	LEFT OUTER JOIN gold_items I ON SOD.item_id = I.id
 	LEFT OUTER JOIN gold_customers C ON SO.customer_id = C.id
+	LEFT OUTER JOIN cms_users U ON SO.saler_id = U.id
+	LEFT OUTER JOIN gold_brands B ON SO.brand_id = B.id
 WHERE SO.id =  $P{id} 
 GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone, C.tax_no, SO.bank_fee,
-	SO.pay_amount, SO.pay_gold_amount, SO.return_amount,  SO.points, SO.payment_method, SO.balance, SO.use_points]]>
+	SO.pay_amount, SO.pay_gold_amount, SO.return_amount,  SO.points, SO.payment_method, SO.balance, SO.use_points, U.name, B.name]]>
 	</queryString>
 	<field name="order_no" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="order_no"/>
@@ -306,6 +305,14 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 		<property name="com.jaspersoft.studio.field.label" value="bank_fee"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="gold_sale_orders"/>
 	</field>
+	<field name="user_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="user_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cms_users"/>
+	</field>
+	<field name="brand_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="brand_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_brands"/>
+	</field>
 	<background>
 		<band height="806" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -332,7 +339,7 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 		<band height="149" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement x="70" y="10" width="480" height="14" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
+				<reportElement x="90" y="10" width="380" height="14" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -340,12 +347,13 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{comp_prefix}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="70" y="43" width="480" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
+				<reportElement x="90" y="43" width="380" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
@@ -353,14 +361,15 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 				<textFieldExpression><![CDATA["Địa chỉ: " + $P{comp_address}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="70" y="55" width="480" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
+				<reportElement x="90" y="55" width="380" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Điện thoại: " + $P{comp_phone}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Hotline: " + $P{comp_phone}]]></textFieldExpression>
 			</textField>
 			<componentElement>
 				<reportElement x="430" y="97" width="120" height="24" uuid="85a89373-63f9-4346-91be-93b4c759d040">
@@ -427,18 +436,17 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 				<text><![CDATA[A. HÀNG BÁN:]]></text>
 			</staticText>
 			<textField>
-				<reportElement mode="Transparent" x="70" y="24" width="480" height="19" forecolor="#FF0000" uuid="b312f102-c890-4bed-b699-b6c617993948">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<reportElement mode="Transparent" x="90" y="24" width="380" height="19" forecolor="#FF0000" uuid="b312f102-c890-4bed-b699-b6c617993948">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="16" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{brand_name}]]></textFieldExpression>
 			</textField>
 			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
-				<reportElement x="10" y="10" width="60" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
+				<reportElement x="10" y="10" width="80" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -1195,7 +1203,7 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 					<font fontName="Arial" size="10" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Phí chuyển khoản" + ($F{bank_fee} != 0 ? " (" + TEXT($F{bank_fee}, "#,###.##") + "%)" : "") ]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Phí chuyển khoản" + ($F{bank_fee} != 0 ? " (" + TEXT($F{bank_fee}, "#,###.##") + "%)" : "")]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="12">
@@ -1387,7 +1395,7 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 				</jr:table>
 			</componentElement>
 		</band>
-		<band height="49">
+		<band height="90">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement x="350" y="25" width="200" height="12" uuid="87ffaa08-23c4-4a93-a103-fd1a89cf836d">
@@ -1605,6 +1613,24 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 					<paragraph leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{pay_amount} - $F{return_amount} - $F{balance}) >= 0 ? "Tiền khách trả thêm / Trừ công nợ" : "Tiền vàng trả lại khách"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="10" y="77" width="200" height="12" uuid="09e36324-bf56-4916-be68-283cdac19296">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="350" y="77" width="200" height="12" uuid="c4e0024c-6f4f-4a1b-ac5e-cc7842f6e823">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

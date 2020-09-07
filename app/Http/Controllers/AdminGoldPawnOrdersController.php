@@ -84,7 +84,7 @@
 
 			$this->search_form[] = ["label"=>"Trạng thái","name"=>"status_search","data_column"=>'gold_pawn_orders.status', "search_type"=>"equals_raw", "type"=>"select","width"=>"col-sm-2",'dataenum'=>\Enums::$PAWN_STATUS];
             $this->search_form[] = ["label"=>"Đúng hạn/Quá hạn", "name"=>"due_date","type"=>"select","width"=>"col-sm-2",'dataenum'=>\Enums::$DUE_STATUS, "search_type"=>"in_details", "mark_value"=>"[value_search]",
-                sub_query=>"CASE WHEN gold_pawn_orders.status = 1 THEN (CASE WHEN ((gold_pawn_orders.last_interested_at is null and DATEDIFF(NOW(),gold_pawn_orders.order_date) > 30) or (gold_pawn_orders.last_interested_at is not null and  DATEDIFF(NOW(),gold_pawn_orders.last_interested_at) > 30)) THEN 2 ELSE 1 END) ELSE 0 END = [value_search]"
+                "sub_query"=>"CASE WHEN gold_pawn_orders.status = 1 THEN (CASE WHEN ((gold_pawn_orders.last_interested_at is null and DATEDIFF(NOW(),gold_pawn_orders.order_date) > 30) or (gold_pawn_orders.last_interested_at is not null and  DATEDIFF(NOW(),gold_pawn_orders.last_interested_at) > 30)) THEN 2 ELSE 1 END) ELSE 0 END = [value_search]"
             ];
 
             # START FORM DO NOT  REMOVE THIS LINE

@@ -10,6 +10,7 @@
 	use JasperPHP\JasperPHP;
 	use Illuminate\Support\Facades\File;
 	use Response;
+    use Enums;
 
 	class AdminGoldPaymentsController extends CBExtendController {
 
@@ -51,6 +52,9 @@
 			$this->col[] = ["label"=>"T/g sửa","name"=>"updated_at","callback_php"=>'date_time_format($row->updated_at, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			# END COLUMNS DO NOT REMOVE THIS LINE
             $this->search_form = [];
+            $this->search_form[] = ["label"=>"Loại đối tượng", "name"=>"object_type", "data_column"=>$this->table.".object_type", "search_type"=>"equals_raw","type"=>"select2","width"=>"col-sm-2", 'dataenum'=>Enums::$OBJECT_TYPE];
+            $this->search_form[] = ["label"=>"Đối tượng", "name"=>"object_id", "data_column"=>$this->table.".object_id", "search_type"=>"equals_raw","type"=>"select2","width"=>"col-sm-2", 'datatable'=>'v_objects,name', 'parent_select'=>'object_type', 'datatable_format'=>"code,' - ',name"];
+            $this->search_form[] = ["label"=>"Người tạo", "name"=>"created_by", "data_column"=>$this->table.".created_by", "search_type"=>"equals_raw","type"=>"select2","width"=>"col-sm-2", 'datatable'=>'cms_users,name', 'datatable_where'=>CRUDBooster::myPrivilegeId() == 2 ? 'id = '.CRUDBooster::myId() : 'id_cms_privileges in (2,3,4,5)', 'datatable_format'=>"employee_code,' - ',name,' (',email,')'"];
             $this->search_form[] = ["label"=>"Từ ngày", "name"=>"order_date_from_date", "data_column"=>"order_date", "search_type"=>"between_from","type"=>"date","width"=>"col-sm-2"];
             $this->search_form[] = ["label"=>"Đến ngày", "name"=>"order_date_to_date", "data_column"=>"order_date", "search_type"=>"between_to","type"=>"date","width"=>"col-sm-2"];
             if(CRUDBooster::myPrivilegeId() == 1 || CRUDBooster::myPrivilegeId() == 4){

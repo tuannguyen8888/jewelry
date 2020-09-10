@@ -534,7 +534,7 @@
                 $('#order_no').addClass('invalid');
                 $(`#order_no`).focus();
             }
-            if($('#liquidation_method').val()==-1){
+            if(!$('#liquidation_method').val() || $('#liquidation_method').val()==-1){
                 valid = false;
                 $('#liquidation_method').addClass('invalid');
             }

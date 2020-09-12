@@ -56,6 +56,8 @@
 			$this->col[] = ["label"=>"Tiền cầm","name"=>DB::raw('gold_pawn_orders.amount as pawn_amount'),"join"=>"gold_pawn_orders,amount","callback_php"=>'number_format($row->pawn_amount)'];
 			$this->col[] = ["label"=>"Mã KH","name"=>"customer_id","join"=>"gold_customers,code"];
 			$this->col[] = ["label"=>"Tên KH","name"=>"customer_id","join"=>"gold_customers,name"];
+            $this->col[] = ["label"=>"Phone","name"=>"customer_id","join"=>"gold_customers,phone"];
+            $this->col[] = ["label"=>"Zalo phone","name"=>"customer_id","join"=>"gold_customers,zalo_phone"];
 			$this->col[] = ["label"=>"Nhân viên","name"=>"saler_id","join"=>"cms_users,name"];
 			$this->col[] = ["label"=>"Cửa hàng","name"=>"brand_id","join"=>"gold_brands,name"];
 			# END COLUMNS DO NOT REMOVE THIS LINE

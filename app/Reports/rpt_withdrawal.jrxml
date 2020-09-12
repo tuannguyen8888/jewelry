@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 7.2.1.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Withdrawal" pageWidth="595" pageHeight="420" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="384" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="283"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="710"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business"/>
 	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -35,7 +35,7 @@
 		<defaultValueExpression><![CDATA["Admin"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[SELECT V.order_no, V.order_date, V.amount, V.notes, V.bank_fee, V.fee, C.name, fNum2Text(V.amount) AS aow,
+		<![CDATA[SELECT V.order_no, V.order_date, V.amount, V.notes, V.bank_fee, V.fee, C.name, C.phone, C.zalo_phone, fNum2Text(V.amount) AS aow,
 	ROUND(V.amount * V.bank_fee / 100, 0) AS bank_amount, ROUND(V.amount * V.fee / 100, 0) AS fee_amount, B.name AS brand_name
 FROM gold_vouchers V
 	LEFT OUTER JOIN gold_customers C ON V.object_id = C.id
@@ -68,6 +68,14 @@ WHERE V.id =  $P{id}]]>
 	</field>
 	<field name="name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_customers"/>
+	</field>
+	<field name="phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="phone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_customers"/>
+	</field>
+	<field name="zalo_phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="zalo_phone"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="gold_customers"/>
 	</field>
 	<field name="aow" class="java.lang.String">
@@ -212,7 +220,7 @@ WHERE V.id =  $P{id}]]>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<textField isBlankWhenNull="true">
-				<reportElement x="80" y="100" width="350" height="20" uuid="3e256c4f-913a-4379-9240-b19626737b2b"/>
+				<reportElement x="80" y="100" width="190" height="20" uuid="3e256c4f-913a-4379-9240-b19626737b2b"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
@@ -406,6 +414,26 @@ WHERE V.id =  $P{id}]]>
 				</textElement>
 				<text><![CDATA[Tiền trả khách:]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="270" y="100" width="50" height="20" uuid="616f67d5-34bd-4567-b145-8272162d8194">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Điện thoại:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="320" y="100" width="110" height="20" uuid="32d2e340-f640-40a3-9132-7ec15bf50a65">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{zalo_phone} == null || TRIM( $F{zalo_phone}) == "") ? ( ($F{phone} == null || TRIM( $F{phone}) == "") ? " - " :  $F{phone}) : $F{zalo_phone}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>

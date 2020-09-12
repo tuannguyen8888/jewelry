@@ -48,7 +48,9 @@
             $this->col[] = ["label"=>"Ngày đơn hàng","name"=>"order_date","callback_php"=>'date_time_format($row->order_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
             $this->col[] = ["label"=>"Trạng thái","name"=>"order_type","callback_php"=>'get_input_status($row->order_type);'];
 			$this->col[] = ["label"=>"Mã khách hàng","name"=>"customer_id","join"=>"gold_customers,code"];
-			$this->col[] = ["label"=>"Tên khách hàng","name"=>"customer_id","join"=>"gold_customers,name"];
+            $this->col[] = ["label"=>"Tên khách hàng","name"=>"customer_id","join"=>"gold_customers,name"];
+            $this->col[] = ["label"=>"Phone","name"=>"customer_id","join"=>"gold_customers,phone"];
+            $this->col[] = ["label"=>"Zalo phone","name"=>"customer_id","join"=>"gold_customers,zalo_phone"];
             $this->col[] = ["label"=>"Số tiền","name"=>DB::raw('(gold_amount + fee - discount_amount - reduce) as amount'),"callback_php"=>'number_format($row->amount)'];
             $this->col[] = ["label"=>"HTTT","name"=>"payment_method","callback_php"=>'get_payment_method($row->payment_method);'];
             $this->col[] = ["label"=>"Nhân viên BH","name"=>"saler_id","join"=>"cms_users,name"];

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 7.2.1.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Invoice_A4" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="559" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="275"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="718"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -197,7 +197,7 @@ GROUP BY SO.pay_amount, SO.return_amount, SO.balance]]>
 		<defaultValueExpression><![CDATA["/storage/app/uploads/favicon.png"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[SELECT SO.order_no, SO.order_date, COUNT(SOD.id) AS No, C.name AS customer_name, C.address, C.zalo_phone, C.tax_no,
+		<![CDATA[SELECT SO.order_no, SO.order_date, COUNT(SOD.id) AS No, C.name AS customer_name, C.address, C.phone, C.zalo_phone, C.tax_no,
 	SUM(SOD.edit_weight + I.gem_weight) AS total_weight, SUM(I.gem_weight) AS gem_weight, SUM(SOD.edit_weight) AS edit_weight, 
 	SUM(SOD.fee) AS fee, SUM(SOD.discount) AS discount, SUM(SOD.amount) AS amount,
 	SO.reduce, SO.pay_gold_amount, SO.return_amount, SO.points, SO.payment_method, SO.balance, SO.use_points,
@@ -230,6 +230,10 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 	</field>
 	<field name="address" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="address"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_customers"/>
+	</field>
+	<field name="phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="phone"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="gold_customers"/>
 	</field>
 	<field name="zalo_phone" class="java.lang.String">
@@ -500,7 +504,7 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{zalo_phone}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{zalo_phone} == null || TRIM( $F{zalo_phone}) == "") ? ( ($F{phone} == null || TRIM( $F{phone}) == "") ? " - " :  $F{phone}) : $F{zalo_phone}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="30" y="109" width="50" height="12" uuid="4a74668f-b55e-4c97-bf5a-c78915e34cd1">

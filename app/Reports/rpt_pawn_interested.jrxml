@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 7.2.1.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Pawn_Invoice" pageWidth="595" pageHeight="420" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="384" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="249"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="751"/>
 	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
@@ -32,7 +32,7 @@
 		<defaultValueExpression><![CDATA["/storage/app/uploads/favicon.png"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[SELECT SO.order_no, SO.order_date, C.name AS customer_name, C.address, C.zalo_phone, 
+		<![CDATA[SELECT SO.order_no, SO.order_date, C.name AS customer_name, C.address, C.phone, C.zalo_phone, 
 	SO.due_date, SO.amount, SO.liquidation_notes,  B.name AS brand_name, U.name as user_name,
 	CASE WHEN SO.liquidation_at = I.interested_date THEN SO.liquidation_method ELSE -1 END AS liquidation_method,
 	I.interested_no, I.interested_date, I.last_interested_at, I.due_date AS days, I.amount AS interested_amount
@@ -57,6 +57,10 @@ WHERE I.id =  $P{id}]]>
 	</field>
 	<field name="address" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="address"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_customers"/>
+	</field>
+	<field name="phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="phone"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="gold_customers"/>
 	</field>
 	<field name="zalo_phone" class="java.lang.String">
@@ -295,7 +299,7 @@ WHERE I.id =  $P{id}]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{zalo_phone}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{zalo_phone} == null || TRIM( $F{zalo_phone}) == "") ? ( ($F{phone} == null || TRIM( $F{phone}) == "") ? " - " :  $F{phone}) : $F{zalo_phone}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="270" y="100" width="50" height="15" uuid="4a74668f-b55e-4c97-bf5a-c78915e34cd1">

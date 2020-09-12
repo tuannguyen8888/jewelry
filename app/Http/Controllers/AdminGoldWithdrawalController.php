@@ -53,6 +53,8 @@
 			$this->col[] = ["label"=>"T/g rút","name"=>"order_date","callback_php"=>'date_time_format($row->order_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			$this->col[] = ["label"=>"Trạng thái","name"=>"status","callback_php"=>'get_input_status($row->status);'];
 			$this->col[] = ["label"=>"Khách hàng","name"=>"object_id","join"=>"gold_customers,name"];
+            $this->col[] = ["label"=>"Phone","name"=>"object_id","join"=>"gold_customers,phone"];
+            $this->col[] = ["label"=>"Zalo phone","name"=>"object_id","join"=>"gold_customers,zalo_phone"];
 			$this->col[] = ["label"=>"Loại thẻ","name"=>"card_type_id","join"=>"gold_bank_card,name"];
 			$this->col[] = ["label"=>"Số tiền","name"=>"in_amount","callback_php"=>'number_format($row->in_amount)'];
 			$this->col[] = ["label"=>"% phí NH","name"=>"bank_fee","callback_php"=>'number_format($row->bank_fee, 2)'];

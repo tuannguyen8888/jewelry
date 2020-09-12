@@ -52,6 +52,8 @@
             $this->col[] = ["label"=>"Ngày đơn hàng","name"=>"order_date","callback_php"=>'date_time_format($row->order_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			$this->col[] = ["label"=>"Mã khách hàng","name"=>"customer_id","join"=>"gold_customers,code"];
 			$this->col[] = ["label"=>"Tên khách hàng","name"=>"customer_id","join"=>"gold_customers,name"];
+            $this->col[] = ["label"=>"Phone","name"=>"customer_id","join"=>"gold_customers,phone"];
+            $this->col[] = ["label"=>"Zalo phone","name"=>"customer_id","join"=>"gold_customers,zalo_phone"];
 			$this->col[] = ["label"=>"Số tiền","name"=>DB::raw('(amount + fee) as amount'),"callback_php"=>'number_format($row->amount)'];
 			$this->col[] = ["label"=>"Nhân viên","name"=>"purchase_id","join"=>"cms_users,name"];
 			$this->col[] = ["label"=>"Cửa hàng","name"=>"brand_id","join"=>"gold_brands,name"];

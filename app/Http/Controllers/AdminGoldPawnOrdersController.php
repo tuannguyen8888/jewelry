@@ -53,6 +53,8 @@
 			$this->col[] = ["label"=>"Trạng thái","name"=>"status","callback_php"=>'get_pawn_status($row->status).get_due_status($row->due_status)'];
 			$this->col[] = ["label"=>"Mã KH","name"=>"customer_id","join"=>"gold_customers,code"];
 			$this->col[] = ["label"=>"Tên KH","name"=>"customer_id","join"=>"gold_customers,name"];
+            $this->col[] = ["label"=>"Phone","name"=>"customer_id","join"=>"gold_customers,phone"];
+            $this->col[] = ["label"=>"Zalo phone","name"=>"customer_id","join"=>"gold_customers,zalo_phone"];
 			$this->col[] = ["label"=>"Số tiền","name"=>"amount", "callback_php"=>'number_format($row->amount)'];
 			$this->col[] = ["label"=>"Thời hạn","name"=>"due_date", "callback_php"=>'number_format($row->due_date)'];
 			$this->col[] = ["label"=>"T/h tối thiểu","name"=>"min_days", "callback_php"=>'number_format($row->min_days)'];

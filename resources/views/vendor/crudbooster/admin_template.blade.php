@@ -27,7 +27,7 @@
     <link rel='stylesheet' href='{{asset("vendor/crudbooster/assets/css/main.css").'?r='.time()}}'/>
 
     <!-- admin_template customize css -->
-    <link rel='stylesheet' href='{{asset("css/admin_template.customize.css").'?r='.time()}}'/>
+    {{--<link rel='stylesheet' href='{{asset("css/admin_template.customize.css").'?r='.time()}}'/>--}}
 
     <!-- load css -->
     <style type="text/css">

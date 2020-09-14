@@ -146,12 +146,12 @@
 
 @push('bottom')
 	<style>
-		#table_order_details tbody {
+		#table_order_details>tbody {
 			display:block;
 			max-height:500px;
 			overflow:auto;
 		}
-		#table_order_details thead, tfoot, tbody tr {
+		#table_order_details>thead, #table_order_details>tfoot, #table_order_details>tbody>tr {
 			display:table;
 			width:100%;
 			table-layout:fixed;

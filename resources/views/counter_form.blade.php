@@ -98,6 +98,7 @@
 									<th>Mua vào</th>
 									<th>Cầm</th>
                                     <th>Lãi</th>
+                                    <th>Giảm lãi</th>
                                     <th>Tất toán</th>
                                     <th>Tiền chuyển</th>
                                     <th>Tiền nhân</th>
@@ -114,6 +115,7 @@
 									<th id="total_purchase_amount" class="text-right">0</th>
 									<th id="total_pawn_amount" class="text-right">0</th>
                                     <th id="total_interested_amount" class="text-right">0</th>
+                                    <th id="total_interest_reduced_amount" class="text-right">0</th>
                                     <th id="total_liquidation_amount" class="text-right">0</th>
                                     <th id="total_withdrawal_in" class="text-right">0</th>
                                     <th id="total_withdrawal_out" class="text-right">0</th>
@@ -449,6 +451,7 @@
                     <th class="text-right">${(detail.purchase_amount ? detail.purchase_amount : 0).toLocaleString('en-US')}</th>
                     <th class="text-right">${(detail.pawn_amount ? detail.pawn_amount : 0).toLocaleString('en-US')}</th>
                     <th class="text-right">${(detail.interested_amount ? detail.interested_amount : 0).toLocaleString('en-US')}</th>
+                    <th class="text-right">${(detail.interest_reduced_amount ? detail.interest_reduced_amount : 0).toLocaleString('en-US')}</th>
                     <th class="text-right">${(detail.liquidation_amount ? detail.liquidation_amount : 0).toLocaleString('en-US')}</th>
                     <th class="text-right">${(detail.withdrawal_in ? detail.withdrawal_in : 0).toLocaleString('en-US')}</th>
                     <th class="text-right">${(detail.withdrawal_out ? detail.withdrawal_out : 0).toLocaleString('en-US')}</th>

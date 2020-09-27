@@ -26,7 +26,7 @@
 									<input type="text" name="customer_code" id="customer_code" onchange="searchCustomer();" class="form-control" required placeholder="Mã KH" style="width: 10%">
 									<input type="text" name="customer_name" id="customer_name" class="form-control" placeholder="Tên khách hàng" style="width: 30%">
                                     <input type="text" name="customer_address" id="customer_address" class="form-control" placeholder="Địa chỉ" style="width: 45%">
-									<input type="text" name="customer_phone" id="customer_phone" class="form-control" placeholder="Số ĐT" style="width: 15%">
+									<input type="text" name="customer_phone" id="customer_phone" onchange="checkCustomerPhone();" class="form-control" placeholder="Số ĐT" style="width: 15%">
 									<input type="hidden" name="customer_id" id="customer_id">
                                     <input type="hidden" name="customer_type" id="customer_type">
 								</div>
@@ -698,6 +698,64 @@
                 AutoNumeric.getAutoNumericElement('#sampling_discount').set(0);
                 // calcTotalSaleOrder();
 			}
+        }
+        function checkCustomerPhone() {
+            let customer_phone = $('#customer_phone').val();
+            if(customer_phone && customer_phone.trim() != ''){
+                //$('.loading').show();
+                $.ajax({
+                    method: "GET",
+                    url: '{{Route("AdminGoldCustomersControllerGetSearchCustomer")}}',
+                    data: {
+                        customer_phone: customer_phone,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        if (data){
+                            if(data.customer){
+                                swal({
+                                        title: "Khách hàng đã tồn tại?",
+                                        text: `${data.customer.name} - ${customer_phone} đã tồn tại, bạn muốn chọn khách hàng cũ hay tiếp tục tạo mới?`,
+                                        type: "warning",
+                                        showCancelButton: true,
+                                        // confirmButtonColor: "#DD6B55",
+                                        confirmButtonText: "Chọn khách hàng cũ",
+                                        cancelButtonText: "Tiếp tục tạo mới",
+                                        closeOnConfirm: true,
+                                        closeOnCancel: true
+                                    },
+                                    function (isConfirm) {
+                                        if (isConfirm) {
+                                            $('#customer_id').val(data.customer.id);
+                                            $('#customer_name').val(data.customer.name);
+                                            $('#customer_address').val(data.customer.address);
+                                            $('#customer_phone').val(customer_phone);
+                                            $('#customer_name').attr('readonly', true);
+                                            $('#customer_address').attr('readonly', true);
+                                            $('#customer_phone').attr('readonly', true);
+                                            AutoNumeric.getAutoNumericElement('#sampling_discount').set(data.customer.discount_rate);
+                                            $('#sampling_discount').trigger("change");
+                                            $('#customer_type').val(data.customer.type);
+                                            AutoNumeric.getAutoNumericElement('#points').set(data.customer.points);
+                                            AutoNumeric.getAutoNumericElement('#customer_balance').set(data.customer.balance);
+                                            // calcTotalSaleOrder();
+                                            setTimeout(function () {
+                                                $('#bar_code').focus();
+                                            },100);
+                                        }
+                                    }
+								);
+                            }
+                        }
+                    },
+                    error: function (request, status, error) {
+                        //$('.loading').hide();
+                        swal("Thông báo","Có lỗi xãy ra khi tải dữ liệu, vui lòng thử lại.","warning");
+                    }
+                });
+            }
         }
 
         function showModalcustomer_id() {

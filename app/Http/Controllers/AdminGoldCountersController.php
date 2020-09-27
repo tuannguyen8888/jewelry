@@ -58,7 +58,8 @@
 			$this->col[] = ["label"=>"Bán ra (CK)","name"=>"bank_amount", "callback_php"=>'number_format($row->bank_amount)'];
 			$this->col[] = ["label"=>"Mua vào","name"=>"purchase_amount", "callback_php"=>'number_format($row->purchase_amount)'];
 			$this->col[] = ["label"=>"Cầm","name"=>"pawn_amount", "callback_php"=>'number_format($row->pawn_amount)'];
-			$this->col[] = ["label"=>"Lãi","name"=>"interested_amount", "callback_php"=>'number_format($row->interested_amount)'];
+            $this->col[] = ["label"=>"Lãi","name"=>"interested_amount", "callback_php"=>'number_format($row->interested_amount)'];
+            $this->col[] = ["label"=>"Giảm lãi","name"=>"interest_reduced_amount", "callback_php"=>'number_format($row->interest_reduced_amount)'];
 			$this->col[] = ["label"=>"Tất toán","name"=>"liquidation_amount", "callback_php"=>'number_format($row->liquidation_amount)'];
 			$this->col[] = ["label"=>"Tiền chuyển","name"=>"withdrawal_in", "callback_php"=>'number_format($row->withdrawal_in)'];
 			$this->col[] = ["label"=>"Tiền nhận","name"=>"withdrawal_out", "callback_php"=>'number_format($row->withdrawal_out)'];
@@ -363,7 +364,8 @@
 					'C.bank_amount',
                     'C.purchase_amount',
 					'C.pawn_amount',
-					'C.interested_amount',
+                    'C.interested_amount',
+                    'C.interest_reduced_amount',
 					'C.liquidation_amount',
 					'C.withdrawal_in',
 					'C.withdrawal_out',

@@ -412,6 +412,7 @@
 				Log::debug('$interested_id = ' . $interested_id);
 				
 				$counter['interested_amount'] += $amount;
+                $counter['interest_reduced_amount'] += $interested['interest_reduced_amount'];
 				$counter['updated_at'] = date('Y-m-d H:i:s');
 				$counter['updated_by'] = CRUDBooster::myId();
 				$counter_id = $counter['id'];
@@ -433,8 +434,9 @@
 						'balance' => $user->balance + $interested['amount']
 					]);
 				}
-				
-				$order['interested_amount'] += $amount;
+
+                $order['interested_amount'] += $amount;
+                $order['interest_reduced_amount'] += $interested['interest_reduced_amount'];
 				$order['updated_at'] = date('Y-m-d H:i:s');
 				$order['updated_by'] = CRUDBooster::myId();
 				$order_id = $order['id'];

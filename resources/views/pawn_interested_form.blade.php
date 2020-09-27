@@ -52,16 +52,20 @@
 						</div>
                         <div class="row">
 							<label for="investor_code" class="control-label col-sm-1">Nhà ĐT</label>
-							<div class="col-sm-7">
+							<div class="col-sm-5">
 								<div class="input-group">
 									<span class="input-group-btn">
 										<button id="btn_search_investor" type="button" class="btn btn-primary btn-flat" disabled><i class="fa fa-search"></i></button>
 									</span>
-									<input type="text" name="investor_code" id="investor_code" class="form-control" placeholder="Mã ĐT" style="width:20%" disabled>
-									<input type="text" name="investor_name" id="investor_name" class="form-control" placeholder="Tên ĐT" style="width:80%" disabled>
+									<input type="text" name="investor_code" id="investor_code" class="form-control" placeholder="Mã ĐT" style="width:35%" disabled>
+									<input type="text" name="investor_name" id="investor_name" class="form-control" placeholder="Tên ĐT" style="width:65%" disabled>
 								</div>
 							</div>
-                            <label class="control-label col-sm-2 text-right">Lãi tạm tính</label>
+                            <label class="control-label col-sm-1 text-right">Giảm lãi</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="interest_reduced_amount" id="interest_reduced_amount" class="form-control money">
+                            </div>
+                            <label class="control-label col-sm-1 text-right">Lãi tạm tính</label>
                             <div class="col-sm-2">
                                 <input type="text" name="estimate_amount" id="estimate_amount" class="form-control money" disabled>
                             </div>
@@ -250,7 +254,7 @@
         };
         counter = null;
         order = null;
-        
+
         $(function(){
             sessionTimeout = Number('{{Config::get('session.lifetime') * 60}}');
 			setTimeout(function () {
@@ -275,7 +279,8 @@
                 todayHighlight:true,
                 showOnFocus:false
             });
-
+            $('#liquidation_method').change(calcAmount);
+            $('#interest_reduced_amount').change(calcAmount);
             $.ajax({
                 method: "GET",
                 url: '{{Route("AdminGoldCountersControllerGetOpenCounter")}}',
@@ -301,7 +306,22 @@
                 resume(resume_id);
             }
         });
-        
+
+        function calcAmount() {
+            if ($('#liquidation_method').val() == 3) // đóng lãi
+            {
+                let estimate_amount = $('#estimate_amount').val() ? Number($('#estimate_amount').val().replace(/,/g, '')) : 0;
+                let interest_reduced_amount = $('#interest_reduced_amount').val() ? Number($('#interest_reduced_amount').val().replace(/,/g, '')) : 0;
+                const amountInput = AutoNumeric.getAutoNumericElement('#amount');
+                amountInput.set(estimate_amount - interest_reduced_amount);
+            } else if ($('#liquidation_method').val() == 0) // tất toán
+            {
+                let estimate_amount = $('#estimate_amount').val() ? Number($('#estimate_amount').val().replace(/,/g, '')) : 0;
+                let amount = ((order && order.amount) ? order.amount : 0) + estimate_amount - interest_reduced_amount;
+                const amountInput = AutoNumeric.getAutoNumericElement('#amount');
+                amountInput.set(amount);
+            }
+        }
 		function resume(id) {
             $.ajax({
                 method: "GET",
@@ -582,6 +602,7 @@
                 interested_date: moment($('#interested_date').val(), 'DD/MM/YYYY HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'),
                 interested_no: $('#interested_no').val() ? $('#interested_no').val() : null,
                 due_date: $('#days').val() ? Number($('#days').val()) : 0,
+                interest_reduced_amount: $('#interest_reduced_amount').val() ? Number($('#interest_reduced_amount').val().replace(/,/g, '')) : 0,
                 estimate_amount: $('#estimate_amount').val() ? Number($('#estimate_amount').val().replace(/,/g, '')) : 0,
                 amount: $('#amount').val() ? Number($('#amount').val().replace(/,/g, '')) : 0,
                 last_interested_at: order.last_interested_at,

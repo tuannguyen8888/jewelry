@@ -376,11 +376,20 @@
             if(!CRUDBooster::isView()) CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
             $para = Request::all();
             $customer_code = $para['customer_code'];
+            $customer_phone = $para['customer_phone'];
 
-           	Log::debug('$para = '.json_encode($para));
-            $customer = DB::table('gold_customers as C')->whereRaw('C.deleted_at is null')
-                ->where('C.code', $customer_code)
-                ->first();
+           	if($customer_code){
+                $customer = DB::table('gold_customers as C')->whereRaw('C.deleted_at is null')
+                    ->where('C.code', $customer_code)
+                    ->first();
+            }elseif($customer_phone){
+                $customer = DB::table('gold_customers as C')->whereRaw('C.deleted_at is null')
+                    ->where(function ($query) use ($customer_phone){
+                        $query->where('C.phone',$customer_phone)
+                            ->orWhere('C.zalo_phone',$customer_phone);
+                    })
+                    ->first();
+            }
 			return ['customer'=>$customer];
 		}
 

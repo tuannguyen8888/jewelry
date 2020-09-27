@@ -445,12 +445,13 @@
                             ];
                             $new_detail_id = DB::table('gold_sale_order_details')->insertGetId($new_detail);
                             array_push($order_detail_ids, $new_detail_id);
+                            $order = DB::table('gold_sale_order')->where('id', $order_id)->first();
                             DB::table('gold_items')->where('id', $detail['id'])->update([
                                 'qty'=>0, 
                                 'status'=>2, 
                                 'updated_at'=>$created_at, 
                                 'updated_by'=>CRUDBooster::myId(), 
-                                'notes' => 'Bán trong đơn hàng '.$new_order_no
+                                'notes' => 'Bán trong đơn hàng '.$order->order_no
                             ]);
                         }
 

@@ -300,10 +300,10 @@
 					var from_date = moment($('#from_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
 					var to_date = moment($('#to_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
 					if(isSales){
-					    window.location.href = "{{action('AdminGoldSaleOrdersController@getReportDetails')}}/S@" + from_date + "@" + to_date + "@" + user_ids;
+					    window.location.href = "{{action('AdminGoldSaleOrdersController@getReportDetails')}}/S@" + from_date + "@" + to_date + "@" + user_ids + "@" + $('#brand_id').val();
 						{{--popupWindow("{{action('AdminGoldSaleOrdersController@getReportDetails')}}/S@" + from_date + "@" + to_date + "@" + user_ids,"print");--}}
 					}else{
-                        window.location.href = "{{action('AdminGoldSaleOrdersController@getReportDetails')}}/P@" + from_date + "@" + to_date + "@" + user_ids;
+                        window.location.href = "{{action('AdminGoldSaleOrdersController@getReportDetails')}}/P@" + from_date + "@" + to_date + "@" + user_ids + "@" + $('#brand_id').val();
 						{{--popupWindow("{{action('AdminGoldSaleOrdersController@getExportDetail')}}/P@" + from_date + "@" + to_date + "@" + user_ids,"print");--}}
 					}
 				}else{

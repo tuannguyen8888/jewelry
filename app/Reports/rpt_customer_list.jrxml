@@ -318,7 +318,7 @@ ORDER BY order_no]]>
 		<![CDATA[SELECT 
 	C.code,
     C.name,
-    CASE WHEN C.phone is null THEN C.zalo_phone ELSE C.phone END as phone,
+    CASE WHEN C.phone is null and C.zalo_phone is null THEN '-' WHEN  C.phone is null THEN C.zalo_phone ELSE C.phone END as phone,
     C.points,
     NOW() as now
 FROM gold_customers as C 
@@ -428,10 +428,10 @@ WHERE C.id = $P{id}]]>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
 					<font fontName="Arial" size="10" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Khách hàng: " + $F{code} + " - " + $F{name} + "   Số điện thoại: " + $F{phone} + "   Điểm tích lũy: " + $F{points}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["<b>Khách hàng:</b> " + $F{code} + " - " + $F{name} + " &nbsp;&nbsp;&nbsp;<b>Số điện thoại:</b> " + $F{phone} + " &nbsp;&nbsp;&nbsp;<b>Điểm tích lũy:</b> " + SIGN($F{points})]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

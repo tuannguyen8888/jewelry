@@ -993,7 +993,8 @@
                 'from_date'=>$paras[1],
                 'to_date'=>$paras[2],
                 'user_ids'=>$paras[3],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'IS_IGNORE_PAGINATION' => true
             ];
             $input = base_path().'/app/Reports/' . ($paras[0] == 'S' ? 'rpt_report_sales_details' : 'rpt_report_purchase_details') . '.jasper';
             $output = public_path().'/output_reports/'.$filename;

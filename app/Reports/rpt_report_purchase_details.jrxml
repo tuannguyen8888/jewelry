@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 7.2.1.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Report_Purchase_Details" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="812" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business"/>
@@ -580,7 +580,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 							<box>
 								<pen lineWidth="0.5"/>
 							</box>
-							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" pattern="#,###.####" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="60" height="15" uuid="a42d6c13-a2fa-4ae0-bf71-3131f8663273">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
@@ -594,7 +594,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 									<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$V{fTotal_Gold_Weight} != 0 ? TEXT($V{fTotal_Gold_Weight}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{fTotal_Gold_Weight}]]></textFieldExpression>
 							</textField>
 						</jr:tableFooter>
 						<jr:detailCell height="15">
@@ -602,7 +602,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 							<box>
 								<pen lineWidth="0.5"/>
 							</box>
-							<textField isBlankWhenNull="true">
+							<textField pattern="#,###.####" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="60" height="15" uuid="e467e416-34f0-4a7d-8026-b4f7767d3aa7">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
@@ -616,7 +616,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 									<font fontName="Arial" size="9"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{gold_weight} != 0 ? TEXT($F{gold_weight}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{gold_weight}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -633,7 +633,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 							<box>
 								<pen lineWidth="0.5"/>
 							</box>
-							<textField isBlankWhenNull="true">
+							<textField pattern="#,###.##" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="70" height="15" uuid="af8f18b3-839d-4110-8524-dd7fb5a49c5d">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
@@ -647,7 +647,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 									<font fontName="Arial" size="9"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{age} != 0 ? TEXT($F{age}, "#,###.##") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{age}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -658,7 +658,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 							<box>
 								<pen lineWidth="0.5"/>
 							</box>
-							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" pattern="#,###.####" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="90" height="15" uuid="d4e34bfc-700f-4c1a-8cc1-274abb9bb6f0">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
@@ -672,7 +672,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 									<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$V{fTotal_Q10} != 0 ? TEXT($V{fTotal_Q10}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{fTotal_Q10}]]></textFieldExpression>
 							</textField>
 						</jr:tableFooter>
 						<jr:detailCell height="15">
@@ -683,7 +683,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 								<bottomPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
-							<textField isBlankWhenNull="true">
+							<textField pattern="#,###.####" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="90" height="15" uuid="df1bca35-65ac-4dc0-adad-f43f3d635006">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
@@ -697,7 +697,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 									<font fontName="Arial" size="9"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{q10} != 0 ? TEXT($F{q10}, "#,###.####") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{q10}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -717,14 +717,14 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 								<bottomPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
-							<textField>
+							<textField pattern="#,###">
 								<reportElement x="0" y="0" width="90" height="15" uuid="7c3cc099-a4d7-42d0-b31e-aea57a841b09">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{price} != 0 ? TEXT($F{price}, "#,###") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -737,7 +737,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 								<bottomPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
-							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" pattern="#,###" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="90" height="15" uuid="c6689487-5f26-4c4b-86d5-5d4705ab4991">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
@@ -751,11 +751,11 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 									<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$V{fTotal_Amount} != 0 ? TEXT($V{fTotal_Amount}, "#,###") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{fTotal_Amount}]]></textFieldExpression>
 							</textField>
 						</jr:tableFooter>
 						<jr:detailCell height="15">
-							<textField isBlankWhenNull="true">
+							<textField pattern="#,###" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="90" height="15" uuid="bedb6008-3bde-487f-b2ed-aac29534e1af">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
@@ -769,7 +769,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 									<font fontName="Arial" size="9"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{amount} != 0 ? TEXT($F{amount}, "#,###") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -782,7 +782,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 								<bottomPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
-							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" pattern="#,###" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="90" height="15" uuid="2dc338a2-34f3-43e2-9be9-4936ad60a4cf">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
@@ -796,11 +796,11 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 									<font fontName="Arial" size="9" isBold="true" isItalic="false"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$V{fTotal_Fee} != 0 ? TEXT($V{fTotal_Fee}, "#,###") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{fTotal_Fee}]]></textFieldExpression>
 							</textField>
 						</jr:tableFooter>
 						<jr:detailCell height="15">
-							<textField isBlankWhenNull="true">
+							<textField pattern="#,###" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="90" height="15" uuid="9db5284e-2b9c-4ec9-9859-3892f2f91c16">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
@@ -814,7 +814,7 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 									<font fontName="Arial" size="9"/>
 									<paragraph rightIndent="2"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{fee} != 0 ? TEXT($F{fee}, "#,###") : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{fee}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

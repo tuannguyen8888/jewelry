@@ -395,7 +395,7 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 				</jr:barbecue>
 			</componentElement>
 			<textField>
-				<reportElement x="475" y="85" width="75" height="12" uuid="e251c692-8108-4b56-ab16-9ab8e5dbbd53">
+				<reportElement x="457" y="85" width="113" height="12" uuid="e251c692-8108-4b56-ab16-9ab8e5dbbd53">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle">
@@ -404,7 +404,7 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 				<textFieldExpression><![CDATA[$F{order_no}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="10" y="85" width="540" height="12" uuid="7186648e-d8d6-4ed8-b8d1-1fc154083664">
+				<reportElement x="150" y="85" width="260" height="12" uuid="7186648e-d8d6-4ed8-b8d1-1fc154083664">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -425,7 +425,7 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 				<text><![CDATA[HÓA ĐƠN KIÊM GIẤY ĐẢM BẢO VÀNG]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="440" y="85" width="35" height="12" uuid="1c0b4929-0712-4380-81c0-3d031a95485a">
+				<reportElement x="422" y="85" width="35" height="12" uuid="1c0b4929-0712-4380-81c0-3d031a95485a">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>

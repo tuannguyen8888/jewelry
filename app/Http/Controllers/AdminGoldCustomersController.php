@@ -103,9 +103,9 @@
 	        | 
 	        */
 	        $this->addaction = array();
-			if(CRUDBooster::myPrivilegeId() != 2){
+//			if(CRUDBooster::myPrivilegeId() != 2){
 				$this->addaction[] = ['label'=>'Bảng kê','url'=>CRUDBooster::mainpath('print-list/[id]'),'icon'=>'fa fa-print','color'=>'info'];
-			}
+//			}
 
 	        /* 
 	        | ---------------------------------------------------------------------- 

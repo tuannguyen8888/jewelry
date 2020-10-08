@@ -28,7 +28,7 @@
 									<label class="control-label col-sm-4">Đến ngày <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
 									<div class="col-sm-7">
 										<div class="input-group" >
-											<input id="to_date" readonly type="text" class="form-control" readonly>
+											<input id="to_date" readonly type="text" class="form-control bg-white" readonly>
 											<div class="input-group-addon bg-gray">
 												<i class="fa fa-calendar"></i>
 											</div>
@@ -138,21 +138,33 @@
 	<script type="application/javascript">
 		users = [];
         $(function(){
-            $('#from_date').datepicker({
-                format:'dd/mm/yyyy',
+            // $('#from_date').datepicker({
+            //     format:'dd/mm/yyyy',
+            //     autoclose:true,
+            //     todayHighlight:true,
+            //     showOnFocus:false
+            // });
+            $('#from_date').datetimepicker({
+                format:'d/m/Y H:i:s',
                 autoclose:true,
                 todayHighlight:true,
                 showOnFocus:false
             });
-            $('#from_date').val(moment('01/' + moment().format('MM/YYYY'), 'DD/MM/YYYY').format('DD/MM/YYYY'))
+            $('#from_date').val(moment('01/' + moment().format('MM/YYYY'), 'DD/MM/YYYY').format('DD/MM/YYYY HH:mm:ss'))
 
-			$('#to_date').datepicker({
-                format:'dd/mm/yyyy',
+			// $('#to_date').datepicker({
+            //     format:'dd/mm/yyyy',
+            //     autoclose:true,
+            //     todayHighlight:true,
+            //     showOnFocus:false
+            // });
+            $('#to_date').datetimepicker({
+                format:'d/m/Y H:i:s',
                 autoclose:true,
                 todayHighlight:true,
                 showOnFocus:false
             });
-			$('#to_date').val(moment().format('DD/MM/YYYY'))
+			$('#to_date').val(moment().format('DD/MM/YYYY HH:mm:ss'))
 			loadBrands();
 
 			$.ajax({
@@ -254,8 +266,8 @@
 				}
 				// console.log('user_ids = ', user_ids);
 				if(user_ids) {
-					var from_date = moment($('#from_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
-					var to_date = moment($('#to_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
+					var from_date = moment($('#from_date').val(),'DD/MM/YYYY HH:mm:ss').format('YYYY-MM-DD HH:mm:ss');
+					var to_date = moment($('#to_date').val(),'DD/MM/YYYY HH:mm:ss').format('YYYY-MM-DD HH:mm:ss');
 					// console.log('from_date = ', from_date);
 					// console.log('to_date = ', to_date);
 					if(print){

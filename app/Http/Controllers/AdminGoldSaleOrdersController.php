@@ -892,12 +892,12 @@
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
             $filename = 'SS_'.time();
-            
+            $para_values = explode("@", $para);
             $parameter = [
-                'brand_id'=>substr($para, 2, 1),
-				'from_date'=>substr($para, 4, 10),
-				'to_date'=>substr($para, 15, 10),
-				'user_ids'=>substr($para, 26, strlen($para)),
+                'brand_id'=>$para_values[1],
+				'from_date'=>$para_values[2],
+				'to_date'=>$para_values[3],
+				'user_ids'=>$para_values[4],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
             $input = base_path().'/app/Reports/rpt_sales.jasper';
@@ -926,13 +926,14 @@
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
 			$filename = 'SD_'.time();
+            $para_values = explode("@", $para);
             $parameter = [
-				'brand_id'=>substr($para, 2, 1),
-				'from_date'=>substr($para, 4, 10),
-				'to_date'=>substr($para, 15, 10),
-				'user_ids'=>substr($para, 26, strlen($para)),
+                'brand_id'=>$para_values[1],
+                'from_date'=>$para_values[2],
+                'to_date'=>$para_values[3],
+                'user_ids'=>$para_values[4],
                 'logo'=>storage_path().'/app/uploads/logo.png'
-			];
+            ];
             $input = base_path().'/app/Reports/rpt_sales_detail.jasper';
             $output = public_path().'/output_reports/'.$filename;
             $ext = substr($para, 0, 1) == 'X' ? 'xlsx' : 'pdf';

@@ -361,6 +361,7 @@
             DB::beginTransaction();
             try {
                 $para = Request::all();
+                Log::debug('date_default_timezone_get() = ' . date_default_timezone_get());
                 Log::debug('$para = ' . Json::encode($para));
 				$order = $para['order'];
 				$details = $para['details'];
@@ -422,6 +423,7 @@
             DB::beginTransaction();
             try {
                 $para = Request::all();
+                Log::debug('date_default_timezone_get() = ' . date_default_timezone_get());
                 Log::debug('$para = ' . Json::encode($para));
                 $order = $para['order'];
 				$item = $para['item'];
@@ -519,6 +521,7 @@
             DB::beginTransaction();
             try {
                 $para = Request::all();
+                Log::debug('date_default_timezone_get() = ' . date_default_timezone_get());
                 Log::debug('$para = ' . Json::encode($para));
 				$detail = $para['detail'];
 

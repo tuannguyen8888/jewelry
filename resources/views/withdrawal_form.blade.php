@@ -170,7 +170,8 @@
                 format:'d/m/Y H:i:s',
                 autoclose:true,
                 todayHighlight:true,
-                showOnFocus:false
+                showOnFocus:false,
+                step: 5
             });
             AutoNumeric.multiple('.money', optionNumberInput);
 

@@ -413,7 +413,8 @@
                 format:'d/m/Y',
                 autoclose:true,
                 todayHighlight:true,
-                showOnFocus:false
+                showOnFocus:false,
+                step: 5
             });
             AutoNumeric.multiple('.money', optionNumberInput);
             loadStock();

@@ -52,7 +52,7 @@
 			$this->col[] = ["label"=>"T/g đóng lãi","name"=>"interested_date","callback_php"=>'date_time_format($row->interested_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			$this->col[] = ["label"=>"Tiền lãi","name"=>"interested_amount","callback_php"=>'number_format($row->interested_amount)'];
 			$this->col[] = ["label"=>"Số hợp đồng","name"=>"order_id","join"=>"gold_pawn_orders,order_no","width"=>"100"];
-			$this->col[] = ["label"=>"T/g cầm","name"=>DB::raw('gold_pawn_orders.order_date'),"join"=>"gold_pawn_orders,order_date","callback_php"=>'date_time_format($row->interested_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
+			$this->col[] = ["label"=>"T/g cầm","name"=>DB::raw('gold_pawn_orders.order_date'),"join"=>"gold_pawn_orders,order_date","callback_php"=>'date_time_format($row->order_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			$this->col[] = ["label"=>"Tiền cầm","name"=>DB::raw('gold_pawn_orders.amount as pawn_amount'),"join"=>"gold_pawn_orders,amount","callback_php"=>'number_format($row->pawn_amount)'];
 			$this->col[] = ["label"=>"Mã KH","name"=>"customer_id","join"=>"gold_customers,code"];
 			$this->col[] = ["label"=>"Tên KH","name"=>"customer_id","join"=>"gold_customers,name"];

@@ -17,7 +17,7 @@
 									<label class="control-label col-sm-4">Từ ngày <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
 									<div class="col-sm-7">
 										<div class="input-group" >
-											<input id="from_date" readonly type="text" class="form-control bg-white" required>
+											<input id="from_date" type="text" class="form-control bg-white" required>
 											<div class="input-group-addon bg-gray">
 												<i class="fa fa-calendar"></i>
 											</div>
@@ -28,7 +28,7 @@
 									<label class="control-label col-sm-4">Đến ngày <span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
 									<div class="col-sm-7">
 										<div class="input-group" >
-											<input id="to_date" readonly type="text" class="form-control bg-white" readonly>
+											<input id="to_date" type="text" class="form-control bg-white">
 											<div class="input-group-addon bg-gray">
 												<i class="fa fa-calendar"></i>
 											</div>
@@ -148,7 +148,8 @@
                 format:'d/m/Y H:i:s',
                 autoclose:true,
                 todayHighlight:true,
-                showOnFocus:false
+                showOnFocus:false,
+				step: 5
             });
             $('#from_date').val(moment('01/' + moment().format('MM/YYYY'), 'DD/MM/YYYY').format('DD/MM/YYYY HH:mm:ss'))
 
@@ -162,7 +163,8 @@
                 format:'d/m/Y H:i:s',
                 autoclose:true,
                 todayHighlight:true,
-                showOnFocus:false
+                showOnFocus:false,
+                step: 5
             });
 			$('#to_date').val(moment().format('DD/MM/YYYY HH:mm:ss'))
 			loadBrands();

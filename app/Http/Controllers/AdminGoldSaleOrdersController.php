@@ -348,6 +348,7 @@
             DB::beginTransaction();
             try {
                 $para = Request::all();
+                Log::debug('date_default_timezone_get() = ' . date_default_timezone_get());
                 Log::debug('$para = ' . Json::encode($para));
                 $new_order = $para['order'];
                 $order_details = $para['order_details'];

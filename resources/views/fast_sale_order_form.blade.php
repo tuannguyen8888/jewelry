@@ -472,7 +472,8 @@
                 format:'d/m/Y H:i:s',
                 autoclose:true,
                 todayHighlight:true,
-                showOnFocus:false
+                showOnFocus:false,
+                step: 5
             });
             $('#pay_date').datepicker({
                 format:'dd/mm/yyyy',

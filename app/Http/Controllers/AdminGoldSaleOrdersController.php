@@ -893,6 +893,7 @@
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
             $filename = 'SS_'.time();
+            Log::debug('$para = ' . Json::encode($para));
             $para_values = explode("@", $para);
             $parameter = [
                 'brand_id'=>$para_values[1],
@@ -901,6 +902,7 @@
 				'user_ids'=>$para_values[4],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
+            Log::debug('$parameter = ' ,$parameter);
             $input = base_path().'/app/Reports/rpt_sales.jasper';
             $output = public_path().'/output_reports/'.$filename;
             $ext = substr($para, 0, 1) == 'X' ? 'xlsx' : 'pdf';

@@ -20,8 +20,8 @@
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="247"/>
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="746"/>
-		<parameter name="from_date" class="java.util.Date"/>
-		<parameter name="to_date" class="java.util.Date"/>
+		<parameter name="from_date" class="java.lang.String"/>
+		<parameter name="to_date" class="java.lang.String"/>
 		<parameter name="user_id" class="java.lang.Integer"/>
 		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
@@ -98,8 +98,8 @@ ORDER BY P.name, I.age]]>
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="228"/>
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="765"/>
 		<parameter name="user_id" class="java.lang.Integer"/>
-		<parameter name="from_date" class="java.util.Date"/>
-		<parameter name="to_date" class="java.util.Date"/>
+		<parameter name="from_date" class="java.lang.String"/>
+		<parameter name="to_date" class="java.lang.String"/>
 		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT name, SUM(qty) as qty, SUM(gold_weight) AS gold_weight, age, SUM(q10) AS q10, SUM(amount) AS amount, SUM(fee) AS fee
@@ -177,8 +177,8 @@ ORDER BY name, age]]>
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="229"/>
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="764"/>
 		<parameter name="user_id" class="java.lang.Integer"/>
-		<parameter name="from_date" class="java.util.Date"/>
-		<parameter name="to_date" class="java.util.Date"/>
+		<parameter name="from_date" class="java.lang.String"/>
+		<parameter name="to_date" class="java.lang.String"/>
 		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT SUM(qty) AS qty, SUM(amount) AS amount, SUM(interested) AS interested, SUM(finalization) AS finalization, SUM(liquidation) AS liquidation
@@ -235,8 +235,8 @@ FROM(
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="764"/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
 		<parameter name="user_id" class="java.lang.Integer"/>
-		<parameter name="to_date" class="java.util.Date"/>
-		<parameter name="from_date" class="java.util.Date"/>
+		<parameter name="to_date" class="java.lang.String"/>
+		<parameter name="from_date" class="java.lang.String"/>
 		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT COUNT(V.order_no) AS qty, SUM(V.amount) AS amount, 
@@ -286,10 +286,10 @@ WHERE V.deleted_at IS NULL AND V.order_type = 2 AND C.saler_id = $P{user_id}
 	<parameter name="logo" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["/storage/app/uploads/logo.png"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="from_date" class="java.util.Date">
+	<parameter name="from_date" class="java.lang.String">
 		<defaultValueExpression><![CDATA[DATE(2019,12,1)]]></defaultValueExpression>
 	</parameter>
-	<parameter name="to_date" class="java.util.Date">
+	<parameter name="to_date" class="java.lang.String">
 		<defaultValueExpression><![CDATA[DATE(2019,12,31)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="user_ids" class="java.lang.String">
@@ -382,7 +382,7 @@ ORDER BY U.name]]>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Arial" size="11" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Từ ngày: " +DATEFORMAT($P{from_date}, "dd/MM/yyyy") + "    Đến ngày: " + DATEFORMAT($P{to_date}, "dd/MM/yyyy")]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Từ ngày: " +DATEFORMAT(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($P{from_date}),"dd/MM/yyyy HH:mm:ss") + "    Đến ngày: " + DATEFORMAT(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($P{to_date}), "dd/MM/yyyy HH:mm:ss")]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement mode="Transparent" x="0" y="60" width="565" height="20" forecolor="#FF0000" uuid="5a5c4011-6ec9-4fdb-bea4-ed988a032338">

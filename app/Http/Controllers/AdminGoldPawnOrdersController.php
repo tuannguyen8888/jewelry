@@ -423,7 +423,7 @@
                         ->where('SO.order_date', '>=', $order_date->format('Y-m-d') . ' 00:00:00')
 						->where('SO.order_date', '<=', $order_date->format('Y-m-d') . ' 23:59:59')
 						->where('SO.order_no', 'like', $new_order_no . '%')
-                        ->orderBy('SO.order_no', 'desc')
+                        ->orderBy('SO.id', 'desc')
                         ->first();
                     if ($last_order) {
 						$old_no = intval(explode('-', $last_order->order_no)[1]);
@@ -598,10 +598,20 @@
             //First, Add an auth
             if(!CRUDBooster::isView()) CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
             $para = Request::all();
+            $order_id = $para['order_id'];
             $order_no = $para['order_no'];
 
            	Log::debug('$para = '.json_encode($para));
-			$order = DB::table('gold_pawn_orders')->whereRaw('deleted_at is null')->where('order_no', $order_no)->first();
+           	if($order_id){
+                $order = DB::table('gold_pawn_orders')->whereRaw('deleted_at is null')->where('id', $order_id)->first();
+            }else {
+                $current_brand = CRUDBooster::myBrand();
+                $order = DB::table('gold_pawn_orders')
+                    ->whereRaw('deleted_at is null')
+                    ->where('order_no', $order_no)
+                    ->where('brand_id', $current_brand)
+                    ->first();
+            }
 			$customer = DB::table('gold_customers')->where('id', $order->customer_id)->first();
 			$investor = DB::table('gold_investors')->where('id', $order->investor_id)->first();
 			$detail = DB::table('gold_pawn_order_details')

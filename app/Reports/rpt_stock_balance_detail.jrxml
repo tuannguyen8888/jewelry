@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 7.2.1.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Stock_Balance_Detail" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="559" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
@@ -17,11 +17,11 @@
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="289"/>
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="700"/>
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business"/>
 		<parameter name="stock_id" class="java.lang.Integer"/>
 		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
-			<![CDATA[SELECT I.bar_code, P.product_code, P.product_name, T.name AS product_type, 
+			<![CDATA[SELECT I.bar_code, P.product_code, P.product_name, T.name AS product_type, I.age,
 	I.total_weight, I.gem_weight, I.gold_weight, I.qty, G.name AS group_name, I.q10
 FROM gold_items I 
 	LEFT OUTER JOIN gold_products P ON I.product_id = P.id
@@ -45,6 +45,10 @@ ORDER BY T.name, G.name, I.id]]>
 		<field name="product_type" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="product_type"/>
 			<property name="com.jaspersoft.studio.field.tree.path" value="gold_product_types"/>
+		</field>
+		<field name="age" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="age"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="gold_items"/>
 		</field>
 		<field name="total_weight" class="java.lang.Double">
 			<property name="com.jaspersoft.studio.field.label" value="total_weight"/>
@@ -248,10 +252,10 @@ WHERE id =  $P{id}]]>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="15" splitType="Stretch">
+		<band height="16" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement x="329" y="0" width="60" height="15" uuid="76945326-bdf5-4652-a6ba-703cfbda0fb6">
+				<reportElement x="329" y="0" width="50" height="15" uuid="76945326-bdf5-4652-a6ba-703cfbda0fb6">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -267,7 +271,7 @@ WHERE id =  $P{id}]]>
 				<text><![CDATA[TL tổng]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="274" y="0" width="55" height="15" uuid="413e327a-feb8-4025-83a4-45240fbab15f">
+				<reportElement x="280" y="0" width="49" height="15" uuid="413e327a-feb8-4025-83a4-45240fbab15f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -282,7 +286,7 @@ WHERE id =  $P{id}]]>
 				<text><![CDATA[Loại vàng]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="80" y="0" width="90" height="15" uuid="5e4a884a-a21a-4b3f-8714-ae9c50635b45">
+				<reportElement x="80" y="0" width="70" height="15" uuid="5e4a884a-a21a-4b3f-8714-ae9c50635b45">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -297,7 +301,7 @@ WHERE id =  $P{id}]]>
 				<text><![CDATA[Mã hàng]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="389" y="0" width="50" height="15" uuid="1d3f31a9-0566-4aa5-8a16-36935b77412f">
+				<reportElement x="379" y="0" width="60" height="15" uuid="1d3f31a9-0566-4aa5-8a16-36935b77412f">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -329,7 +333,7 @@ WHERE id =  $P{id}]]>
 				<text><![CDATA[TL vàng]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="170" y="0" width="104" height="15" uuid="6264bc48-33f5-4da4-b473-eb235b048f40">
+				<reportElement x="150" y="0" width="80" height="15" uuid="6264bc48-33f5-4da4-b473-eb235b048f40">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -388,6 +392,21 @@ WHERE id =  $P{id}]]>
 				</textElement>
 				<text><![CDATA[Mã vạch]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="230" y="0" width="50" height="15" uuid="2e7bce79-3233-45f3-a4b1-b3a47185f491">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tuổi]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
@@ -413,11 +432,11 @@ WHERE id =  $P{id}]]>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
-					<jr:columnGroup width="329" uuid="2cb43a00-1a17-44cf-b5fa-ab44084f5847">
+					<jr:columnGroup width="280" uuid="2cb43a00-1a17-44cf-b5fa-ab44084f5847">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [5]"/>
 						<jr:tableFooter style="Table_CH" height="15" rowSpan="1">
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="329" height="15" uuid="615e2aab-2859-4594-bde9-d24b397f9b38">
+								<reportElement x="0" y="0" width="280" height="15" uuid="615e2aab-2859-4594-bde9-d24b397f9b38">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
 								<box>
@@ -436,7 +455,7 @@ WHERE id =  $P{id}]]>
 						<jr:groupFooter groupName="Product_Group">
 							<jr:cell style="Table_CH" height="15" rowSpan="1">
 								<textField isBlankWhenNull="true">
-									<reportElement x="0" y="0" width="329" height="15" uuid="4e89feca-a86a-4220-b1b2-eefc589482ff">
+									<reportElement x="0" y="0" width="280" height="15" uuid="4e89feca-a86a-4220-b1b2-eefc589482ff">
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 										<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 									</reportElement>
@@ -503,14 +522,14 @@ WHERE id =  $P{id}]]>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="90" uuid="5e601fc9-0dc2-4855-9202-0806027c0809">
+						<jr:column width="70" uuid="5e601fc9-0dc2-4855-9202-0806027c0809">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 							<jr:groupHeader groupName="Product_Group">
 								<jr:cell style="Table_CH" height="0" rowSpan="1"/>
 							</jr:groupHeader>
 							<jr:detailCell height="15">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement x="0" y="0" width="90" height="15" uuid="e948a5b9-51b6-4d8a-bd5e-bea73b5670dd">
+									<reportElement x="0" y="0" width="70" height="15" uuid="e948a5b9-51b6-4d8a-bd5e-bea73b5670dd">
 										<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 									</reportElement>
 									<box>
@@ -527,14 +546,14 @@ WHERE id =  $P{id}]]>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="104" uuid="3a0e749f-5754-4d07-bc5e-d98280f7fea5">
+						<jr:column width="80" uuid="3a0e749f-5754-4d07-bc5e-d98280f7fea5">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 							<jr:groupHeader groupName="Product_Group">
 								<jr:cell style="Table_CH" height="0" rowSpan="1"/>
 							</jr:groupHeader>
 							<jr:detailCell height="15">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement x="0" y="0" width="104" height="15" uuid="56b1fd47-79d7-4524-a18a-1c66fffec721">
+									<reportElement x="0" y="0" width="80" height="15" uuid="56b1fd47-79d7-4524-a18a-1c66fffec721">
 										<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 									</reportElement>
 									<box>
@@ -551,36 +570,58 @@ WHERE id =  $P{id}]]>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
-						<jr:column width="55" uuid="ab0f8f91-5845-4820-ac79-15f606701b72">
+						<jr:column width="50" uuid="ab0f8f91-5845-4820-ac79-15f606701b72">
 							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 							<jr:groupHeader groupName="Product_Group">
 								<jr:cell style="Table_CH" height="0" rowSpan="1"/>
 							</jr:groupHeader>
 							<jr:detailCell height="15">
-								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement x="0" y="0" width="55" height="15" uuid="b52f5e9a-af80-437c-9d04-2b382c9ca2d7"/>
+								<textField>
+									<reportElement x="0" y="0" width="50" height="15" uuid="b26dbf31-3778-4f8d-9e5c-3c76fe2acbbb"/>
 									<box>
-										<topPen lineWidth="0.5"/>
-										<leftPen lineWidth="0.5"/>
-										<bottomPen lineWidth="0.5"/>
-										<rightPen lineWidth="0.5"/>
+										<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 									</box>
-									<textElement textAlignment="Center" verticalAlignment="Middle">
-										<font fontName="Arial" size="11"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{product_type}]]></textFieldExpression>
+									<textElement textAlignment="Center" verticalAlignment="Middle"/>
+									<textFieldExpression><![CDATA[$F{age}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
 					</jr:columnGroup>
-					<jr:column width="60" uuid="7e358854-a3ef-4f77-ab72-728f589160ab">
+					<jr:column width="49" uuid="7e358854-a3ef-4f77-ab72-728f589160ab">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+						<jr:detailCell height="15">
+							<box>
+								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="49" height="15" uuid="b52f5e9a-af80-437c-9d04-2b382c9ca2d7"/>
+								<box>
+									<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{product_type}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="50" uuid="576a5d1f-aee9-40c7-8869-9449ea119e1d">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
 						<jr:tableFooter style="Table_CH" height="15" rowSpan="1">
 							<box>
 								<pen lineWidth="0.5"/>
 							</box>
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="60" height="15" uuid="d1ce5d5e-b159-4608-9d77-a74aa81fcb23">
+								<reportElement x="0" y="0" width="50" height="15" uuid="d1ce5d5e-b159-4608-9d77-a74aa81fcb23">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
 								<box>
@@ -599,7 +640,7 @@ WHERE id =  $P{id}]]>
 						<jr:groupFooter groupName="Product_Group">
 							<jr:cell style="Table_CH" height="15" rowSpan="1">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement x="0" y="0" width="60" height="15" uuid="97cff45b-151f-42f9-8d6b-9f531dc79434">
+									<reportElement x="0" y="0" width="50" height="15" uuid="97cff45b-151f-42f9-8d6b-9f531dc79434">
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
 									<box>
@@ -618,7 +659,7 @@ WHERE id =  $P{id}]]>
 						</jr:groupFooter>
 						<jr:detailCell height="15">
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="60" height="15" uuid="29ca02a8-84b1-4c4c-aa58-e95dae093a09">
+								<reportElement x="0" y="0" width="50" height="15" uuid="29ca02a8-84b1-4c4c-aa58-e95dae093a09">
 									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 								</reportElement>
@@ -636,14 +677,14 @@ WHERE id =  $P{id}]]>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="50" uuid="576a5d1f-aee9-40c7-8869-9449ea119e1d">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+					<jr:column width="60" uuid="a654d72c-9677-485e-825a-40ba2283798b">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
 						<jr:tableFooter style="Table_CH" height="15" rowSpan="1">
 							<box>
 								<pen lineWidth="0.5"/>
 							</box>
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="50" height="15" uuid="a6e21788-0565-40ea-b08d-f1dfe3c0a377">
+								<reportElement x="0" y="0" width="60" height="15" uuid="a6e21788-0565-40ea-b08d-f1dfe3c0a377">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
 								<box>
@@ -662,7 +703,7 @@ WHERE id =  $P{id}]]>
 						<jr:groupFooter groupName="Product_Group">
 							<jr:cell style="Table_CH" height="15" rowSpan="1">
 								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-									<reportElement x="0" y="0" width="50" height="15" uuid="caca7cef-7f59-41e2-81ba-65f2a3c59cbb">
+									<reportElement x="0" y="0" width="60" height="15" uuid="caca7cef-7f59-41e2-81ba-65f2a3c59cbb">
 										<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 									</reportElement>
 									<box>
@@ -681,7 +722,7 @@ WHERE id =  $P{id}]]>
 						</jr:groupFooter>
 						<jr:detailCell height="15">
 							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="50" height="15" uuid="69d8a695-d62d-4516-8207-4bdfedc37fec">
+								<reportElement x="0" y="0" width="60" height="15" uuid="69d8a695-d62d-4516-8207-4bdfedc37fec">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 								</reportElement>
 								<box>
@@ -698,12 +739,9 @@ WHERE id =  $P{id}]]>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="60" uuid="a654d72c-9677-485e-825a-40ba2283798b">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+					<jr:column width="60" uuid="f9e8f630-bf86-48c8-8d2c-1cfd44a13679">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
 						<jr:tableFooter style="Table_CH" height="15" rowSpan="1">
-							<box>
-								<pen lineWidth="0.5"/>
-							</box>
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="60" height="15" uuid="ce345179-63bb-483b-95ef-ffa2124f3c8a">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -741,7 +779,7 @@ WHERE id =  $P{id}]]>
 								</textField>
 							</jr:cell>
 						</jr:groupFooter>
-						<jr:detailCell height="15">
+						<jr:detailCell style="Table_CH" height="15">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="60" height="15" uuid="4a235cb5-22db-4860-85b0-c82043bf9d8a">
 									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -760,8 +798,8 @@ WHERE id =  $P{id}]]>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="60" uuid="f9e8f630-bf86-48c8-8d2c-1cfd44a13679">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
+					<jr:column width="60" uuid="8f7b3cdb-3618-4598-9a96-a7af02e948fb">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
 						<jr:tableFooter style="Table_CH" height="15" rowSpan="1">
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="60" height="15" uuid="beb3070f-dfab-49f2-98bf-22e9d27493a3">

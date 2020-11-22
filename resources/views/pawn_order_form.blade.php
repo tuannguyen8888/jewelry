@@ -309,6 +309,9 @@
             let resume_id = getUrlParameter('resume_id') ? getUrlParameter('resume_id') : '{{$resume_id}}';
             if(resume_id) {
                 resume(resume_id);
+            }else{
+                $('#investor_code').val('NDT01').trigger('change');
+                console.log('tự động chọn NDT01');
             }
         });
         

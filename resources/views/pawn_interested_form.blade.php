@@ -169,7 +169,7 @@
 					<div class="col-sm-10">
 						<a href="{{CRUDBooster::mainpath()}}" class="btn btn-default"><i class="fa fa-chevron-circle-left"></i> Quay về</a>
 						@if($mode=='new' || $mode=='edit')
-							<button id="save_button" class="btn btn-success" onclick="submit(true)"><i class="fa fa-save"></i> Lưu</button>
+							<button id="save_button" disabled class="btn btn-success" onclick="submit(true)"><i class="fa fa-save"></i> Lưu</button>
 						@endif
 						<a id="print_invoice" style="display: none;cursor: pointer;" onclick="printInvoice()" class="btn btn-info"><i class="fa fa-print"></i> In phiếu</a>
 					</div>
@@ -280,7 +280,12 @@
                 showOnFocus:false,
                 step: 5
             });
-            $('#liquidation_method').change(calcAmount);
+            $('#liquidation_method').change(function (){
+                if($('#liquidation_method').val()){
+                    $('#save_button').prop( "disabled", false );
+                }
+                calcAmount();
+            });
             $('#interest_reduced_amount').change(calcAmount);
             $.ajax({
                 method: "GET",
@@ -393,13 +398,14 @@
             }
         };
 
-        function searchOrder() {
+        function searchOrder(order_id) {
             let order_no = $('#order_no').val();
-			if(order_no && order_no.trim() != ''){
+			if(order_id || (order_no && order_no.trim() != '')){
                 $.ajax({
                     method: "GET",
                     url: '{{Route("AdminGoldPawnOrdersControllerGetSearchOrder")}}',
                     data: {
+                        order_id: order_id,
                         order_no: order_no,
                         _token: '{{ csrf_token() }}'
                     },
@@ -456,7 +462,7 @@
         }
 
         function showModalorder_id() {
-            var url_order_no = "{{action('AdminGoldPawnOrderInterestedController@getModalData')}}/gold_pawn_order_interested/modal-data?table=gold_pawn_orders&columns=id,order_no,order_date,due_date&name_column=order_id&where=deleted_at+is+null+and+status+=+1&select_to=order_no:order_no&columns_name_alias=Số HĐ,T/g cầm,Thời hạn";
+            var url_order_no = "{{action('AdminGoldPawnOrderInterestedController@getModalData')}}/gold_pawn_order_interested/modal-data?table=v_pawn_orders&columns=id,order_no,order_date,due_date,customer_code,customer_name,branch_name&name_column=order_id&where=deleted_at+is+null+and+status+=+1&select_to=id,order_no:id,order_no&columns_name_alias=Số HĐ,T/g cầm,Thời hạn,Mã KH, Tên KH, Tên Của Hàng";
             $('#iframe-modal-order_id').attr('src',url_order_no);
             $('#modal-datamodal-order_id').modal('show');
         }
@@ -464,7 +470,10 @@
             $('#modal-datamodal-order_id').modal('hide');
         }
         function selectAdditionalDataorder_id(select_to_json) {
-			if(select_to_json.order_no){
+            if(select_to_json.datamodal_id){
+                $('#order_no').val(select_to_json.order_no);
+                searchOrder(select_to_json.datamodal_id);
+            }else if(select_to_json.order_no){
                 $('#order_no').val(select_to_json.order_no).trigger('change');
 			}
             hideModalorder_id();
@@ -614,7 +623,7 @@
 			if(!finish || validate()){ // nếu finish == false thì không validate
                 if(!counter){
                     swal("Thông báo", "Bạn phải mở sổ tính tiền trước, vui lòng kiểm tra lại.", "warning");
-                    return;
+                    return false;
                 }
 
                 if(finish) {
@@ -655,6 +664,7 @@
                 });
 			} else {
                 $('#save_button').show();
+                return false;
 			}
         }
 

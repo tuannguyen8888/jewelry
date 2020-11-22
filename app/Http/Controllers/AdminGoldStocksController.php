@@ -375,8 +375,10 @@
             $filename = 'TK_'.time();
             $parameter = [
                 'id'=>$id,
+                'brand_id'=>CRUDBooster::myBrand(),
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
+            Log::debug('$parameter = ', $parameter);
             $input = base_path().'/app/Reports/rpt_stock_balance_detail.jasper';
             $output = public_path().'/output_reports/'.$filename;
             $jasper->process($input, $output, array('pdf'), $parameter, $database)->execute();
@@ -652,6 +654,7 @@
 				'stock_ids'=>$para_values[2],
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
+            Log::debug('$parameter = ', $parameter);
             $input = base_path().'/app/Reports/rpt_stock_balance.jasper';
 			$output = public_path().'/output_reports/'.$filename;
 			Log::debug('$para = '.$input);

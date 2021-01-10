@@ -62,20 +62,22 @@
 								</div>
 							</div>
 							<div class="col-sm-8">
-								<div class="row">
-									<table id="table_customers" class='table table-bordered'>
-										<thead>
-										<tr class="bg-success">
-											<th class="action no-padding text-center"><input id="check_all" type="checkbox" checked="1" onchange="checkAll();" required></th>
-											<th class="sort_no">Stt</th>
-											<th class="customer_code">Mã khách hàng</th>
-											<th>Tên khách hàng</th>
-										</tr>
-										</thead>
-										<tbody>
-										</tbody>
-									</table>
-								</div>
+								<select id="select_customer"  multiple="multiple" class="form-control" style="width: 100%;"></select>
+								{{--<div class="row">--}}
+									{{--<table id="table_customers" class='table table-bordered' style="display: none;">--}}
+										{{--<thead>--}}
+										{{--<tr class="bg-success">--}}
+											{{--<th class="action no-padding text-center">#</th>--}}
+											{{--<th class="sort_no">Stt</th>--}}
+											{{--<th class="customer_phone">Số điện thoại</th>--}}
+											{{--<th class="customer_code">Mã khách hàng</th>--}}
+											{{--<th>Tên khách hàng</th>--}}
+										{{--</tr>--}}
+										{{--</thead>--}}
+										{{--<tbody>--}}
+										{{--</tbody>--}}
+									{{--</table>--}}
+								{{--</div>--}}
 							</div>
 						</div>
 					</div>
@@ -122,6 +124,15 @@
 		.loading{
 			display: none;
 		}
+		.select2-container--default .select2-selection--multiple .select2-selection__choice {
+			background-color: #588ff5;
+		}
+		.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+			color: red;
+		}
+		.select2-container--default .select2-selection--multiple .select2-selection__rendered{
+			display: grid;
+		}
 	</style>
 
 	<script type="application/javascript">
@@ -144,42 +155,66 @@
 			$('#to_date').val(moment().format('DD/MM/YYYY'))
 			loadBrands();
 
-			$.ajax({
-                method: "GET",
-                url: '{{Route("AdminGoldCustomersControllerGetCustomers")}}',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data && data.customers) {
-						customers = data.customers;
-						loadCustomer();
+            $('#select_customer').select2({
+                placeholder: 'Chọn khách hàng để xem báo cáo, nếu không có khách hàng được chọn thì tất cả sẽ được báo cáo.',
+                minimumInputLength: 0,
+                tags: true,
+                ajax: {
+                    url: '{{Route("AdminGoldCustomersControllerGetSearchCustomers4Select")}}',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: function (para) {
+                        para.page_limit = 100;
+                        para.page = para.page || 1;
+                        return para;
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data,
+                            pagination: {
+                                more: data.length >= 10
+                            }
+                        };
                     }
-                },
-                error: function (request, status, error) {
-                    console.log('PostAdd status = ', status);
-                    console.log('PostAdd error = ', error);
                 }
             });
+			{{--$.ajax({--}}
+                {{--method: "GET",--}}
+                {{--url: '{{Route("AdminGoldCustomersControllerGetCustomers")}}',--}}
+                {{--data: {--}}
+                    {{--_token: '{{ csrf_token() }}'--}}
+                {{--},--}}
+                {{--dataType: "json",--}}
+                {{--async: false,--}}
+                {{--success: function (data) {--}}
+                    {{--if (data && data.customers) {--}}
+						{{--customers = data.customers;--}}
+						{{--loadCustomer();--}}
+                    {{--}--}}
+                {{--},--}}
+                {{--error: function (request, status, error) {--}}
+                    {{--console.log('PostAdd status = ', status);--}}
+                    {{--console.log('PostAdd error = ', error);--}}
+                {{--}--}}
+            {{--});--}}
 		});
 
-		function loadCustomer() {
-			if (customers && customers.length > 0) {
-				let html = '';
-				customers.forEach(function (detail, i) {
-					html += `<tr id="customer_index_${detail.id}">
-						<th class="action no-padding text-center"><input id="customer_${detail.id}_check" type="checkbox" checked="1" required></th>
-						<th class="sort_no text-right">${i + 1}</th>
-						<th class="customer_code">${detail.code}</th>
-						<th>${detail.name}</th>
-					</tr>`;					
-				});
-				// console.log('html = ', html)
-				$('#table_customers tbody').append(html);
-			}
-		}
+		// function loadCustomer() {
+		// 	if (customers && customers.length > 0) {
+		// 		let html = '';
+		// 		customers.forEach(function (detail, i) {
+		// 			html += `<tr id="customer_index_${detail.id}">
+		// 				<th class="action no-padding text-center"><input id="customer_${detail.id}_check" type="checkbox" checked="1" required></th>
+		// 				<th class="sort_no text-right">${i + 1}</th>
+		// 				<th class="customer_code">${detail.code}</th>
+		// 				<th>${detail.name}</th>
+		// 			</tr>`;
+		// 		});
+		// 		// console.log('html = ', html)
+		// 		$('#table_customers tbody').append(html);
+		// 	}
+		// }
 		
 		function loadBrands() {
             $.ajax({
@@ -206,14 +241,14 @@
             });
         }
 
-		function checkAll() {
-			console.log('checkAll');
-			if (customers && customers.length > 0) {
-				customers.forEach(function (detail, i) {
-					$(`#customer_${detail.id}_check`).prop('checked', $(`#check_all`).is(":checked"));
-				});
-			}
-        }
+		// function checkAll() {
+		// 	console.log('checkAll');
+		// 	if (customers && customers.length > 0) {
+		// 		customers.forEach(function (detail, i) {
+		// 			$(`#customer_${detail.id}_check`).prop('checked', $(`#check_all`).is(":checked"));
+		// 		});
+		// 	}
+        // }
 
         function popupWindow(url,windowName) {
             window.open(url,windowName,'height=500,width=600');
@@ -229,18 +264,21 @@
 				$('#to_date').focus();
             }else{
 				var ids = '';
-				if(customers && customers.length > 0) {
-					customers.forEach(function (detail, i) {
-						if($(`#customer_${detail.id}_check`).is(":checked")) {
-							if(ids){
-								ids += ',';
-							}
-							ids += detail.id;
-						}
-					});
+				// if(customers && customers.length > 0) {
+				// 	customers.forEach(function (detail, i) {
+				// 		if($(`#customer_${detail.id}_check`).is(":checked")) {
+				// 			if(ids){
+				// 				ids += ',';
+				// 			}
+				// 			ids += detail.id;
+				// 		}
+				// 	});
+				// }
+				if($('#select_customer').val()){
+                    ids = $('#select_customer').val().join(',')
 				}
 				// console.log('ids = ', ids);
-				if(ids) {
+				// if(ids) {
 					var from_date = moment($('#from_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
 					var to_date = moment($('#to_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
 					if(print){
@@ -256,9 +294,10 @@
 							popupWindow("{{action('AdminGoldCustomersController@getPrintBalanceDetailXlsx')}}/" + from_date + "@" + to_date + "@" + $('#brand_id').val() + "@" +ids,"export");
 						}
 					}
-				}else{
-					alert("Bạn phải chọn ít nhất 1 NCC!");
-				}
+				// }
+				// else{
+				// 	alert("Bạn phải chọn ít nhất 1 NCC!");
+				// }
             }
         }
 	</script>

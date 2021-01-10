@@ -211,9 +211,8 @@
 	        |
 	        */
 	        $this->load_js = array();
-	        
-	        
-	        
+            $this->load_js[] = asset("vendor/crudbooster/assets/select2/dist/js/select2.min.js");
+
 	        /*
 	        | ---------------------------------------------------------------------- 
 	        | Add css style at body 
@@ -235,6 +234,10 @@
 	        |
 	        */
 	        $this->load_css = array();
+            $this->load_css[] = asset("css/loading.css");
+            $this->load_css[] = asset("css/site.customize.css");
+            $this->load_css[] = asset("vendor/crudbooster/assets/datetimepicker-master/jquery.datetimepicker.css");
+            $this->load_css[] = asset("vendor/crudbooster/assets/select2/dist/css/select2.min.css");
 	        
 	        
 	    }
@@ -399,6 +402,30 @@
             $customers = DB::table('gold_customers')->whereRaw('deleted_at is null')->orderBy('code')->get();
             return ['customers'=>$customers];
 		}
+        function getSearchCustomers4Select() {
+            $para = Request::all();
+            $search_term = $para['term'];
+            $page = intval($para['page']);
+            $page_limit = intval($para['page_limit']);
+//            Log::debug(CRUDBooster::getCurrentMethod().' $para = '.json_encode($para));
+            $results = DB::table('gold_customers as C')
+                ->whereNull('C.deleted_at')
+                ->where(function ($query) use ($search_term){
+                    $query->where('C.phone', 'like', '%' . $search_term . '%')
+                        ->orWhere('C.zalo_phone', 'like', '%' . $search_term . '%')
+                        ->orWhere('C.code', 'like', '%' . $search_term . '%')
+                        ->orWhere('C.name', 'like', '%' . $search_term . '%');
+                })
+                ->select('C.id as id',
+                    'C.code',
+                    'C.name',
+                    DB::raw('concat(C.code, \' - \', C.name, \' - \', CASE WHEN C.phone is null THEN C.zalo_phone ELSE C.phone END) as text'))
+                ->orderBy('C.code', 'asc')
+                ->distinct()
+                ->offset(($page - 1) * $page_limit)
+                ->limit($page_limit);
+            return $results->get();
+        }
 
 		public function getBalance() {
 			//            $para = Request::all();
@@ -441,7 +468,7 @@
             $parameter = [
 				'to_date'=>$para_values[0],
 				'brand_id'=>$para_values[1],
-				'ids'=>$para_values[2],
+				'ids'=>$para_values[2]?$para_values[2]:'ALL',
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
 

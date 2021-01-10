@@ -1,0 +1,22 @@
+CREATE TABLE `gold_money_transfers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_no` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'tự phát sinh \rFormat (NKYYMMDD-###\rVí dụ: CT190418-001',
+  `order_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Ngày nhập',
+  `object_id` int(11) NOT NULL COMMENT 'Đối tượng',
+  `brand_id` int(11) NOT NULL DEFAULT '1' COMMENT 'Mã cửa hàng',
+  `object_type` int(1) NOT NULL DEFAULT '0' COMMENT 'Loại đối tượng (0: Khách hàng; 1: NCC; 2: NĐT; 3: Nhân viên)',
+  `amount` double NOT NULL DEFAULT '0' COMMENT 'Số tiền',
+  `bank_fee` double NOT NULL DEFAULT '0' COMMENT 'Phí ngân hàng',
+  `fee` double NOT NULL DEFAULT '0' COMMENT 'Phí dịch vụ',
+  `notes` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Ghi chú',
+  `status` int(1) NOT NULL DEFAULT '0' COMMENT 'Trạng thái: 0 - Mới nhập; 1 - Hoàn tất',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` int(11) DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `deleted_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `l_key` (`order_no`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=9210 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

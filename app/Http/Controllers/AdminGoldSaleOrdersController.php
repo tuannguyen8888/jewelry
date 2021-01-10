@@ -1076,16 +1076,17 @@
 	    */
 	    public function hook_after_delete($id) {
 	        //Your code here
-            $order = DB::table($this->table)->where('id', $id)->first();    
+            $order = DB::table('gold_sale_orders')->where('id', $id)->first();
             // Log::debug('$order = ' . Json::encode($order));
-            if($order && $order->order_type == 1){
+            if($order && intval($order->order_type) == 1){
                 $q10 = 0;
                 $order_details  = DB::table('gold_sale_order_details')->whereRaw('deleted_at is null')->where('order_id',$id)->get();
                 foreach ($order_details as $detail) {
+                    DB::table('gold_sale_order_details')->where('id', id)->update(['deleted_at' => $order->deleted_at, 'notes' => 'Xóa theo '.$order->order_no]);
                     $item = DB::table('gold_items')->where('id', $detail->item_id)->first();
                     if($item){
                         $q10 += $detail->q10;
-                        DB::table('gold_items')->where('id', $item->id)->update(['qty'=>1, 'status'=>1, 'notes' => '']);
+                        DB::table('gold_items')->where('id', $item->id)->update(['qty'=>1, 'status'=>1, 'notes' => $order->notes.'. Trả lại kho do xóa '.$order->order_no]);
                     }
                 }
 

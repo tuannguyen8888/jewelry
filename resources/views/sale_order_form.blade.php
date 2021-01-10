@@ -702,8 +702,15 @@
         }
         function checkCustomerPhone() {
             let customer_phone = $('#customer_phone').val();
+            $('#customer_phone').removeClass('invalid');
             if(customer_phone && customer_phone.trim() != ''){
                 //$('.loading').show();
+                let rg = new RegExp("[0-9]{10}");
+                if(!rg.test(customer_phone)){
+                    swal("Thông báo","Số điện thoại không đúng định dạng.","warning");
+                    $('#customer_phone').addClass('invalid');
+                    return false;
+				}
                 $.ajax({
                     method: "GET",
                     url: '{{Route("AdminGoldCustomersControllerGetSearchCustomer")}}',
@@ -1357,12 +1364,16 @@
         function validate() {
 			let valid = true;
             $('#form input').removeClass('invalid');
-			if(!$('#customer_id').val()) {
+            if(!$('#customer_id').val()) {
                 if(!$('#customer_name').val()){
                     valid = false;
                     $('#customer_name').addClass('invalid');
                 }
-			}
+                if($('#customer_phone').val() && !(new RegExp('[0-9]{10}')).test($('#customer_phone').val().trim())){
+                    valid = false;
+                    $('#customer_phone').addClass('invalid');
+                }
+            }
             if(!$('#order_date').val()){
                 valid = false;
                 $('#order_date').addClass('invalid');

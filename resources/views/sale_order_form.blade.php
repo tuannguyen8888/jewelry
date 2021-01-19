@@ -1451,10 +1451,10 @@
                                     valid = false;
                                     swal("Thông báo", "Sản phẩm [" + data.item.bar_code + "] đã bán.", "warning");
                                 } 
-                                // else if (owner_stock_ids.indexOf(data.item.stock_id + '') < 0) {
-                                //     valid = false;
-                                //     swal("Thông báo", "Sản phẩm [" + data.item.bar_code + "] nằm trong " + data.item.stock_name + ", không thuộc quyền quản lý của bạn, hãy kiểm tra lại.", "error");
-                                // }
+                                else if (owner_stock_ids.indexOf(data.item.stock_id + '') < 0) {
+                                    valid = false;
+                                    swal("Thông báo", "Sản phẩm [" + data.item.bar_code + "] nằm trong " + data.item.stock_name + ", không thuộc quyền quản lý của bạn, hãy kiểm tra lại.", "error");
+                                }
                             } else {
                                 valid = false;
                                 swal("Thông báo", "Không tìm thấy mã " + detail.bar_code, "warning");

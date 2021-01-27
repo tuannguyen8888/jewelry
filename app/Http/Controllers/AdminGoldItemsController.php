@@ -75,7 +75,8 @@
             $this->search_form[] = ["label"=>"Từ ngày", "name"=>"received_date_from_date", "data_column"=>"gold_stocks_received.received_date", "search_type"=>"between_from","type"=>"date","width"=>"col-sm-2"];
             $this->search_form[] = ["label"=>"Đến ngày", "name"=>"received_date_to_date", "data_column"=>"gold_stocks_received.received_date", "search_type"=>"between_to","type"=>"date","width"=>"col-sm-2"];
             $this->search_form[] = ["label"=>"Trạng thái", "name"=>"status", "data_column"=>"gold_items.status", "search_type"=>"equals_raw","type"=>"select","width"=>"col-sm-2", 'dataenum'=>Enums::$INPUT_STATUS];
-            $this->search_form[] = ["label"=>"Cửa hàng", "name"=>"brand_id", "data_column"=>"gold_stocks_received.brand_id", "search_type"=>"equals_raw","type"=>"select2","width"=>"col-sm-2", 'datatable'=>'gold_brands,name', 'datatable_where'=>'deleted_at is null'];
+//            $this->search_form[] = ["label"=>"Cửa hàng", "name"=>"brand_id", "data_column"=>"gold_stocks_received.brand_id", "search_type"=>"equals_raw","type"=>"select2","width"=>"col-sm-2", 'datatable'=>'gold_brands,name', 'datatable_where'=>'deleted_at is null'];
+            $this->search_form[] = ["label"=>"Cửa hàng", "name"=>"brand_id", "data_column"=>"gold_stocks.brand_id", "search_type"=>"equals_raw","type"=>"select2","width"=>"col-sm-2", 'datatable'=>'gold_brands,name', 'datatable_where'=>'deleted_at is null'];
             $this->search_form[] = ["label"=>"Kho hàng", "name"=>"stock_id", "data_column"=>"gold_items.stock_id", "search_type"=>"equals_raw","type"=>"select2","width"=>"col-sm-2", 'datatable'=>'gold_stocks,name', 'datatable_where'=>'deleted_at is null'];
 
 			# START FORM DO NOT REMOVE THIS LINE

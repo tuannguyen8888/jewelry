@@ -1054,7 +1054,7 @@
                     <select id="pay${data.id}_product_type" class="form-control" onchange="pay_product_type_change(${data.id})" value="` + Number(data.product_type_id) + `">`;
             if(product_types && product_types.length > 0){
                 product_types.forEach(function (detail, i) {
-                    html = html + ` <option value=${detail.id}>${detail.name}</option>`;
+                    html = html + ` <option value=${detail.id} ${data.product_type_id == detail.id ? 'selected' : ''}>${detail.name}</option>`;
                 });
             }
             html = html + ` </select>

@@ -61,8 +61,8 @@
             $this->col[] = ["label"=>"Lãi","name"=>"interested_amount", "callback_php"=>'number_format($row->interested_amount)'];
             $this->col[] = ["label"=>"Giảm lãi","name"=>"interest_reduced_amount", "callback_php"=>'number_format($row->interest_reduced_amount)'];
 			$this->col[] = ["label"=>"Tất toán","name"=>"liquidation_amount", "callback_php"=>'number_format($row->liquidation_amount)'];
-			$this->col[] = ["label"=>"Tiền chuyển","name"=>"withdrawal_in", "callback_php"=>'number_format($row->withdrawal_in)'];
-			$this->col[] = ["label"=>"Tiền nhận","name"=>"withdrawal_out", "callback_php"=>'number_format($row->withdrawal_out)'];
+			$this->col[] = ["label"=>"Tiền chuyển","name"=>"withdrawal_out", "callback_php"=>'number_format($row->withdrawal_out)'];
+			$this->col[] = ["label"=>"Tiền nhận","name"=>"withdrawal_in", "callback_php"=>'number_format($row->withdrawal_in)'];
 			$this->col[] = ["label"=>"Người khóa","name"=>"finalized_by","join"=>"cms_users,name"];
 			$this->col[] = ["label"=>"T/g khóa","name"=>"finalized_at","callback_php"=>'date_time_format($row->finalized_at, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			$this->col[] = ["label"=>"Cửa hàng","name"=>"brand_id","join"=>"gold_brands,name"];

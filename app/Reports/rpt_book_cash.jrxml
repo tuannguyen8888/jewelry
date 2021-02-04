@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 7.2.1.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Book_Cash" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
@@ -32,7 +32,15 @@
 FROM(
 	SELECT SUM(ROUND(amount * (1 - bank_fee / 100))) as in_amount
 	FROM gold_vouchers
-	WHERE deleted_at IS NULL AND status <> 0 	AND ($P{type} = -1 OR method = $P{type}) AND order_date < $P{from_date} 
+	WHERE deleted_at IS NULL AND status <> 0 AND order_type <> 3 AND ($P{type} = -1 OR method = $P{type}) AND order_date < $P{from_date} 
+		AND brand_id = $P{brand_id} 
+	UNION ALL
+	SELECT SUM(CASE WHEN $P{type} = 0 THEN ROUND(amount + fee)
+									   WHEN $P{type} = 1 THEN -ROUND(amount + bank_fee)
+                                       ELSE ROUND(fee - bank_fee)
+					END) as in_amount
+	FROM gold_vouchers
+	WHERE deleted_at IS NULL AND status <> 0 AND order_type = 3 AND order_date < $P{from_date} 
 		AND brand_id = $P{brand_id} 
 	UNION ALL
 	SELECT SUM(ROUND((pay_amount - return_amount) * (1 - bank_fee / 100))) as in_amount
@@ -51,7 +59,25 @@ FROM gold_vouchers V
 	LEFT OUTER JOIN cms_users U ON V.object_id = U.id AND V.object_type = 3
 WHERE V.deleted_at IS NULL AND V.status <> 0 AND ($P{type} = -1 OR V.method = $P{type})
 	AND V.order_date >= $P{from_date} AND V.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
-	AND V.brand_id = $P{brand_id}
+	AND V.brand_id = $P{brand_id} AND V.order_type <> 3
+UNION ALL
+SELECT V.order_no, V.order_date, V.notes, IFNULL(C.name, IFNULL(S.name, IFNULL(I.name, U.name))) as object, 
+	ROUND(CASE WHEN $P{type} = 0 THEN ROUND(amount + fee)
+									   WHEN $P{type} = 1 THEN 0
+                                       ELSE ROUND(amount + fee)
+					END) as in_amount, 
+    ROUND(CASE WHEN $P{type} = 0 THEN 0
+									   WHEN $P{type} = 1 THEN ROUND(amount + bank_fee)
+                                       ELSE ROUND(amount + bank_fee)
+					END) as out_amount 
+FROM gold_vouchers V
+	LEFT OUTER JOIN gold_customers C ON V.object_id = C.id AND V.object_type = 0
+	LEFT OUTER JOIN gold_suppliers S ON V.object_id = S.id AND V.object_type = 1
+	LEFT OUTER JOIN gold_investors I ON V.object_id = I.id AND V.object_type = 2
+	LEFT OUTER JOIN cms_users U ON V.object_id = U.id AND V.object_type = 3
+WHERE V.deleted_at IS NULL AND V.status <> 0 AND ($P{type} = -1 OR V.method = $P{type})
+	AND V.order_date >= $P{from_date} AND V.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+	AND V.brand_id = $P{brand_id} AND V.order_type =  3
 UNION ALL
 SELECT V.order_no, V.order_date, NULL AS notes, C.name as object, 
 	ROUND((V.pay_amount - V.return_amount) / (1 + V.bank_fee / 100)) as in_amount, 0 AS out_amount 

@@ -378,13 +378,13 @@ class AdminTransferMoneyController extends CBExtendController {
             if($counter){
                 $order['counter_id'] = $counter->id;
                 DB::table('gold_counters')->where('id', $counter->id)->update([
-                    'withdrawal_in' => $counter->withdrawal_in + $order['amount'] + $order['fee_amount'],
-                    'withdrawal_out' => $counter->withdrawal_out + $order['amount'] + $order['bank_fee_amount']
+                    'withdrawal_in' => $counter->withdrawal_in + $order['amount'] + $order['fee'],
+                    'withdrawal_out' => $counter->withdrawal_out + $order['amount'] + $order['bank_fee']
                 ]);
 
                 $user = DB::table('cms_users')->where('id', CRUDBooster::myId())->first();
                 if($user){
-                    DB::table('cms_users')->where('id', $user->id)->update(['balance' => $user->balance + $order['amount'] + $order['fee_amount']]);
+                    DB::table('cms_users')->where('id', $user->id)->update(['balance' => $user->balance + $order['amount'] + $order['fee']]);
                 }
             }
 

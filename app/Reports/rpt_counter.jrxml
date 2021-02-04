@@ -2,10 +2,10 @@
 <!-- Created with Jaspersoft Studio version 7.2.1.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Counter" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="559" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="232"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="761"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business"/>
 	<subDataset name="dsSales" uuid="3455ee47-1b45-4294-bd69-78cf769ef53e">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business_connection"/>
@@ -389,7 +389,7 @@ ORDER BY order_no]]>
 		<![CDATA[SELECT C.counter_no, C.opened_at, C.closed_at, C.description, U.name AS saleman,
 	C.advance_amount, SUM(CB.sales_amount) AS sales_amount, SUM(CB.bank_amount) AS bank_amount, SUM(CB.purchase_amount) AS purchase_amount, 
 	SUM(CB.pawn_amount) AS pawn_amount, SUM(CB.interested_amount) AS interested_amount, C.amount, SUM(CB.liquidation_amount) AS liquidation_amount,
-	IFNULL(-SUM(CB.balance), 0) as balance, SUM(CB.withdrawal_in) AS withdrawal_in, SUM(CB.withdrawal_out) AS withdrawal_out, B.name AS brand_name
+	IFNULL(-SUM(CB.balance), 0) as balance, SUM(CB.withdrawal_in) AS withdrawal_in, SUM(CB.withdrawal_out) AS withdrawal_out, SUM(CB.transfer_money_in) AS transfer_money_in, SUM(CB.transfer_money_out) AS transfer_money_out, B.name AS brand_name
 FROM gold_counters C
 	LEFT OUTER JOIN cms_users U ON C.saler_id = U.id
 	LEFT OUTER JOIN gold_brands B ON C.brand_id = B.id
@@ -459,6 +459,12 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 	<field name="withdrawal_out" class="java.lang.Double">
 		<property name="com.jaspersoft.studio.field.label" value="withdrawal_out"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="gold_counters"/>
+	</field>
+	<field name="transfer_money_in" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="transfer_money_in"/>
+	</field>
+	<field name="transfer_money_out" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="transfer_money_out"/>
 	</field>
 	<field name="brand_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="brand_name"/>
@@ -667,7 +673,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 				<textFieldExpression><![CDATA[DATEFORMAT($F{closed_at}, "dd/MM/yyyy HH:mm:ss")]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="110" y="125" width="110" height="15" uuid="de644779-ffba-4267-8b61-b3bf96bd70c9">
+				<reportElement x="110" y="125" width="90" height="15" uuid="de644779-ffba-4267-8b61-b3bf96bd70c9">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -680,7 +686,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 				<text><![CDATA[Bán ra (TM)]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="110" y="140" width="110" height="15" uuid="3ea0244a-aace-4d46-80c1-dd444c6ff156">
+				<reportElement x="110" y="140" width="90" height="15" uuid="3ea0244a-aace-4d46-80c1-dd444c6ff156">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
@@ -722,7 +728,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 				<text><![CDATA[Mua vào]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="110" y="170" width="110" height="15" uuid="c2cec6c1-9a6e-4670-95d9-ed173df4a3d0">
+				<reportElement x="110" y="170" width="90" height="15" uuid="c2cec6c1-9a6e-4670-95d9-ed173df4a3d0">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
@@ -736,7 +742,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 				<textFieldExpression><![CDATA[$F{pawn_amount} != 0 ? TEXT($F{pawn_amount}, "#,###") : ""]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="110" y="155" width="110" height="15" uuid="fefab871-9bcf-42cf-a6d4-e95bfc45158f">
+				<reportElement x="110" y="155" width="90" height="15" uuid="fefab871-9bcf-42cf-a6d4-e95bfc45158f">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -749,7 +755,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 				<text><![CDATA[Cầm]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="440" y="170" width="120" height="15" forecolor="#FF0000" backcolor="#FFCC00" uuid="b39416bf-ca93-41e4-a85f-a42c1b0bd841">
+				<reportElement mode="Opaque" x="420" y="170" width="140" height="15" forecolor="#FF0000" backcolor="#FFCC00" uuid="b39416bf-ca93-41e4-a85f-a42c1b0bd841">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -761,10 +767,10 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 					<font fontName="Arial" size="10" isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{advance_amount} + $F{sales_amount} - $F{purchase_amount} - $F{pawn_amount} + $F{interested_amount} + $F{liquidation_amount} - $F{withdrawal_out}) != 0 ? TEXT(($F{advance_amount} + $F{sales_amount} - $F{purchase_amount} - $F{pawn_amount} + $F{interested_amount} + $F{liquidation_amount} - $F{withdrawal_out}), "#,###") : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{advance_amount} + $F{sales_amount} - $F{purchase_amount} - $F{pawn_amount} + $F{interested_amount} + $F{liquidation_amount} - $F{withdrawal_out}) != 0 ? TEXT(($F{advance_amount} + $F{sales_amount} - $F{purchase_amount} - $F{pawn_amount} + $F{interested_amount} + $F{liquidation_amount} - $F{withdrawal_out}) + $F{transfer_money_in}, "#,###") : ""]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Transparent" x="440" y="155" width="120" height="15" forecolor="#000000" backcolor="#FFCC00" uuid="af086632-c6f9-43ec-86be-123c86b23bc7">
+				<reportElement mode="Transparent" x="420" y="155" width="140" height="15" forecolor="#000000" backcolor="#FFCC00" uuid="af086632-c6f9-43ec-86be-123c86b23bc7">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -777,7 +783,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 				<text><![CDATA[Phải nộp]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="220" y="155" width="110" height="15" uuid="13ef8fc1-d6b1-46d4-8ceb-9df67caf8406">
+				<reportElement x="200" y="155" width="90" height="15" uuid="13ef8fc1-d6b1-46d4-8ceb-9df67caf8406">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -790,7 +796,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 				<text><![CDATA[Lãi]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="220" y="125" width="110" height="15" uuid="4a13f081-aa27-4d58-a169-78e22f10d4c8">
+				<reportElement x="200" y="125" width="90" height="15" uuid="4a13f081-aa27-4d58-a169-78e22f10d4c8">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -803,7 +809,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 				<text><![CDATA[Bán ra (CK)]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="220" y="140" width="110" height="15" uuid="3c3f59ad-e310-432e-8f08-cd7bece9117d">
+				<reportElement x="200" y="140" width="90" height="15" uuid="3c3f59ad-e310-432e-8f08-cd7bece9117d">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -818,7 +824,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 				<textFieldExpression><![CDATA[$F{bank_amount} != 0 ? TEXT($F{bank_amount}, "#,###") : ""]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="220" y="170" width="110" height="15" uuid="2b4a9e0a-8c4d-43ad-94e9-f9522827bffe">
+				<reportElement x="200" y="170" width="90" height="15" uuid="2b4a9e0a-8c4d-43ad-94e9-f9522827bffe">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -833,7 +839,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 				<textFieldExpression><![CDATA[$F{interested_amount} != 0 ? TEXT($F{interested_amount}, "#,###") : ""]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="330" y="155" width="110" height="15" uuid="74a6efb2-2ef4-4fe7-9603-0f138c665f06">
+				<reportElement x="290" y="155" width="130" height="15" uuid="74a6efb2-2ef4-4fe7-9603-0f138c665f06">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -846,7 +852,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 				<text><![CDATA[Tất toán]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="330" y="170" width="110" height="15" uuid="1f849a0c-ad91-42ea-a891-8c707478b268">
+				<reportElement x="290" y="170" width="130" height="15" uuid="1f849a0c-ad91-42ea-a891-8c707478b268">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
@@ -860,7 +866,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 				<textFieldExpression><![CDATA[$F{liquidation_amount} != 0 ? TEXT($F{liquidation_amount}, "#,###") : ""]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="330" y="125" width="110" height="15" uuid="44aba962-4dcf-42bd-a2f5-effb0a959891">
+				<reportElement x="290" y="125" width="130" height="15" uuid="44aba962-4dcf-42bd-a2f5-effb0a959891">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -870,10 +876,10 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Thu tiền rút (CK)]]></text>
+				<text><![CDATA[Thu vào sổ ngân hàng (CK)]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="330" y="140" width="110" height="15" uuid="4f666b44-93d0-4302-8943-56a7de7d56d0">
+				<reportElement x="290" y="140" width="130" height="15" uuid="4f666b44-93d0-4302-8943-56a7de7d56d0">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -888,7 +894,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 				<textFieldExpression><![CDATA[$F{withdrawal_in} != 0 ? TEXT($F{withdrawal_in}, "#,###") : ""]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="440" y="125" width="120" height="15" uuid="3dc4909b-8568-424f-bb9d-0105e20078a9">
+				<reportElement x="420" y="125" width="140" height="15" uuid="3dc4909b-8568-424f-bb9d-0105e20078a9">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -898,10 +904,10 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Trả tiền rút (TM)]]></text>
+				<text><![CDATA[Chi thay sổ ngân hàng (TM)]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="440" y="140" width="120" height="15" uuid="d96ef474-6ca8-43f4-a957-82994c8db7d0">
+				<reportElement x="420" y="140" width="140" height="15" uuid="d96ef474-6ca8-43f4-a957-82994c8db7d0">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>

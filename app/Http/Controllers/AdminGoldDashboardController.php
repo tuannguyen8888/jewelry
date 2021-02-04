@@ -40,7 +40,7 @@
 			$this->col[] = ["label"=>"Tiền mua","name"=>'purchase_amount',"callback_php"=>'number_format($row->purchase_amount)'];
 			$this->col[] = ["label"=>"Tiền cầm","name"=>'pawn_amount',"callback_php"=>'number_format($row->pawn_amount)'];
 			$this->col[] = ["label"=>"Tiền lãi","name"=>'interested_amount',"callback_php"=>'number_format($row->interested_amount)'];
-			$this->col[] = ["label"=>"Tiền phải nộp","name"=>DB::raw('(advance_amount + sales_amount + interested_amount - purchase_amount - pawn_amount) as amount'),"callback_php"=>'number_format($row->amount)'];
+			$this->col[] = ["label"=>"Tiền phải nộp","name"=>DB::raw('(advance_amount + sales_amount + interested_amount + withdrawal_in - purchase_amount - pawn_amount) as amount'),"callback_php"=>'number_format($row->amount)'];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE

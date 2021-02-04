@@ -410,8 +410,8 @@
                 order_no: $('#order_no').val() ? $('#order_no').val() : null,
                 notes: $('#notes').val() ? $('#notes').val() : null,
                 amount: $('#amount').val() ? AutoNumeric.getAutoNumericElement('#amount').getNumber() : 0,
-                bank_fee: $('#bank_fee').val() ? AutoNumeric.getAutoNumericElement('#bank_fee').getNumber() : 0,
-                fee: $('#fee').val() ? AutoNumeric.getAutoNumericElement('#fee').getNumber() : 0
+                bank_fee: $('#bank_amount').val() ? AutoNumeric.getAutoNumericElement('#bank_amount').getNumber() : 0,
+                fee: $('#fee_amount').val() ? AutoNumeric.getAutoNumericElement('#fee_amount').getNumber() : 0
             };
 		}
 

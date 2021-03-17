@@ -314,7 +314,8 @@
 	        //Your code here
             if(CRUDBooster::myPrivilegeId() == 2)// Nhân viên bán hàng
             {
-                $query->where('gold_pawn_orders.saler_id', CRUDBooster::myId());
+//                $query->where('gold_pawn_orders.saler_id', CRUDBooster::myId());
+                $query->where('gold_pawn_orders.brand_id', CRUDBooster::myBrand());
             }
             $current_brand = CRUDBooster::myBrand();
             $privilegeId = CRUDBooster::myPrivilegeId();

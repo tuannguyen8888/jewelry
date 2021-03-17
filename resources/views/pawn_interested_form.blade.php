@@ -414,7 +414,9 @@
                     success: function (data) {
                         if (data && data.order){
                             if(data.order.status == 2){
-                                swal("Thông báo","Hợp đồng đã thanh lý, vui lòng chọn lại.","warning");        
+                                swal("Thông báo","Hợp đồng đã thanh lý, vui lòng chọn lại.","warning");
+                            }else if(data.order.status == 3){
+                                swal("Thông báo","Hợp đồng đã tất toán, vui lòng chọn lại.","warning");
                             }else{
                                 order = data.order;
                                 $('#order_date').val(moment(order.order_date, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss'));
@@ -579,6 +581,12 @@
             
             if(!valid) {
                 swal("Thông báo", "Dữ liệu chưa được nhập đầy đủ, vui lòng kiểm tra lại.", "warning");
+            }else if(order.status == 2){
+                valid = false;
+                swal("Thông báo","Hợp đồng đã thanh lý, vui lòng chọn lại.","warning");
+            }else if(order.status == 3){
+                valid = false;
+                swal("Thông báo","Hợp đồng đã tất toán, vui lòng chọn lại.","warning");
             }else{
                 order.liquidation_method = $('#liquidation_method').val() ? $('#liquidation_method').val() : null;
                 let amount = $('#amount').val() ? Number($('#amount').val().replace(/,/g, '')) : 0;

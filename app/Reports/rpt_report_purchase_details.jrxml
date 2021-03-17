@@ -54,7 +54,7 @@ FROM(
 		INNER JOIN gold_counters C ON PO.counter_id = C.id
 		INNER JOIN gold_sale_order_pays POD ON PO.id = POD.order_id
 		LEFT OUTER JOIN gold_product_types P ON POD.product_type_id = P.id	
-	WHERE PO.deleted_at IS NULL AND POD.deleted_at IS NULL AND FIND_IN_SET(C.saler_id, $P{user_ids}) > 0
+	WHERE PO.brand_id =  $P{branch_id} AND  PO.deleted_at IS NULL AND POD.deleted_at IS NULL AND FIND_IN_SET(C.saler_id, $P{user_ids}) > 0
 		AND PO.order_date >= $P{from_date} AND PO.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
 ) A
 ORDER BY order_date]]>

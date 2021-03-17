@@ -274,6 +274,51 @@ WHERE V.deleted_at IS NULL AND V.order_type = 2 AND FIND_IN_SET(C.saler_id, $P{u
 			<variableExpression><![CDATA[$F{fee_amount}]]></variableExpression>
 		</variable>
 	</subDataset>
+	<subDataset name="dsTransferMoney" uuid="898abc27-f1df-41b4-b8ca-ba2828027385">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="229"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="764"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business"/>
+		<parameter name="user_ids" class="java.lang.String"/>
+		<parameter name="to_date" class="java.lang.String"/>
+		<parameter name="from_date" class="java.lang.String"/>
+		<parameter name="brand_id" class="java.lang.Integer"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT COUNT(V.order_no) AS qty, SUM(V.amount) AS amount, 
+	SUM(ROUND(V.bank_fee)) as bank_amount, 
+	SUM(ROUND(V.fee)) as fee_amount
+FROM gold_vouchers V
+	INNER JOIN gold_counters C ON V.counter_id = C.id
+WHERE V.deleted_at IS NULL AND V.order_type = 3 AND FIND_IN_SET(C.saler_id, $P{user_ids}) > 0
+	AND V.order_date >= $P{from_date} AND V.order_date < DATE_ADD($P{to_date}, INTERVAL 1 MICROSECOND)
+	AND V.brand_id = $P{brand_id}]]>
+		</queryString>
+		<field name="qty" class="java.lang.Long">
+			<property name="com.jaspersoft.studio.field.label" value="qty"/>
+		</field>
+		<field name="amount" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="amount"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="gold_vouchers"/>
+		</field>
+		<field name="bank_amount" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="bank_amount"/>
+		</field>
+		<field name="fee_amount" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="fee_amount"/>
+		</field>
+		<variable name="fNo" class="java.lang.Long" calculation="Count">
+			<variableExpression><![CDATA[$F{qty}]]></variableExpression>
+		</variable>
+		<variable name="fTotal_Amount" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+		</variable>
+		<variable name="fTotal_Bank_Amount" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[$F{bank_amount}]]></variableExpression>
+		</variable>
+		<variable name="fTotal_Fee_Amount" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[$F{fee_amount}]]></variableExpression>
+		</variable>
+	</subDataset>
 	<parameter name="comp_name" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ KIM VẠN PHƯỚC"]]></defaultValueExpression>
 	</parameter>
@@ -2083,6 +2128,240 @@ WHERE id IN(SELECT DISTINCT saler_id FROM gold_counters
 				</textElement>
 				<text><![CDATA[Phí ngân hàng]]></text>
 			</staticText>
+		</band>
+		<band height="50">
+			<staticText>
+				<reportElement x="0" y="5" width="90" height="15" uuid="91e9c42e-5457-4453-b2d0-c34045b0e7e4">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[V. CHUYỂN TIỀN:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="25" height="15" uuid="b761b588-72b1-40d3-824d-c45865b65a9c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Stt]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="25" y="20" width="55" height="15" uuid="abe8f0fd-3fdf-4255-8417-37758870e0d3">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Số lượt]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="20" width="195" height="15" uuid="6548e068-d11c-4da5-bba8-b043b86e2417">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Số tiền]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="275" y="20" width="150" height="15" uuid="4552abe8-ce50-4d70-a809-0f3ac9c07a60">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Phí ngân hàng]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="425" y="20" width="140" height="15" uuid="fd0ee6f2-98d6-4ac0-9e12-8b06e8f5b5f3">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Phí dịch vụ]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement mode="Transparent" x="0" y="35" width="565" height="15" uuid="be895a5b-8e4c-4b79-909a-ab783f9fc262">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header"/>
+					<property name="com.jaspersoft.studio.table.style.column_header"/>
+					<property name="com.jaspersoft.studio.table.style.detail"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="dsTransferMoney" uuid="2f0ad6b8-11d6-429e-b9a0-31c591e23fe3">
+						<datasetParameter name="user_ids">
+							<datasetParameterExpression><![CDATA[$P{user_ids}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="from_date">
+							<datasetParameterExpression><![CDATA[$P{from_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="to_date">
+							<datasetParameterExpression><![CDATA[$P{to_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="brand_id">
+							<datasetParameterExpression><![CDATA[$P{brand_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="80" uuid="6def599f-11e9-4a7f-aa58-9e2ed202a1e3">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [2]"/>
+						<jr:column width="25" uuid="9eb8cfad-d26e-4b41-b60f-080a7e8910f5">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+							<jr:detailCell height="15">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="25" height="15" uuid="59b996d2-eba2-4c31-8e4b-dee8fb5a5e9f">
+										<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+									</reportElement>
+									<box>
+										<topPen lineWidth="0.5"/>
+										<leftPen lineWidth="0.5"/>
+										<bottomPen lineWidth="0.5"/>
+										<rightPen lineWidth="0.5"/>
+									</box>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[TEXT($V{fNo}, "#,###")]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="55" uuid="47feaf74-1bfa-4a9b-8688-177b48a1e431">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="55" height="15" uuid="9fbae202-12a9-482b-bb60-1d74868e5378">
+										<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+									</reportElement>
+									<box>
+										<topPen lineWidth="0.5"/>
+										<leftPen lineWidth="0.5"/>
+										<bottomPen lineWidth="0.5"/>
+										<rightPen lineWidth="0.5"/>
+									</box>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial" size="9"/>
+										<paragraph leftIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{qty} != 0 ? TEXT($F{qty}, "#,###") : null]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:column width="195" uuid="c494558a-6e35-4998-be82-af74791379af">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:detailCell height="15">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="195" height="15" uuid="db52d325-71d0-4b1c-adb7-3f686ab3f201">
+									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+								</reportElement>
+								<box>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="9"/>
+									<paragraph rightIndent="2"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{amount} != 0 ? TEXT($F{amount}, "#,###") : ""]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="150" uuid="4ee30f23-fc0d-421b-92fe-2caf42b6c5c7">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:detailCell height="15">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<box>
+								<pen lineWidth="0.5"/>
+							</box>
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="150" height="15" uuid="25118a2e-f2fd-4886-8991-73ca38b4a80c">
+									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+								</reportElement>
+								<box>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="9"/>
+									<paragraph rightIndent="2"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{bank_amount} != 0 ? TEXT($F{bank_amount}, "#,###") : ""]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="140" uuid="56ed3947-c0a7-46e8-8eac-28fb1854fbc0">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:detailCell height="15">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="140" height="15" uuid="85825581-0138-403c-8277-173c9dec1a13">
+									<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+								</reportElement>
+								<box>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="Arial" size="9"/>
+									<paragraph rightIndent="2"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{fee_amount} != 0 ? TEXT($F{fee_amount}, "#,###") : ""]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
 		</band>
 	</detail>
 	<pageFooter>

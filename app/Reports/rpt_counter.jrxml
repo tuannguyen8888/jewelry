@@ -767,7 +767,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 					<font fontName="Arial" size="10" isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{advance_amount} + $F{sales_amount} - $F{purchase_amount} - $F{pawn_amount} + $F{interested_amount} + $F{liquidation_amount} - $F{withdrawal_out}) != 0 ? TEXT(($F{advance_amount} + $F{sales_amount} - $F{purchase_amount} - $F{pawn_amount} + $F{interested_amount} + $F{liquidation_amount} - $F{withdrawal_out}) + $F{transfer_money_in}, "#,###") : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(($F{advance_amount} + $F{sales_amount} - $F{purchase_amount} - $F{pawn_amount} + $F{interested_amount} + $F{liquidation_amount} - $F{withdrawal_out}) + $F{transfer_money_in}) != 0 ? TEXT(($F{advance_amount} + $F{sales_amount} - $F{purchase_amount} - $F{pawn_amount} + $F{interested_amount} + $F{liquidation_amount} - $F{withdrawal_out}) + $F{transfer_money_in}, "#,###") : ""]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement mode="Transparent" x="420" y="155" width="140" height="15" forecolor="#000000" backcolor="#FFCC00" uuid="af086632-c6f9-43ec-86be-123c86b23bc7">
@@ -891,7 +891,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 					<font fontName="Arial" size="10" isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{withdrawal_in} != 0 ? TEXT($F{withdrawal_in}, "#,###") : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{withdrawal_in}-$F{transfer_money_out}) != 0 ? TEXT($F{withdrawal_in}-$F{transfer_money_out}, "#,###") : ""]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="420" y="125" width="140" height="15" uuid="3dc4909b-8568-424f-bb9d-0105e20078a9">
@@ -919,7 +919,7 @@ GROUP BY C.counter_no, C.opened_at, C.closed_at, C.description, U.name, C.advanc
 					<font fontName="Arial" size="10" isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{withdrawal_out} != 0 ? TEXT($F{withdrawal_out}, "#,###") : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{withdrawal_out}-$F{transfer_money_in}) != 0 ? TEXT($F{withdrawal_out}-$F{transfer_money_in}, "#,###") : ""]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

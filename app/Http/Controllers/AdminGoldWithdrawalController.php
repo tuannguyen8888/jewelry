@@ -290,7 +290,8 @@
 			$query->where('gold_vouchers.order_type', 2);
 			if(CRUDBooster::myPrivilegeId() == 2)// Nhân viên bán hàng
             {
-                $query->where('gold_vouchers.created_by', CRUDBooster::myId());
+//                $query->where('gold_vouchers.created_by', CRUDBooster::myId());
+                $query->where('gold_vouchers.brand_id', CRUDBooster::myBrand());
 			}
             $current_brand = CRUDBooster::myBrand();
             $privilegeId = CRUDBooster::myPrivilegeId();

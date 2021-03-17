@@ -169,10 +169,10 @@
 	        |
 	        */
 	        $this->index_statistic = array();
-            $this->index_statistic[] = ['label'=>'Tổng số phiếu','use_main_query'=>true,'operator'=>'count','icon'=>'fa fa-newspaper-o','color'=>'success'];
-            $this->index_statistic[] = ['label'=>'Tổng số tiền cầm','use_main_query'=>true,'operator'=>'sum','field'=>'gold_pawn_orders.amount','icon'=>'fa fa-usd','color'=>'danger'];
-            $this->index_statistic[] = ['label'=>'Tổng số tiền lãi','use_main_query'=>true,'operator'=>'sum','field'=>'gold_pawn_order_interested.interested_amount','icon'=>'fa fa-money','color'=>'warning'];
-            $this->index_statistic[] = ['label'=>'Số khách hàng','use_main_query'=>true,'operator'=>'count_distinct','field'=>'gold_pawn_order_interested.customer_id','icon'=>'fa fa-users','color'=>'info'];
+//            $this->index_statistic[] = ['label'=>'Tổng số phiếu','use_main_query'=>true,'operator'=>'count','icon'=>'fa fa-newspaper-o','color'=>'success'];
+//            $this->index_statistic[] = ['label'=>'Tổng số tiền cầm','use_main_query'=>true,'operator'=>'sum','field'=>'gold_pawn_orders.amount','icon'=>'fa fa-usd','color'=>'danger'];
+//            $this->index_statistic[] = ['label'=>'Tổng số tiền lãi','use_main_query'=>true,'operator'=>'sum','field'=>'gold_pawn_order_interested.interested_amount','icon'=>'fa fa-money','color'=>'warning'];
+//            $this->index_statistic[] = ['label'=>'Số khách hàng','use_main_query'=>true,'operator'=>'count_distinct','field'=>'gold_pawn_order_interested.customer_id','icon'=>'fa fa-users','color'=>'info'];
 
 
 
@@ -307,7 +307,8 @@
 	        //Your code here
             if(CRUDBooster::myPrivilegeId() == 2)// Nhân viên bán hàng
             {
-                $query->where('gold_pawn_order_interested.saler_id', CRUDBooster::myId());
+//                $query->where('gold_pawn_order_interested.saler_id', CRUDBooster::myId());
+                $query->where('gold_pawn_order_interested.brand_id', CRUDBooster::myBrand());
             }
             $current_brand = CRUDBooster::myBrand();
             $privilegeId = CRUDBooster::myPrivilegeId();

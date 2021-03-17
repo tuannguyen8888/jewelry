@@ -55,7 +55,7 @@ class AdminTransferMoneyController extends CBExtendController {
         $this->col[] = ["label"=>"Khách hàng","name"=>"object_id","join"=>"gold_customers,name"];
         $this->col[] = ["label"=>"Phone","name"=>"object_id","join"=>"gold_customers,phone"];
         $this->col[] = ["label"=>"Zalo phone","name"=>"object_id","join"=>"gold_customers,zalo_phone"];
-        $this->col[] = ["label"=>"Loại thẻ","name"=>"card_type_id","join"=>"gold_bank_card,name"];
+        $this->col[] = ["label"=>"Mức phí","name"=>"card_type_id","join"=>"gold_transfer_money_fee_type,name"];
         $this->col[] = ["label"=>"Số tiền","name"=>"in_amount","callback_php"=>'number_format($row->in_amount)'];
 //        $this->col[] = ["label"=>"% phí NH","name"=>"bank_fee","callback_php"=>'number_format($row->bank_fee, 2)'];
 //        $this->col[] = ["label"=>"% phí DV","name"=>"fee","callback_php"=>'number_format($row->fee, 2)'];
@@ -290,7 +290,8 @@ class AdminTransferMoneyController extends CBExtendController {
         $query->where('gold_vouchers.order_type', 3);
         if(CRUDBooster::myPrivilegeId() == 2)// Nhân viên bán hàng
         {
-            $query->where('gold_vouchers.created_by', CRUDBooster::myId());
+//            $query->where('gold_vouchers.created_by', CRUDBooster::myId());
+            $query->where('gold_vouchers.brand_id', CRUDBooster::myBrand());
         }
         $current_brand = CRUDBooster::myBrand();
         $privilegeId = CRUDBooster::myPrivilegeId();

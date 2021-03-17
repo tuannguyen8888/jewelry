@@ -19,7 +19,7 @@
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="235"/>
 		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="758"/>
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business"/>
 		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="620"/>
 		<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="366"/>
 		<parameter name="from_date" class="java.util.Date"/>
@@ -28,30 +28,26 @@
 		<parameter name="brand_id" class="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[SELECT NULL AS order_no, NULL as order_date, N'Số dư đầu kỳ' AS notes, NULL as object, 
-	SUM(in_amount) as in_amount, 0 as out_amount 
+	SUM(in_amount - out_amount) as in_amount, 0 as out_amount
 FROM(
-	SELECT SUM(ROUND(amount * (1 - bank_fee / 100))) as in_amount
+	SELECT SUM(ROUND(in_amount * (1 - bank_fee / 100))) as in_amount, SUM(out_amount) as out_amount
 	FROM gold_vouchers
-	WHERE deleted_at IS NULL AND status <> 0 AND order_type <> 3 AND ($P{type} = -1 OR method = $P{type}) AND order_date < $P{from_date} 
-		AND brand_id = $P{brand_id} 
+	WHERE deleted_at IS NULL AND status <> 0	AND ($P{type} = -1 OR method = $P{type}) AND order_date < $P{from_date}
+		AND brand_id = $P{brand_id} AND order_type < 3
 	UNION ALL
-	SELECT SUM(CASE WHEN $P{type} = 0 THEN ROUND(amount + fee)
-									   WHEN $P{type} = 1 THEN -ROUND(amount + bank_fee)
-                                       ELSE ROUND(fee - bank_fee)
-					END) as in_amount
+	SELECT 0 as in_amount, SUM(ROUND(amount + bank_fee )) as out_amount
 	FROM gold_vouchers
-	WHERE deleted_at IS NULL AND status <> 0 AND order_type = 3 AND order_date < $P{from_date} 
-		AND brand_id = $P{brand_id} 
+	WHERE deleted_at IS NULL AND status <> 0	AND ($P{type} = -1 OR method = $P{type}) AND order_date < $P{from_date}
+		AND brand_id = $P{brand_id} AND order_type = 3
 	UNION ALL
-	SELECT SUM(ROUND((pay_amount - return_amount) * (1 - bank_fee / 100))) as in_amount
+	SELECT SUM(ROUND((pay_amount - return_amount) / (1 - bank_fee / 100))) as in_amount, 0 as out_amount
 	FROM gold_sale_orders
 	WHERE deleted_at IS NULL AND order_type <> 0 AND payment_method = 1 AND $P{type} <> 0 AND order_date < $P{from_date}
 		AND brand_id = $P{brand_id}
 ) A
-HAVING SUM(in_amount) <> 0
 UNION ALL
-SELECT V.order_no, V.order_date, V.notes, IFNULL(C.name, IFNULL(S.name, IFNULL(I.name, U.name))) as object, 
-	ROUND(V.in_amount / (1 + V.bank_fee / 100)) as in_amount, V.out_amount 
+SELECT V.order_no, V.order_date, V.notes, IFNULL(C.name, IFNULL(S.name, IFNULL(I.name, U.name))) as object,
+	ROUND(V.in_amount * (1 - V.bank_fee / 100)) as in_amount, V.out_amount
 FROM gold_vouchers V
 	LEFT OUTER JOIN gold_customers C ON V.object_id = C.id AND V.object_type = 0
 	LEFT OUTER JOIN gold_suppliers S ON V.object_id = S.id AND V.object_type = 1
@@ -59,17 +55,10 @@ FROM gold_vouchers V
 	LEFT OUTER JOIN cms_users U ON V.object_id = U.id AND V.object_type = 3
 WHERE V.deleted_at IS NULL AND V.status <> 0 AND ($P{type} = -1 OR V.method = $P{type})
 	AND V.order_date >= $P{from_date} AND V.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
-	AND V.brand_id = $P{brand_id} AND V.order_type <> 3
+	AND V.brand_id = $P{brand_id} AND order_type < 3
 UNION ALL
-SELECT V.order_no, V.order_date, V.notes, IFNULL(C.name, IFNULL(S.name, IFNULL(I.name, U.name))) as object, 
-	ROUND(CASE WHEN $P{type} = 0 THEN ROUND(amount + fee)
-									   WHEN $P{type} = 1 THEN 0
-                                       ELSE ROUND(amount + fee)
-					END) as in_amount, 
-    ROUND(CASE WHEN $P{type} = 0 THEN 0
-									   WHEN $P{type} = 1 THEN ROUND(amount + bank_fee)
-                                       ELSE ROUND(amount + bank_fee)
-					END) as out_amount 
+SELECT V.order_no, V.order_date, V.notes, IFNULL(C.name, IFNULL(S.name, IFNULL(I.name, U.name))) as object,
+	0 as in_amount, ROUND(V.amount + V.bank_fee) as out_amount
 FROM gold_vouchers V
 	LEFT OUTER JOIN gold_customers C ON V.object_id = C.id AND V.object_type = 0
 	LEFT OUTER JOIN gold_suppliers S ON V.object_id = S.id AND V.object_type = 1
@@ -77,10 +66,10 @@ FROM gold_vouchers V
 	LEFT OUTER JOIN cms_users U ON V.object_id = U.id AND V.object_type = 3
 WHERE V.deleted_at IS NULL AND V.status <> 0 AND ($P{type} = -1 OR V.method = $P{type})
 	AND V.order_date >= $P{from_date} AND V.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
-	AND V.brand_id = $P{brand_id} AND V.order_type =  3
+	AND V.brand_id = $P{brand_id} AND order_type = 3
 UNION ALL
-SELECT V.order_no, V.order_date, NULL AS notes, C.name as object, 
-	ROUND((V.pay_amount - V.return_amount) / (1 + V.bank_fee / 100)) as in_amount, 0 AS out_amount 
+SELECT V.order_no, V.order_date, NULL AS notes, C.name as object,
+	ROUND((V.pay_amount - V.return_amount) / (1 - V.bank_fee / 100)) as in_amount, 0 AS out_amount
 FROM gold_sale_orders V
 	LEFT OUTER JOIN gold_customers C ON V.customer_id = C.id
 WHERE V.deleted_at IS NULL AND V.order_type <> 0 AND V.payment_method = 1 AND $P{type} <> 0

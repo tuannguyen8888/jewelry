@@ -311,7 +311,7 @@
 	        //Your code here
             if(CRUDBooster::myPrivilegeId() == 2)// Nhân viên bán hàng
             {
-                $query->where('gold_sale_orders.saler_id', CRUDBooster::myId());
+                $query->where('gold_sale_orders.brand_id', CRUDBooster::myBrand());
             }
 	    }
 
@@ -386,9 +386,11 @@
                     // get new order no
                     $last_order = DB::table('gold_sale_orders as SO')
                         ->whereRaw('SO.deleted_at is null')
-                        ->where('SO.order_date', '>=', $order_date->format('Y-m-d') . ' 00:00:00')
-                        ->where('SO.order_date', '<=', $order_date->format('Y-m-d') . ' 23:59:59')
-                        ->orderBy('SO.order_no', 'desc')
+                        ->where('SO.brand_id',CRUDBooster::myBrand())
+                        ->where('SO.created_at', '>=', date('01-m-Y'))
+//                        ->where('SO.order_date', '>=', $order_date->format('Y-m-d') . ' 00:00:00')
+//                        ->where('SO.order_date', '<=', $order_date->format('Y-m-d') . ' 23:59:59')
+                        ->orderBy('SO.id', 'desc')
                         ->first();
                     $new_order_no = '';
                     if ($last_order) {

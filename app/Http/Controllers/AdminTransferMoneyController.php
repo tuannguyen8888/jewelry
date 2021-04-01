@@ -465,6 +465,8 @@ class AdminTransferMoneyController extends CBExtendController {
         ];
         $input = base_path().'/app/Reports/rpt_transfer_money.jasper';
         $output = public_path().'/output_reports/'.$filename;
+         $command = $jasper->process($input, $output, array('pdf'), $parameter, $database)->output();
+         Log::debug('$command = ' . $command);
         $jasper->process($input, $output, array('pdf'), $parameter, $database)->execute();
 
         while (!file_exists($output.'.pdf' )){

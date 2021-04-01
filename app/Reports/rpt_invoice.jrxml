@@ -1414,7 +1414,7 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Người bán]]></text>
+				<text><![CDATA[Nhân viên]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="350" y="37" width="200" height="12" uuid="c3474f1a-0d93-4750-948e-4c7729090550">

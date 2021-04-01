@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 7.2.1.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Pawn" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="806" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.report.description" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="232"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="761"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="comp_name" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["CÔNG TY TNHH VÀNG BẠC ĐÁ QUÝ KIM VẠN PHƯỚC"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="comp_phone" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["0886 768 769"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="comp_address" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["57 Ấp Bình Tiền 2, Xã Đức Hoà Hạ, Huyện Đức Hoà, Tỉnh Long An"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/storage/app/uploads/logo.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="to_date" class="java.util.Date"/>
+	<parameter name="from_date" class="java.util.Date"/>
+	<parameter name="brand_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT 
+	SUM(A.begin_amount) as begin_amount, 
+	SUM(A.begin_amount) + SUM(A.total_amount) as end_amount,
+	SUM(A.total_order_count) as total_order_count,
+	SUM(A.total_customer_count) as total_customer_count,
+	SUM(A.total_amount) as total_amount,
+	SUM(A.total_interested_amount) as total_interested_amount,
+	SUM(A.total_finalization_amount) as total_finalization_amount,
+	SUM(A.total_liquidation_count) as total_liquidation_count,
+	SUM(A.total_liquidation_amount) as total_liquidation_amount,
+	SUM(A.total_orver_count) as total_orver_count,
+	SUM(A.total_orver_amount) as total_orver_amount
+FROM (
+	SELECT 
+		SUM(PO.amount) as begin_amount,
+		0 as total_order_count,
+		0 as total_customer_count,
+		0 as total_amount,
+		0 as total_interested_amount,
+		0 as total_finalization_amount,
+		0 as total_liquidation_count,
+		0 as total_liquidation_amount,
+		0 as total_orver_count,
+		0 as total_orver_amount
+	FROM gold_pawn_orders as PO
+	WHERE PO.deleted_at is null
+		AND PO.status = 1
+        AND PO.brand_id = $P{brand_id}
+		AND PO.order_date < $P{from_date}
+	UNION ALL
+	SELECT 
+		0 as begin_amount,
+		COUNT(*) as total_order_count,
+		COUNT(DISTINCT PO.customer_id) as total_customer_count,
+		SUM(PO.amount) as total_amount,
+		0 as total_interested_amount,
+		0 as total_finalization_amount,
+		0 as total_liquidation_count,
+		0 as total_liquidation_amount,
+		0 as total_orver_count,
+		0 as total_orver_amount
+	FROM gold_pawn_orders as PO
+	WHERE PO.deleted_at is null
+		AND PO.status = 1
+        AND PO.brand_id = $P{brand_id}
+		AND PO.order_date >= $P{from_date} AND PO.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+	UNION ALL
+	SELECT 
+		0 as begin_amount,
+		0 as total_order_count,
+		0 as total_customer_count,
+		0 as total_amount,
+		SUM(POI.interested_amount) as total_interested_amount,
+		0 as total_finalization_amount,
+		0 as total_liquidation_count,
+		0 as total_liquidation_amount,
+		0 as total_orver_count,
+		0 as total_orver_amount
+	FROM gold_pawn_orders as PO
+	INNER JOIN gold_pawn_order_interested as POI ON PO.id = POI.order_id
+	WHERE PO.deleted_at is null AND POI.deleted_at is null
+		AND PO.status <> 0
+        AND PO.brand_id = $P{brand_id}
+		AND POI.interested_date >= $P{from_date} AND POI.interested_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+	UNION ALL
+	SELECT 
+		0 as begin_amount,
+		0 as total_order_count,
+		0 as total_customer_count,
+		0 as total_amount,
+		0 as total_interested_amount,
+		SUM(POI.amount) as total_finalization_amount,
+		0 as total_liquidation_count,
+		0 as total_liquidation_amount,
+		0 as total_orver_count,
+		0 as total_orver_amount
+	FROM gold_pawn_orders as PO
+	INNER JOIN gold_pawn_order_interested as POI ON PO.id = POI.order_id
+	WHERE PO.deleted_at is null AND POI.deleted_at is null
+		AND PO.status = 3 
+        AND PO.brand_id = $P{brand_id}
+		AND PO.order_date >= $P{from_date} AND PO.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+	UNION ALL
+	SELECT 
+		0 as begin_amount,
+		0 as total_order_count,
+		0 as total_customer_count,
+		0 as total_amount,
+		0 as total_interested_amount,
+		0 as total_finalization_amount,
+		COUNT(DISTINCT PO.id) as total_liquidation_count,
+		SUM(POI.amount) as total_liquidation_amount,
+		0 as total_orver_count,
+		0 as total_orver_amount
+	FROM gold_pawn_orders as PO
+	INNER JOIN gold_pawn_order_interested as POI ON PO.id = POI.order_id
+	WHERE PO.deleted_at is null AND POI.deleted_at is null
+		AND PO.status = 2
+        AND PO.brand_id = $P{brand_id}
+		AND PO.order_date >= $P{from_date} AND PO.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+	UNION ALL
+	SELECT 
+		0 as begin_amount,
+		0 as total_order_count,
+		0 as total_customer_count,
+		0 as total_amount,
+		0 as total_interested_amount,
+		0 as total_finalization_amount,
+		0 as total_liquidation_count,
+		0 as total_liquidation_amount,
+		COUNT(*) as total_orver_count,
+		SUM(PO.amount) as total_orver_amount
+	FROM gold_pawn_orders as PO
+	WHERE PO.deleted_at is null
+		AND PO.status = 1
+        AND PO.brand_id = $P{brand_id}
+		AND ((PO.last_interested_at is null and DATEDIFF(NOW(),PO.order_date) > 30) or (PO.last_interested_at is not null and  DATEDIFF(NOW(),PO.last_interested_at) > 30))
+		AND PO.order_date >= $P{from_date} AND PO.order_date < DATE_ADD($P{to_date}, INTERVAL 1 DAY)
+) as A]]>
+	</queryString>
+	<field name="begin_amount" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="begin_amount"/>
+	</field>
+	<field name="end_amount" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="end_amount"/>
+	</field>
+	<field name="total_order_count" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="total_order_count"/>
+	</field>
+	<field name="total_customer_count" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="total_customer_count"/>
+	</field>
+	<field name="total_amount" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="total_amount"/>
+	</field>
+	<field name="total_interested_amount" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="total_interested_amount"/>
+	</field>
+	<field name="total_finalization_amount" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="total_finalization_amount"/>
+	</field>
+	<field name="total_liquidation_count" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="total_liquidation_count"/>
+	</field>
+	<field name="total_liquidation_amount" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="total_liquidation_amount"/>
+	</field>
+	<field name="total_orver_count" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="total_orver_count"/>
+	</field>
+	<field name="total_orver_amount" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="total_orver_amount"/>
+	</field>
+	<title>
+		<band height="341" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="80" y="0" width="400" height="14" forecolor="#FFCC00" uuid="40b39d63-a7a6-4c04-ad2b-a79177d76299">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="33" width="400" height="12" forecolor="#FFCC00" uuid="242d5c4f-4417-4adc-a79c-1b5e9920ba51">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Địa chỉ: " + $P{comp_address}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="45" width="400" height="12" forecolor="#FFCC00" uuid="79aa48f2-082e-4e1c-b0dd-4c198ec49dde">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Hotline: " + $P{comp_phone}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="60" width="559" height="20" forecolor="#FF0000" uuid="ee78a9a4-0d0b-4dfe-a64a-21909be96180">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Báo Cáo Cầm Vàng]]></text>
+			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement x="0" y="0" width="80" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="140" width="120" height="15" uuid="6e14376c-812d-468a-ad7c-5bf9c3865edd">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{begin_amount} != 0 ? TEXT($F{begin_amount}, "#,###") : "0"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="125" width="120" height="15" uuid="4a74668f-b55e-4c97-bf5a-c78915e34cd1">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Số tiền cầm đầu kỳ (A)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="125" width="150" height="15" uuid="de644779-ffba-4267-8b61-b3bf96bd70c9">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Số tiền cầm cuối kỳ (B)]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="140" width="150" height="15" uuid="3ea0244a-aace-4d46-80c1-dd444c6ff156">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{end_amount} != 0 ? TEXT($F{end_amount}, "#,###") : "0"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="213" width="120" height="15" uuid="31a3a3b0-82a3-4a40-9b77-1304c9b2288f">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_order_count} != 0 ? TEXT($F{total_order_count}, "#,###") : "0"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="198" width="120" height="15" uuid="4a3780c4-7a37-49f0-9748-5cae86e4b0de">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Số lượt cầm trong kỳ (G)]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="213" width="150" height="15" uuid="c2cec6c1-9a6e-4670-95d9-ed173df4a3d0">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_customer_count} != 0 ? TEXT($F{total_customer_count}, "#,###") : "0"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="120" y="198" width="150" height="15" uuid="fefab871-9bcf-42cf-a6d4-e95bfc45158f">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Số khách hàng cầm trong kỳ (H)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="559" y="198" width="121" height="15" forecolor="#000000" backcolor="#FFCC00" uuid="af086632-c6f9-43ec-86be-123c86b23bc7">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Số hợp đồng thanh lý (K)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="270" y="198" width="160" height="15" uuid="13ef8fc1-d6b1-46d4-8ceb-9df67caf8406">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Số hợp đồng quá hạn (I)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="270" y="125" width="160" height="15" uuid="4a13f081-aa27-4d58-a169-78e22f10d4c8">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Số tiền phát sinh mới trong kỳ (C)]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="270" y="140" width="160" height="15" uuid="3c3f59ad-e310-432e-8f08-cd7bece9117d">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_amount} != 0 ? TEXT($F{total_amount}, "#,###") : "0"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="270" y="213" width="160" height="15" uuid="2b4a9e0a-8c4d-43ad-94e9-f9522827bffe">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_orver_count} != 0 ? TEXT($F{total_orver_count}, "#,###") : "0"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="430" y="198" width="129" height="15" uuid="74a6efb2-2ef4-4fe7-9603-0f138c665f06">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Giá trị hợp đồng quá hạn (J)]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="430" y="213" width="129" height="15" uuid="1f849a0c-ad91-42ea-a891-8c707478b268">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_orver_amount} != 0 ? TEXT($F{total_orver_amount}, "#,###") : "0"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="430" y="125" width="129" height="15" uuid="44aba962-4dcf-42bd-a2f5-effb0a959891">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tiền lãi trong kỳ (D)]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="430" y="140" width="129" height="15" uuid="4f666b44-93d0-4302-8943-56a7de7d56d0">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_interested_amount} != 0 ? TEXT($F{total_interested_amount}, "#,###") : "0"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="559" y="125" width="121" height="15" uuid="3dc4909b-8568-424f-bb9d-0105e20078a9">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tất toán trong kỳ (E)]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="559" y="140" width="121" height="15" uuid="d96ef474-6ca8-43f4-a957-82994c8db7d0">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_finalization_amount} != 0 ? TEXT($F{total_finalization_amount}, "#,###") : "0"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="110" width="559" height="15" uuid="05d4d6f3-a0ea-45c6-b326-aa7f125e273a">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[1. CẦM VÀNG:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="680" y="125" width="130" height="15" uuid="7f9281df-22e3-4c2a-98c7-f4e39b706b21">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Thanh lý trong kỳ (F)]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="680" y="140" width="130" height="15" uuid="aaa5b8e1-5fea-4f12-8912-2460b38f963c">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_liquidation_amount} != 0 ? TEXT($F{total_liquidation_amount}, "#,###") : ""]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="181" width="559" height="15" uuid="7a479425-13c6-4c02-b026-c7f5be97d47d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[2. THỐNG KÊ:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="559" y="213" width="121" height="15" uuid="519cad43-82ea-46dc-8ee4-5ee6e98f89d8">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_liquidation_count} != 0 ? TEXT($F{total_liquidation_count}, "#,###") : "0"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="250" width="559" height="15" uuid="71589011-bcd2-4d97-a673-ed540062d857">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[3. CHỈ SỐ:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="270" width="120" height="15" uuid="55e2898e-a4c4-4940-abaa-02249bf873fa">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Giá trị cầm trung bình]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="285" width="120" height="15" uuid="b8462e87-31f2-47af-95f4-c0115fe7122d">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{total_amount}/$F{total_order_count}) != 0 ? TEXT(($F{total_amount}/$F{total_order_count}), "#,###") : "0"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="120" y="270" width="150" height="15" uuid="cf4844a2-da15-4de6-9445-94fad4934e9a">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tỷ lệ HĐ quá hạn]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="285" width="150" height="15" uuid="06aac86a-ebd0-4d1f-821c-f539607c5dab">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{total_orver_amount}/$F{end_amount}) != 0 ? TEXT(($F{total_orver_amount}/$F{end_amount}), "#,###.###") : "00"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="85" width="560" height="12" uuid="2507e9f9-a417-43b6-bdb1-bd0f8b114309">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Từ ngày: " + DATEFORMAT($P{from_date}, "dd/MM/yyyy") + " đến ngày: " + DATEFORMAT($P{to_date}, "dd/MM/yyyy")]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageFooter>
+		<band height="12" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="0" y="0" width="190" height="12" uuid="5c1cda85-de6b-4faa-ab7c-8e6113310353">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["In lúc: " + DATEFORMAT(NOW( ), "dd/MM/yyyy HH:mm:ss")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="460" y="0" width="70" height="12" uuid="bf99d036-268c-4810-b561-df1281bc26ba">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Trang: " + $V{PAGE_NUMBER} + "/"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="530" y="0" width="29" height="12" uuid="e74216f4-b575-4206-a44f-c30ea9bbe481">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

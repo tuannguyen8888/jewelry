@@ -9,7 +9,7 @@
 				<form method='post' action='{{CRUDBooster::mainpath('add-save')}}' id="form">
 					<input type="hidden" name="id" id="id">
 					<div class="col-sm-12">
-                        <!-- <div class="row">
+                        <div class="row">
 							<label for="stock_code" class="control-label col-sm-2">Kho<span class="text-danger" title="Không được bỏ trống trường này.">*</span></label>
 							<div class="col-sm-10">
 								<div class="input-group">
@@ -21,7 +21,7 @@
 									<input type="hidden" name="stock_id" id="stock_id">
 								</div>
 							</div>
-						</div> -->
+						</div>
                         <div class="row">
                             <label class="control-label col-sm-2">Mã vạch </label>
                             <div class="col-sm-2">
@@ -414,10 +414,14 @@
                                 async: true,
                                 success: function (data) {
                                     if (data && data.item) {
-                                        if(data.item.balance_qty > 0){
-                                            addNewItem(data.item);
+                                        if(data.item.stock_id == $('#stock_id').val() || !$('#stock_id').val()) {
+                                            if (data.item.balance_qty > 0) {
+                                                addNewItem(data.item);
+                                            } else {
+                                                swal("Thông báo", "Hàng hóa [" + bar_code + "] đã bán", "warning");
+                                            }
                                         }else{
-                                            swal("Thông báo", "Hàng hóa [" + bar_code + "] đã bán", "warning");    
+                                            swal("Thông báo", "Hàng hóa [" + bar_code + "] không nằm trong kho đang chọn ("+$('#stock_name').val()+")", "warning");
                                         }
                                     } else {
                                         swal("Thông báo", "Không tìm thấy mã " + bar_code, "warning");
@@ -563,7 +567,7 @@
             return {
                 id: $('#id').val() ? Number($('#id').val()) : null,
                 status: finish ? 1 : 0,
-                // stock_id: $('#stock_id').val() ? Number($('#stock_id').val()) : null,
+                stock_id: $('#stock_id').val() ? Number($('#stock_id').val()) : null,
                 order_date: moment($('#order_date').val(), 'DD/MM/YYYY HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'),
                 order_no: $('#order_no').val(),
                 notes: $('#notes').val()

@@ -31,6 +31,9 @@
 	<parameter name="background" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["/storage/app/uploads/favicon.png"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="qr_code" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/storage/app/uploads/qr_kvp.png"]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT SO.order_no, SO.order_date, C.name AS customer_name, C.address, C.phone, C.zalo_phone, 
 	SO.due_date, SO.amount, SO.liquidation_notes,  B.name AS brand_name, U.name as user_name,
@@ -521,13 +524,19 @@ WHERE I.id =  $P{id}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{order_no}]]></textFieldExpression>
 			</textField>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement x="490" y="10" width="60" height="60" uuid="e9f06a58-b114-4abd-a5ff-7c24ebddd7dc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{qr_code}]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageFooter>
-		<band height="36" splitType="Stretch">
+		<band height="69" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<frame>
-				<reportElement positionType="FixRelativeToBottom" x="10" y="0" width="540" height="36" uuid="e686d3be-3f59-4224-a857-74cde471eca4">
+				<reportElement positionType="FixRelativeToBottom" x="10" y="0" width="540" height="60" uuid="e686d3be-3f59-4224-a857-74cde471eca4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<staticText>
@@ -541,7 +550,7 @@ WHERE I.id =  $P{id}]]>
 					<text><![CDATA[Lưu ý:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="10" y="12" width="530" height="24" forecolor="#FF0000" uuid="2a245981-dd03-4d72-82a7-ed6438dbc912">
+					<reportElement x="10" y="12" width="530" height="48" forecolor="#FF0000" uuid="2a245981-dd03-4d72-82a7-ed6438dbc912">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -549,7 +558,9 @@ WHERE I.id =  $P{id}]]>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" size="10" isBold="false" isItalic="true"/>
 					</textElement>
-					<text><![CDATA[- Quý khách kiểm tra kỹ hàng hóa trước khi rời khỏi quầy. Mọi thắc mắc và khiếu nại về sau của quý khách cửa hàng sẽ không giải quyết.]]></text>
+					<text><![CDATA[- Quý khách vui lòng kiểm tra kỹ trình trạng sản phẩm, nếu có bất kỳ vấn đề gì xin vui lòng báo cho nhân viên để được giải quyết trước khi rời khỏi quầy.
+- Quý khách có nhu cầu làm mới sản phẩm miễn phí vui lòng liên hệ nhân viên.
+Cảm ơn Quý khách đã lựa chọn Kim Vạn Phước!]]></text>
 				</staticText>
 			</frame>
 		</band>

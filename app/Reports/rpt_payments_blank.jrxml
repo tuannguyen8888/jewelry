@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 7.2.1.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Receipts_Blank" pageWidth="595" pageHeight="420" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="384" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business_connection"/>
@@ -342,7 +342,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Người nộp tiền]]></text>
+				<text><![CDATA[Người nhận tiền]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="10" y="20" width="140" height="15" uuid="08de7aae-74c5-426b-b0ab-dfb19bd7920d">
@@ -365,7 +365,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Thủ quỷ]]></text>
+				<text><![CDATA[Thủ quỹ]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="150" y="20" width="140" height="15" uuid="77d4543d-9c1b-4557-b615-f5a220ae1197">

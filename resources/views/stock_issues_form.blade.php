@@ -592,7 +592,7 @@
                 valid = false;
                 $('#order_date').addClass('invalid');
             }
-            if( '{{CRUDBooster::myPrivilegeId()}}'!='4' && !$('#object_id').val()){
+            if( '{{CRUDBooster::myId()}}'!='10' && !$('#object_id').val()){
                 valid = false;
                 $('#object_id').addClass('invalid');
             }

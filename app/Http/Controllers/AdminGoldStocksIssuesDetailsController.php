@@ -30,11 +30,20 @@
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
-            $this->col[] = ["label"=>"Barcode","name"=>"id","callback_php"=>'$row->bar_code'];
-            $this->col[] = ["label"=>"Số phiếu","name"=>"order_no"];
+            $this->col[] = ["label"=>"Barcode","name"=>"id","callback_php"=>'$row->bar_code',"export"=>'$row->bar_code'];
+            $this->col[] = ["label"=>"Mã sản phẩm","name"=>"id","callback_php"=>'$row->product_code',"export"=>'$row->product_code'];
+            $this->col[] = ["label"=>"Tên sản phẩm","name"=>"id","callback_php"=>'$row->product_name',"export"=>'$row->product_name'];
+            $this->col[] = ["label"=>"Loại vàng","name"=>"id","callback_php"=>'$row->product_type_name',"export"=>'$row->product_type_name'];
+            $this->col[] = ["label"=>"TL tổng","name"=>"id","callback_php"=>'$row->total_weight',"export"=>'$row->total_weight'];
+            $this->col[] = ["label"=>"TL đá","name"=>"id","callback_php"=>'$row->gem_weight',"export"=>'$row->gem_weight'];
+            $this->col[] = ["label"=>"TL vàng","name"=>"id","callback_php"=>'$row->gold_weight',"export"=>'$row->gold_weight'];
+            $this->col[] = ["label"=>"Tuổi vàng","name"=>"id","callback_php"=>'$row->age',"export"=>'$row->age'];
+            $this->col[] = ["label"=>"Q10","name"=>"id","callback_php"=>'$row->q10',"export"=>'$row->q10'];
+            $this->col[] = ["label"=>"Công vốn","name"=>"id","callback_php"=>'number_format($row->fund_fee)'];
+            $this->col[] = ["label"=>"Số phiếu xuất","name"=>"order_no"];
             $this->col[] = ["label"=>"T/g xuất","name"=>"order_date","callback_php"=>'date_time_format($row->order_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
-            $this->col[] = ["label"=>"Đối tượng","name"=>"object_id","callback_php"=>'$row->object_name'];
-            $this->col[] = ["label"=>"Trạng thái","name"=>"status","callback_php"=>'get_input_status($row->status);'];
+            $this->col[] = ["label"=>"Đối tượng","name"=>"object_id","callback_php"=>'$row->object_name',"export"=>'$row->object_name'];
+            $this->col[] = ["label"=>"Trạng thái","name"=>"status","callback_php"=>'get_input_status($row->status);',"export"=>'get_input_status($row->status);'];
             $this->col[] = ["label"=>"Lý do","name"=>"notes"];
             $this->col[] = ["label"=>"Cửa hàng","name"=>"brand_id","join"=>"gold_brands,name"];
 //            $this->col[] = ["label"=>"Người tạo","name"=>"created_by","join"=>"cms_users,name"];
@@ -47,7 +56,12 @@
             $this->search_form[] = ["label"=>"Đến ngày", "name"=>"order_date_to_date", "data_column"=>"order_date", "search_type"=>"between_to","type"=>"date","width"=>"col-sm-2"];
             if(CRUDBooster::myPrivilegeId() == 1 || CRUDBooster::myPrivilegeId() == 4){
                 $this->search_form[] = ["label" => "Cửa hàng", "name" => "brand_id", "data_column"=>$this->table.".brand_id", "search_type"=>"equals_raw", "type" => "select2", "width" => "col-sm-2", 'datatable' => 'gold_brands,name', 'datatable_where' => 'deleted_at is null'];
+            }else{
+                $this->search_form[] = ["label"=>"Xuống dòng", "name"=>"break_line", "type"=>"break_line"];
             }
+            $this->search_form[] = ["label"=>"Loại đối tượng", "name"=>"object_type", "data_column"=>$this->table.".object_type", "search_type"=>"equals_raw","type"=>"select2","width"=>"col-sm-2", 'dataenum'=>`Enums::$OBJECT_TYPE`];
+            $this->search_form[] = ["label"=>"Đối tượng", "name"=>"object_id", "data_column"=>$this->table.".object_id", "search_type"=>"equals_raw","type"=>"select2","width"=>"col-sm-2", 'datatable'=>'v_objects,name', 'parent_select'=>'object_type', 'datatable_format'=>"code,' - ',name"];
+
 
             # START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
@@ -296,7 +310,24 @@
 
             $query->join('gold_stocks_issue_detail as SID', $this->table.'.id','=', 'SID.order_id')
                 ->leftJoin('gold_items as I', 'SID.item_id', '=', 'I.id')
-                ->addSelect('I.bar_code');
+//                ->addSelect('I.bar_code');
+//
+//            $query
+//                ->leftJoin('gold_items as I', 'gold_stocks_received.id', '=', 'I.received_id')
+                ->leftJoin('gold_products as P', 'I.product_id', '=', 'P.id')
+                ->leftJoin('gold_product_types as PT', 'I.product_type_id', '=', 'PT.id')
+                ->addSelect(
+                    'I.bar_code',
+                    'P.product_code',
+                    'P.product_name',
+                    'I.total_weight',
+                    'I.gem_weight',
+                    'I.gold_weight',
+                    'I.fund_fee',
+                    'I.age',
+                    'I.q10',
+                    'PT.name as product_type_name'
+                );
         }
 
 	    /*

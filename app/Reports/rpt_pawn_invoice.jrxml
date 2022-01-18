@@ -90,6 +90,9 @@ WHERE deleted_at IS NULL
 	<parameter name="background" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["/storage/app/uploads/favicon.png"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="qr_code" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/storage/app/uploads/qr_kvp.png"]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT SO.order_no, SO.order_date, C.name AS customer_name, C.address, C.phone, C.zalo_phone, 
 	SO.due_date, SO.amount, SO.interested_amount, 
@@ -376,6 +379,12 @@ WHERE SO.id =  $P{id}]]>
 					<pen lineWidth="3.0" lineStyle="Solid"/>
 				</graphicElement>
 			</line>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement x="490" y="10" width="60" height="60" uuid="da423820-09e0-40d4-9dbb-222a133cc1d8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{qr_code}]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
@@ -712,17 +721,7 @@ WHERE SO.id =  $P{id}]]>
 					<text><![CDATA[Lưu ý:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="160" y="12" width="380" height="12" forecolor="#FF0000" uuid="76e9aaf5-bd5f-42ba-b9c6-5ec6745f6f1a">
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false" isItalic="true"/>
-					</textElement>
-					<text><![CDATA[(Nếu chưa chuộc thì mỗi tháng quý khách phải đóng lãi 1 lần)]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="24" width="530" height="37" forecolor="#FF0000" uuid="2a245981-dd03-4d72-82a7-ed6438dbc912">
+					<reportElement x="10" y="12" width="530" height="49" forecolor="#FF0000" uuid="2a245981-dd03-4d72-82a7-ed6438dbc912">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -730,17 +729,10 @@ WHERE SO.id =  $P{id}]]>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" size="10" isBold="false" isItalic="true"/>
 					</textElement>
-					<text><![CDATA[- Quá hạn 10 ngày kể từ ngày biên nhận hết giá trị, mà quý khách không liên hệ với cửa hàng để đóng lãi, coi như quý khách đã tự ý bỏ, cửa hàng sẽ thanh lý để đảm bảo nguồn vốn. Mọi thắc mắc và khiếu nại về sau của quý khách cửa hàng sẽ không giải quyết.]]></text>
+					<text><![CDATA[- Quý khách vui lòng đóng lãi sau mỗi 30 ngày. Trường hợp quá hạn 15 ngày kể từ thời điểm đóng lãi mà công ty không liên hệ được với quý khách thì chúng tôi sẽ tiến hành thanh lý hợp đồng này.
+- Quý khách vui lòng lưu giữ hợp đồng này. Trường hợp bị mất hợp đồng vui lòng liên hệ với công ty.
+Cảm ơn Quý khách đã lựa chọn Kim Vạn Phước!]]></text>
 				</staticText>
-				<textField isBlankWhenNull="true">
-					<reportElement x="10" y="12" width="150" height="12" forecolor="#FF0000" uuid="0495b868-8a42-41ca-9f61-f680140d608e">
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					</reportElement>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="true" isItalic="true" isUnderline="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA["- Biên nhận có giá trị " + $F{due_date} + " ngày"]]></textFieldExpression>
-				</textField>
 			</frame>
 		</band>
 	</pageFooter>

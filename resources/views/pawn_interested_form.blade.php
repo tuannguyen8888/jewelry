@@ -541,7 +541,7 @@
             interested_date_str = moment($('#interested_date').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
             // console.log("interested_date_str = ", interested_date_str);
             if(order.last_interested_at){
-                date_str = moment(order.last_interested_at, 'YYYY-MM-DD').format('YYYY-MM-DD');
+                date_str = moment(order.last_interested_at, 'YYYY-MM-DD').add(1,'d').format('YYYY-MM-DD');
                 days = ((moment(interested_date_str, 'YYYY-MM-DD') - moment(date_str, 'YYYY-MM-DD')) / 86400000);
             }else if($('#order_date').val()){
                 date_str = moment($('#order_date').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
@@ -549,9 +549,10 @@
             }
             // console.log("date_str = ", date_str);
             // console.log("days = ", days);
-            if(days < order.min_days){
-                days = order.min_days;
-            }
+            //bỏ theo ý Tường Nguyễn
+            // if(days < order.min_days){
+            //     days = order.min_days;
+            // }
             const element = AutoNumeric.getAutoNumericElement('#days');
             element.set(days);
             const estimate_amount = AutoNumeric.getAutoNumericElement('#estimate_amount');

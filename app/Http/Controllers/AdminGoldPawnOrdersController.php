@@ -306,7 +306,8 @@
                 'to_date'=>$para_values[1],
                 // 'type'=>$para_values[2],
                 'brand_id'=>$para_values[2],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
             ];
             $input = base_path().'/app/Reports/rpt_pawn.jasper';
             $output = public_path().'/output_reports/'.$filename;
@@ -561,7 +562,8 @@
             $filename = 'CV_'.time();
             $parameter = [
                 'id'=>$id,
-                'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'), 
+                'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'),
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
                 'background'=>storage_path().'/app/'.CRUDBooster::getSetting('favicon'),
             ];
             $output = public_path().'/output_reports/'.$filename;
@@ -587,7 +589,8 @@
             $database = \Config::get('database.connections.mysql');
             $filename = 'CVB_'.time();
             $parameter = [
-                'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'), 
+                'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'),
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
                 'background'=>storage_path().'/app/'.CRUDBooster::getSetting('favicon'),
             ];
             $output = public_path().'/output_reports/'.$filename;

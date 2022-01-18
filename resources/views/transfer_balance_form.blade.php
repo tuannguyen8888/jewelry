@@ -13,7 +13,9 @@
                             <label class="control-label col-sm-2">Đối tượng</label>
                             <div class="col-sm-2">
                                 <select id="object_type" class="form-control" onchange="objectTypeChange();">
+                                    <option value=0>Khách hàng</option>
                                     <option value=1>Nhà cung cấp</option>
+                                    <option value=2>Nhà đầu tư</option>
                                     <option value=3>Nhân viên</option>
                                 </select>
                             </div>

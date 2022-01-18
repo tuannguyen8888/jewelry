@@ -709,7 +709,13 @@
             }else{
                 isProgess = true;
             }
-            
+            let total_weight = $('#total_weight').val() ? Number($('#total_weight').val().replace(/,/g, '')) : 0;
+            let gem_weight = $('#gem_weight').val() ? Number($('#gem_weight').val().replace(/,/g, '')) : 0;
+            let gold_weight = $('#gold_weight').val() ? Number($('#gold_weight').val().replace(/,/g, '')) : 0;
+            if(Math.round(total_weight*1000)/1000 != Math.round((Number(gem_weight) + Number(gold_weight))*1000)/1000){
+                swal("Thông báo", "Dữ liệu trọng lượng có bất thường, vui lòng kiểm tra lại. TL tổng("+total_weight+") = TL đá("+gem_weight+") + TL vàng("+gold_weight+").", "warning");
+                return;
+            }
             // console.log('isProgess 1 = ', isProgess)
             item = {
                 id: $('#item_id').val() ? Number($('#item_id').val()) : null,
@@ -720,9 +726,9 @@
                 product_unit_id: $('#product_unit_id').val() ? Number($('#product_unit_id').val()) : null,
                 producer_id: $('#producer_id').val() ? Number($('#producer_id').val()) : null,
                 // bar_code: $('#bar_code').val(),
-                total_weight: $('#total_weight').val() ? Number($('#total_weight').val().replace(/,/g, '')) : 0,
-                gem_weight: $('#gem_weight').val() ? Number($('#gem_weight').val().replace(/,/g, '')) : 0,
-                gold_weight: $('#gold_weight').val() ? Number($('#gold_weight').val().replace(/,/g, '')) : 0,
+                total_weight: total_weight,
+                gem_weight: gem_weight,
+                gold_weight: gold_weight,
                 retail_fee: $('#retail_fee').val() ? Number($('#retail_fee').val().replace(/,/g, '')) : 0,
                 whole_fee: $('#whole_fee').val() ? Number($('#whole_fee').val().replace(/,/g, '')) : 0,
                 fund_fee: $('#fund_fee').val() ? Number($('#fund_fee').val().replace(/,/g, '')) : 0,

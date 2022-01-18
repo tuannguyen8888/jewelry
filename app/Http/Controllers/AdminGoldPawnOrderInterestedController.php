@@ -52,8 +52,8 @@
 			$this->col[] = ["label"=>"T/g đóng lãi","name"=>"interested_date","callback_php"=>'date_time_format($row->interested_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
 			$this->col[] = ["label"=>"Tiền lãi","name"=>"interested_amount","callback_php"=>'number_format($row->interested_amount)'];
 			$this->col[] = ["label"=>"Số hợp đồng","name"=>"order_id","join"=>"gold_pawn_orders,order_no","width"=>"100"];
-			$this->col[] = ["label"=>"T/g cầm","name"=>DB::raw('gold_pawn_orders.order_date'),"join"=>"gold_pawn_orders,order_date","callback_php"=>'date_time_format($row->order_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
-			$this->col[] = ["label"=>"Tiền cầm","name"=>DB::raw('gold_pawn_orders.amount as pawn_amount'),"join"=>"gold_pawn_orders,amount","callback_php"=>'number_format($row->pawn_amount)'];
+			$this->col[] = ["label"=>"T/g cầm","name"=>"order_id","callback_php"=>'date_time_format($row->gold_pawn_orders_order_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
+			$this->col[] = ["label"=>"Tiền cầm","name"=>"order_id","join"=>"gold_pawn_orders,amount","callback_php"=>'number_format($row->gold_pawn_orders_amount)'];
 			$this->col[] = ["label"=>"Mã KH","name"=>"customer_id","join"=>"gold_customers,code"];
 			$this->col[] = ["label"=>"Tên KH","name"=>"customer_id","join"=>"gold_customers,name"];
             $this->col[] = ["label"=>"Phone","name"=>"customer_id","join"=>"gold_customers,phone"];
@@ -62,7 +62,7 @@
 			$this->col[] = ["label"=>"Cửa hàng","name"=>"brand_id","join"=>"gold_brands,name"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
-            // Nguen add new for search
+            // Nguyen add new for search
 
             $this->search_form = [];
             if(CRUDBooster::myPrivilegeId() == 2) {
@@ -169,10 +169,10 @@
 	        |
 	        */
 	        $this->index_statistic = array();
-//            $this->index_statistic[] = ['label'=>'Tổng số phiếu','use_main_query'=>true,'operator'=>'count','icon'=>'fa fa-newspaper-o','color'=>'success'];
-//            $this->index_statistic[] = ['label'=>'Tổng số tiền cầm','use_main_query'=>true,'operator'=>'sum','field'=>'gold_pawn_orders.amount','icon'=>'fa fa-usd','color'=>'danger'];
-//            $this->index_statistic[] = ['label'=>'Tổng số tiền lãi','use_main_query'=>true,'operator'=>'sum','field'=>'gold_pawn_order_interested.interested_amount','icon'=>'fa fa-money','color'=>'warning'];
-//            $this->index_statistic[] = ['label'=>'Số khách hàng','use_main_query'=>true,'operator'=>'count_distinct','field'=>'gold_pawn_order_interested.customer_id','icon'=>'fa fa-users','color'=>'info'];
+            $this->index_statistic[] = ['label'=>'Tổng số phiếu','use_main_query'=>true,'operator'=>'count','icon'=>'fa fa-newspaper-o','color'=>'success'];
+            $this->index_statistic[] = ['label'=>'Tổng số tiền cầm','use_main_query'=>true,'operator'=>'sum','field'=>'gold_pawn_orders.amount','icon'=>'fa fa-usd','color'=>'danger'];
+            $this->index_statistic[] = ['label'=>'Tổng số tiền lãi','use_main_query'=>true,'operator'=>'sum','field'=>'gold_pawn_order_interested.interested_amount','icon'=>'fa fa-money','color'=>'warning'];
+            $this->index_statistic[] = ['label'=>'Số khách hàng','use_main_query'=>true,'operator'=>'count_distinct','field'=>'gold_pawn_order_interested.customer_id','icon'=>'fa fa-users','color'=>'info'];
 
 
 
@@ -507,7 +507,8 @@
             $filename = 'DL_'.time();
             $parameter = [
                 'id'=>$id,
-                'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'), 
+                'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'),
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
                 'background'=>storage_path().'/app/'.CRUDBooster::getSetting('favicon'),
             ];
             $output = public_path().'/output_reports/'.$filename;
@@ -533,7 +534,8 @@
             $database = \Config::get('database.connections.mysql');
             $filename = 'DLT_'.time();
             $parameter = [
-                'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'), 
+                'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'),
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
                 'background'=>storage_path().'/app/'.CRUDBooster::getSetting('favicon'),
             ];
             $output = public_path().'/output_reports/'.$filename;

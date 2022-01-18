@@ -461,6 +461,7 @@
 				'id'=>$id,
 				'user'=>CRUDBooster::myName(),
 				'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
                 'background'=>storage_path().'/app/uploads/favicon.png'
 			];
             $input = base_path().'/app/Reports/rpt_withdrawal.jasper';
@@ -487,6 +488,7 @@
             $filename = 'RTT_'.time();
             $parameter = [
                 'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
                 'background'=>storage_path().'/app/uploads/favicon.png'
             ];
             $output = public_path().'/output_reports/'.$filename;

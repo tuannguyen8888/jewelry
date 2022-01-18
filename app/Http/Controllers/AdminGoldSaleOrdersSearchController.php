@@ -832,7 +832,8 @@
             $filename = 'BH_'.time();
             $parameter = [
                 'id'=>$id,
-                'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'), 
+                'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'),
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
                 'background'=>storage_path().'/app/'.CRUDBooster::getSetting('favicon'),
                 // 'comp_name'=>CRUDBooster::getSetting('ten'),
                 // 'comp_prefix'=>CRUDBooster::getSetting('ten_thuong_mai'),
@@ -875,7 +876,8 @@
             $database = \Config::get('database.connections.mysql');
             $filename = 'BHB_'.time();
             $parameter = [
-                'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'), 
+                'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'),
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
                 'background'=>storage_path().'/app/'.CRUDBooster::getSetting('favicon'),
             ];
             $output = public_path().'/output_reports/'.$filename;

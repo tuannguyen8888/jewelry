@@ -440,7 +440,8 @@
             $filename = 'CL_'.time();
             $parameter = [
                 'id'=>$id,
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
             $input = base_path().'/app/Reports/rpt_customer_list.jasper';
             $output = public_path().'/output_reports/'.$filename;
@@ -469,7 +470,8 @@
 				'to_date'=>$para_values[0],
 				'brand_id'=>$para_values[1],
 				'ids'=>$para_values[2]?$para_values[2]:'ALL',
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_customer_balance.jasper';
@@ -500,7 +502,8 @@
 				'to_date'=>$para_values[0],
 				'brand_id'=>$para_values[1],
 				'ids'=>$para_values[2],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
             $input = base_path().'/app/Reports/rpt_customer_balance.jasper';
             $output = public_path().'/output_reports/'.$filename;
@@ -531,7 +534,8 @@
 				'to_date'=>$para_values[1],
 				'brand_id'=>$para_values[2],
 				'ids'=>$para_values[3],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_customer_balance_detail.jasper';
@@ -562,7 +566,8 @@
 				'to_date'=>$para_values[1],
 				'brand_id'=>$para_values[2],
 				'ids'=>$para_values[3],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
             $input = base_path().'/app/Reports/rpt_customer_balance_detail.jasper';
             $output = public_path().'/output_reports/'.$filename;

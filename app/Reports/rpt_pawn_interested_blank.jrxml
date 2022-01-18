@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 7.2.1.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Pawn_Invoice" pageWidth="595" pageHeight="420" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="384" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business_connection"/>
@@ -30,6 +30,9 @@
 	</parameter>
 	<parameter name="background" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["/storage/app/uploads/favicon.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="qr_code" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/storage/app/uploads/qr_kvp.png"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[]]>
@@ -156,7 +159,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{comp_name}]]></textFieldExpression>
 			</textField>
-			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle" isLazy="true">
 				<reportElement x="10" y="10" width="80" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -480,13 +483,19 @@
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
 			</textField>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement x="490" y="10" width="60" height="60" uuid="b211c0c0-4257-4801-98a4-1e0d33c09b71">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{qr_code}]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageFooter>
-		<band height="45" splitType="Stretch">
+		<band height="77" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<frame>
-				<reportElement positionType="FixRelativeToBottom" x="10" y="0" width="540" height="45" uuid="e686d3be-3f59-4224-a857-74cde471eca4">
+				<reportElement positionType="FixRelativeToBottom" x="10" y="0" width="540" height="70" uuid="e686d3be-3f59-4224-a857-74cde471eca4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<staticText>
@@ -500,7 +509,7 @@
 					<text><![CDATA[Lưu ý:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="10" y="15" width="530" height="30" forecolor="#FF0000" uuid="2a245981-dd03-4d72-82a7-ed6438dbc912">
+					<reportElement x="10" y="15" width="530" height="55" forecolor="#FF0000" uuid="2a245981-dd03-4d72-82a7-ed6438dbc912">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -508,7 +517,9 @@
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" size="11" isBold="false" isItalic="true"/>
 					</textElement>
-					<text><![CDATA[- Quý khách kiểm tra kỹ hàng hóa trước khi rời khỏi quầy. Mọi thắc mắc và khiếu nại về sau của quý khách cửa hàng sẽ không giải quyết.]]></text>
+					<text><![CDATA[- Quý khách vui lòng kiểm tra kỹ trình trạng sản phẩm, nếu có bất kỳ vấn đề gì xin vui lòng báo cho nhân viên để được giải quyết trước khi rời khỏi quầy.
+- Quý khách có nhu cầu làm mới sản phẩm miễn phí vui lòng liên hệ nhân viên.
+Cảm ơn Quý khách đã lựa chọn Kim Vạn Phước!]]></text>
 				</staticText>
 			</frame>
 		</band>

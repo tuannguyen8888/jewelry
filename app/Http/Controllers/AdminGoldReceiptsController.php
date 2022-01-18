@@ -504,6 +504,7 @@
 				'id'=>$id,
 				'user'=>CRUDBooster::myName(),
 				'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
                 'background'=>storage_path().'/app/uploads/favicon.png'
 			];
             $input = base_path().'/app/Reports/rpt_receipts.jasper';
@@ -530,6 +531,7 @@
             $filename = 'PTT_'.time();
             $parameter = [
                 'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
                 'background'=>storage_path().'/app/uploads/favicon.png'
             ];
             $output = public_path().'/output_reports/'.$filename;
@@ -560,7 +562,8 @@
 				'to_date'=>$para_values[1],
 				'type'=>$para_values[2],
 				'brand_id'=>$para_values[3],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
             $input = base_path().'/app/Reports/rpt_book_cash.jasper';
             $output = public_path().'/output_reports/'.$filename;
@@ -595,7 +598,8 @@
 				'to_date'=>$para_values[1],
 				'type'=>$para_values[2],
 				'brand_id'=>$para_values[3],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
             $input = base_path().'/app/Reports/rpt_book_cash.jasper';
             $output = public_path().'/output_reports/'.$filename;

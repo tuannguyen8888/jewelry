@@ -376,6 +376,7 @@
             $parameter = [
                 'id'=>$id,
                 'brand_id'=>CRUDBooster::myBrand(),
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
             Log::debug('$parameter = ', $parameter);
@@ -434,14 +435,20 @@
 			$this->cbView('stock_movement_form', $data);
 		}
 
-		public function getStockBalance() {
-			//            $para = Request::all();
-			$data = [];
-			$data['page_title'] = 'Báo cáo tồn kho';
-			$this->cbView('stock_balance_form', $data);
-		}
+        public function getStockBarcodeBalance() {
+            $data = [];
+            $data['page_title'] = 'Báo cáo tồn mã vạch';
+            $this->cbView('stock_barcode_balance_form', $data);
+        }
 
-		public function getPrintStockMovement($para) {
+        public function getStockBalance() {
+            //            $para = Request::all();
+            $data = [];
+            $data['page_title'] = 'Báo cáo tồn kho';
+            $this->cbView('stock_balance_form', $data);
+        }
+
+        public function getPrintStockMovement($para) {
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
 			$filename = 'SM_'.time();
@@ -454,7 +461,8 @@
 				'to_date'=>$para_values[1],
 				'brand_id'=>$para_values[2],
 				'stock_ids'=>$para_values[3],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_stock_movement.jasper';
@@ -488,7 +496,8 @@
 				'to_date'=>$para_values[1],
 				'brand_id'=>$para_values[2],
 				'stock_ids'=>$para_values[3],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_stock_movement_all.jasper';
@@ -519,7 +528,8 @@
 				'to_date'=>$para_values[1],
 				'brand_id'=>$para_values[2],
 				'stock_ids'=>$para_values[3],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_stock_movement.jasper';
@@ -551,7 +561,8 @@
 				'to_date'=>$para_values[1],
 				'brand_id'=>$para_values[2],
 				'stock_ids'=>$para_values[3],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_stock_movement_all.jasper';
@@ -590,7 +601,8 @@
 				'to_date'=>$para_values[1],
 				'brand_id'=>$para_values[2],
 				'supplier_ids'=>$para_values[3],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_stock_movement_supplier.jasper';
@@ -621,7 +633,8 @@
 				'to_date'=>$para_values[1],
 				'brand_id'=>$para_values[2],
 				'supplier_ids'=>$para_values[3],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_stock_movement_supplier.jasper';
@@ -652,7 +665,8 @@
 				'to_date'=>$para_values[0],
 				'brand_id'=>$para_values[1],
 				'stock_ids'=>$para_values[2],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
             Log::debug('$parameter = ', $parameter);
             $input = base_path().'/app/Reports/rpt_stock_balance.jasper';
@@ -685,7 +699,8 @@
 				'to_date'=>$para_values[0],
 				'brand_id'=>$para_values[1],
 				'stock_ids'=>$para_values[2],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_stock_balance_all.jasper';
@@ -715,7 +730,8 @@
 				'to_date'=>$para_values[0],
 				'brand_id'=>$para_values[1],
 				'stock_ids'=>$para_values[2],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
             $input = base_path().'/app/Reports/rpt_stock_balance.jasper';
             $output = public_path().'/output_reports/'.$filename;
@@ -745,7 +761,8 @@
 				'to_date'=>$para_values[0],
 				'brand_id'=>$para_values[1],
 				'stock_ids'=>$para_values[2],
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_stock_balance_all.jasper';
@@ -766,4 +783,134 @@
                 )
             );
 		}
+
+
+
+        public function getPrintStockBarcodeBalance($para) {
+            $jasper = new JasperPHP();
+            $database = \Config::get('database.connections.mysql');
+            $filename = 'SBB_'.time();
+            $para_values = explode("@", $para);
+            $parameter = [
+                'to_date'=>$para_values[0],
+                'brand_id'=>$para_values[1],
+                'stock_ids'=>$para_values[2],
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+            ];
+            Log::debug('$parameter = ', $parameter);
+            $input = base_path().'/app/Reports/rpt_stock_barcode_balance.jasper';
+            $output = public_path().'/output_reports/'.$filename;
+            Log::debug('$para = '.$input);
+            Log::debug('$para = '.$output);
+            Log::debug('$para = '.storage_path().'/app/uploads/logo.png');
+            $jasper->process($input, $output, array('pdf'), $parameter, $database)->execute();
+
+            while (!file_exists($output.'.pdf')){
+                sleep(1);
+            }
+
+            $file = File::get($output.'.pdf');
+            Log::debug('$para = '.$file);
+            return Response::make($file, 200,
+                array(
+                    'Content-type' => 'application/pdf',
+                    'Content-Disposition' => 'filename="'.$filename.'.pdf"'
+                )
+            );
+        }
+
+        public function getPrintStockBarcodeBalanceAll($para) {
+            $jasper = new JasperPHP();
+            $database = \Config::get('database.connections.mysql');
+            $filename = 'SBBA_'.time();
+            $para_values = explode("@", $para);
+            $parameter = [
+                'to_date'=>$para_values[0],
+                'brand_id'=>$para_values[1],
+                'stock_ids'=>$para_values[2],
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+            ];
+
+            $input = base_path().'/app/Reports/rpt_stock_barcode_balance_all.jasper';
+            $output = public_path().'/output_reports/'.$filename;
+            $jasper->process($input, $output, array('pdf'), $parameter, $database)->execute();
+
+            while (!file_exists($output.'.pdf' )){
+                sleep(1);
+            }
+
+            $file = File::get( $output.'.pdf' );
+
+            return Response::make($file, 200,
+                array(
+                    'Content-type' => 'application/pdf',
+                    'Content-Disposition' => 'filename="'.$filename.'.pdf"'
+                )
+            );
+        }
+
+        public function getPrintStockBarcodeBalanceXlsx($para) {
+            $jasper = new JasperPHP();
+            $database = \Config::get('database.connections.mysql');
+            $filename = 'SBB_'.time();
+            $para_values = explode("@", $para);
+            $parameter = [
+                'to_date'=>$para_values[0],
+                'brand_id'=>$para_values[1],
+                'stock_ids'=>$para_values[2],
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+            ];
+            $input = base_path().'/app/Reports/rpt_stock_barcode_balance.jasper';
+            $output = public_path().'/output_reports/'.$filename;
+            $jasper->process($input, $output, array('xlsx'), $parameter, $database)->execute();
+
+            while (!file_exists($output . '.xlsx' )){
+                sleep(1);
+            }
+
+            $file = File::get( $output . '.xlsx' );
+            unlink($output . '.xlsx');
+
+            return Response::make($file, 200,
+                array(
+                    'Content-type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'Content-Disposition' => 'filename="'.$filename.'.xlsx"'
+                )
+            );
+        }
+
+        public function getPrintStockBarcodeBalanceAllXlsx($para) {
+            $jasper = new JasperPHP();
+            $database = \Config::get('database.connections.mysql');
+            $filename = 'SBBA_'.time();
+            $para_values = explode("@", $para);
+            $parameter = [
+                'to_date'=>$para_values[0],
+                'brand_id'=>$para_values[1],
+                'stock_ids'=>$para_values[2],
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+            ];
+
+            $input = base_path().'/app/Reports/rpt_stock_barcode_balance_all.jasper';
+            $output = public_path().'/output_reports/'.$filename;
+            $jasper->process($input, $output, array('xlsx'), $parameter, $database)->execute();
+
+            while (!file_exists($output . '.xlsx' )){
+                sleep(1);
+            }
+
+            $file = File::get( $output . '.xlsx' );
+            unlink($output . '.xlsx');
+
+            return Response::make($file, 200,
+                array(
+                    'Content-type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'Content-Disposition' => 'filename="'.$filename.'.xlsx"'
+                )
+            );
+        }
 	}

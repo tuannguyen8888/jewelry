@@ -944,6 +944,7 @@
                 swal("Thông báo", "Bạn không thể thêm sản phẩm sau khi đã lưu đơn hàng, hãy tạo đơn hàng mới.", "warning");
                 return;
 			}
+			let isWarning = (Math.round(Number(dataRow.total_weight)*1000)/1000 != Math.round((Number(dataRow.gem_weight) + Number(dataRow.gold_weight))*1000)/1000);
             let html = `<tr id="order_detail_` + dataRow.id + `">` +
                 `<th class="action text-center"><a style="cursor: pointer;" onclick="removeSaleOrderDetail(` + dataRow.id + `)"><i class="fa fa-remove text-red"></i></a></th>` +
                 `<th class="sort_no text-right" id="no_` + dataRow.id + `">${dataRow.no}</th>` +
@@ -951,9 +952,9 @@
                 `<th class="product_code">${dataRow.product_code}</th>` +
                 `<th class="product_name">${dataRow.product_name}</th>` +
                 `<th class="product_type_name text-center">${dataRow.product_type_name}</th>` +
-                `<th class="weight_value">${dataRow.total_weight.toLocaleString('en-US')}</th>` +
-                `<th class="weight_value">${dataRow.gem_weight.toLocaleString('en-US')}</th>` +
-                `<th class="weight_value">${dataRow.gold_weight.toLocaleString('en-US')}</th>` +
+                `<th class="weight_value ${isWarning?'text-red':''}">${dataRow.total_weight.toLocaleString('en-US')}</th>` +
+                `<th class="weight_value ${isWarning?'text-red':''}">${dataRow.gem_weight.toLocaleString('en-US')}</th>` +
+                `<th class="weight_value ${isWarning?'text-red':''}">${dataRow.gold_weight.toLocaleString('en-US')}</th>` +
                 `<th class="no-padding edit_weight"><input id="edit_weight_` + dataRow.id + `" type="text" class="form-control money" value="${dataRow.edit_weight}" onchange="edit_weight_change(` + dataRow.id + `)"></th>` +
                 `<th class="weight_value" id="diff_weight_${dataRow.id}">${(dataRow.edit_weight - dataRow.gold_weight).toLocaleString('en-US')}</th>` + //TL chênh lệch
                 `<th class="fee_value" id="price_${dataRow.id}">${dataRow.price.toLocaleString('en-US')}</th>` +
@@ -965,6 +966,9 @@
 			$('#table_order_details tbody').append(html);
             valid_actual_weight();
             // $('#table_order_details tbody').animate({scrollTop:9999999}, 'slow');
+            if(isWarning){
+                swal("Cảnh báo", "Mã vạch "+dataRow.bar_code+" mới thêm có bất thường, hãy kiểm tra lại.", "warning");
+            }
         }
 
         function removeBarcode(event){
@@ -1403,9 +1407,13 @@
                 swal("Thông báo", "Dữ liệu chưa được nhập đầy đủ, vui lòng kiểm tra lại.", "warning");
             }else if(!order_details || order_details.length <= 0){
                 valid = false;
+                $('#order_date').addClass('invalid');
+                swal("Thông báo", "Không được chọn ngày trong tương lai.", "warning");
+            }else if(moment($('#order_date').val(), 'DD/MM/YYYY HH:mm:ss').format('YYYY-MM-DD HH:mm:ss') > (moment().format('YYYY-MM-DD') + ' 23:59:59') ){
+                valid = false;
                 $(`#bar_code`).focus();
                 swal("Thông báo", "Chưa nhập hàng bán, vui lòng kiểm tra lại.", "warning");
-            }else{
+			}else{
                 let points = $('#points').val() ? AutoNumeric.getAutoNumericElement('#points').getNumber() : 0;
                 let use_points = $('#use_points').val() ? AutoNumeric.getAutoNumericElement('#use_points').getNumber() : 0;
                 let customer_balance = $('#customer_balance').val() ? AutoNumeric.getAutoNumericElement('#customer_balance').getNumber() : 0;

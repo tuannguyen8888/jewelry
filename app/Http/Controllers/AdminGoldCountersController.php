@@ -510,7 +510,8 @@
             $filename = 'STT'.time();
             $parameter = [
                 'id'=>$id,
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
             ];
             $input = base_path().'/app/Reports/rpt_counter.jasper';
             $output = public_path().'/output_reports/'.$filename;
@@ -536,7 +537,8 @@
             $filename = 'CTSTT-'.time();
             $parameter = [
                 'id'=>$id,
-                'logo'=>storage_path().'/app/uploads/logo.png'
+                'logo'=>storage_path().'/app/uploads/logo.png',
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
             ];
             $input = base_path().'/app/Reports/rpt_counter_detail.jasper';
             $output = public_path().'/output_reports/'.$filename;

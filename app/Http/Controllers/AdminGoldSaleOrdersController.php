@@ -381,11 +381,19 @@
 
                 if( $new_order['id'] && intval($new_order['id']) > 0) // update order
                 {
+                    if($new_order['order_type'] != 1) // chưa hoàn tất
+                    {
+                        $exits_order = DB::table($this->table)->where('id', $new_order['id'])->first();
+                        if ($exits_order->order_type == 1) // mà cái trong DB lại là đã hoàn tất => có vấn đề, ko cho lưu
+                        {
+                            throw new \Exception('Không thể lưu đè vào phiếu bán hàng đã hoàn tất.');
+                        }
+                    }
                     $order_id = $this->updateOrderHeader($new_order);
                 }else{
                     // get new order no
                     $last_order = DB::table('gold_sale_orders as SO')
-                        ->whereRaw('SO.deleted_at is null')
+//                        ->whereRaw('SO.deleted_at is null')
                         ->where('SO.brand_id',CRUDBooster::myBrand())
                         ->where('SO.created_at', '>=', date('01-m-Y'))
 //                        ->where('SO.order_date', '>=', $order_date->format('Y-m-d') . ' 00:00:00')
@@ -821,12 +829,19 @@
         }
 
         public function getPrintInvoice($id){
+            $so = DB::table('gold_sale_orders')->whereNull('deleted_at')->where('id', $id)->first();
+            if(!$so){
+                return 'Không tìm thấy hóa đơn có id = '.$id;
+            }elseif ($so->order_type !=1 ){
+                return 'Hóa đơn '.$so->order_no.' chưa hoàn tất, không thể in';
+            }
             $jasper = new JasperPHP();
             $database = \Config::get('database.connections.mysql');
             $filename = 'BH_'.time();
             $parameter = [
                 'id'=>$id,
-                'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'), 
+                'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'),
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
                 'background'=>storage_path().'/app/'.CRUDBooster::getSetting('favicon'),
                 // 'comp_name'=>CRUDBooster::getSetting('ten'),
                 // 'comp_prefix'=>CRUDBooster::getSetting('ten_thuong_mai'),
@@ -869,7 +884,8 @@
             $database = \Config::get('database.connections.mysql');
             $filename = 'BHB_'.time();
             $parameter = [
-                'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'), 
+                'logo'=>storage_path().'/app/'.CRUDBooster::getSetting('logo'),
+                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
                 'background'=>storage_path().'/app/'.CRUDBooster::getSetting('favicon'),
             ];
             $output = public_path().'/output_reports/'.$filename;

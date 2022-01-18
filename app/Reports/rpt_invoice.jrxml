@@ -205,6 +205,9 @@ GROUP BY SO.pay_amount, SO.return_amount, SO.balance]]>
 	<parameter name="background" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["/storage/app/uploads/favicon.png"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="qr_code" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/storage/app/uploads/qr_kvp.png"]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT SO.order_no, SO.order_date, COUNT(SOD.id) AS No, C.name AS customer_name, C.address, C.phone, C.zalo_phone, C.tax_no,
 	SUM(SOD.edit_weight + I.gem_weight) AS total_weight, SUM(I.gem_weight) AS gem_weight, SUM(SOD.edit_weight) AS edit_weight, 
@@ -455,7 +458,7 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 				</textElement>
 				<textFieldExpression><![CDATA[$F{brand_name}]]></textFieldExpression>
 			</textField>
-			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle" isLazy="true">
 				<reportElement x="10" y="10" width="80" height="60" uuid="29318a16-1fe8-43ab-ba93-e2216a06f821">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -565,6 +568,12 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 				</textElement>
 				<textFieldExpression><![CDATA[$F{payment_method} == 0 ? "TM" : "CK"]]></textFieldExpression>
 			</textField>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement x="490" y="10" width="60" height="60" uuid="33a1637f-7fa3-49c4-a5e4-88bc9fd5d282">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{qr_code}]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
@@ -1670,9 +1679,9 @@ GROUP BY SO.order_no, SO.order_date, SO.reduce, C.name, C.address, C.zalo_phone,
 					<textElement verticalAlignment="Top">
 						<font fontName="Arial" size="9" isBold="false" isItalic="true"/>
 					</textElement>
-					<text><![CDATA[- Đã giao, kiểm tra và cân đủ trọng lượng. SP vàng 610 được đổi ngang giá trị vàng về sau (không bị lỗ vàng)
-- SP vàng 610 được đổi miễn phí sang SP 610 khác trong vòng 7 ngày (không mất tiền công)
-- SP được bảo hành làm mới miễn phí trọn đời. Quý khách được tích điểm khi mua vàng 610]]></text>
+					<text><![CDATA[- Quý khách vui lòng kiểm tra trọng lượng trước khi nhận hàng, SP có thể bị hao mòn trong quá trình sử dụng
+- Đối với SP nữ trang đúc 610, 416 được đổi ngang giá trị vàng về sau. SP chưa qua sử dụng được đổi miễn phí trong 7 ngày.
+- SP được bảo hành và làm mới miễn phí trọn đời. Cảm ơn Quý khách đã lựa chọn Kim Vạn Phước!]]></text>
 				</staticText>
 			</frame>
 		</band>

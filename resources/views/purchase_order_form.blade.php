@@ -794,6 +794,46 @@
                     success: function (data) {
                         if (data && data.counter) {
                             counter = data.counter;
+
+                            $.ajax({
+                                method: "POST",
+                                url: '{{CRUDBooster::mainpath('add-save')}}',
+                                data: {
+                                    order: getOrderHeader(finish),
+                                    customer: {
+                                        code: $('#customer_code').val(),
+                                        name: $('#customer_name').val(),
+                                        phone: $('#customer_phone').val(),
+                                        address: $('#customer_address').val()
+                                    },
+                                    order_pays: order_pays,
+                                    counter: counter,
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                dataType: "json",
+                                async: true,
+                                success: function (data) {
+                                    if (data) {
+                                        if(finish) {
+                                            disableOrder();
+                                        }
+                                        order_id = data.id;
+                                        $('#id').val(order_id);
+                                        $('#order_no').val(data.order_no);
+                                        $('#customer_id').val(data.customer_id);
+                                    }
+                                    $('.loading').hide();
+                                },
+                                error: function (request, status, error) {
+                                    $('.loading').hide();
+                                    console.log('PostAdd status = ', status);
+                                    console.log('PostAdd error = ', error);
+                                    swal("Thông báo", "Có lỗi xãy ra khi lưu dữ liệu, vui lòng thử lại.", "error");
+                                    $('#save_button').show();
+                                }
+                            });
+                        } else {
+                            swal("Thông báo", "Không thể mở sổ tính tiền, vui lòng thử lại.", "error");
                         }
                     },
                     error: function (request, status, error) {
@@ -802,43 +842,7 @@
                     }
                 });
 
-                $.ajax({
-                    method: "POST",
-                    url: '{{CRUDBooster::mainpath('add-save')}}',
-                    data: {
-                        order: getOrderHeader(finish),
-                        customer: {
-                            code: $('#customer_code').val(),
-                            name: $('#customer_name').val(),
-                            phone: $('#customer_phone').val(),
-                            address: $('#customer_address').val()
-						},
-                        order_pays: order_pays,
-                        counter: counter,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    dataType: "json",
-                    async: true,
-                    success: function (data) {
-                        if (data) {
-                            if(finish) {
-                                disableOrder();
-                            }
-    						order_id = data.id;
-							$('#id').val(order_id);
-                            $('#order_no').val(data.order_no);
-                            $('#customer_id').val(data.customer_id);
-                        }
-                        $('.loading').hide();
-                    },
-                    error: function (request, status, error) {
-                        $('.loading').hide();
-                        console.log('PostAdd status = ', status);
-                        console.log('PostAdd error = ', error);
-                        swal("Thông báo", "Có lỗi xãy ra khi lưu dữ liệu, vui lòng thử lại.", "error");
-                        $('#save_button').show();
-                    }
-                });
+
 			} else {
                 $('#save_button').show();
 			}

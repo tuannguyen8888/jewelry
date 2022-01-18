@@ -677,7 +677,7 @@ GROUP BY SO.order_no, SO.order_date, SO.fee, SO.amount, C.name, C.address, C.zal
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="45" splitType="Stretch">
+		<band height="75" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<frame>
 				<reportElement positionType="FixRelativeToBottom" x="10" y="0" width="540" height="45" uuid="e686d3be-3f59-4224-a857-74cde471eca4">
@@ -694,7 +694,7 @@ GROUP BY SO.order_no, SO.order_date, SO.fee, SO.amount, C.name, C.address, C.zal
 					<text><![CDATA[Lưu ý:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="10" y="15" width="530" height="15" forecolor="#FF0000" uuid="76e9aaf5-bd5f-42ba-b9c6-5ec6745f6f1a">
+					<reportElement x="10" y="15" width="530" height="55" forecolor="#FF0000" uuid="76e9aaf5-bd5f-42ba-b9c6-5ec6745f6f1a">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -702,18 +702,9 @@ GROUP BY SO.order_no, SO.order_date, SO.fee, SO.amount, C.name, C.address, C.zal
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" size="11" isBold="false" isItalic="true"/>
 					</textElement>
-					<text><![CDATA[- Quý khách kiểm tra kỹ tiền trước khi rời khỏi quầy.]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="10" y="30" width="530" height="15" forecolor="#FF0000" uuid="a60b9d12-155a-43ae-96a6-1a1b983c5f0d">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					</reportElement>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="11" isBold="false" isItalic="true"/>
-					</textElement>
-					<text><![CDATA[- Mọi thắc mắc và khiếu nại sau khi quý khách đã rời khỏi quầy cửa hàng sẽ không giải quyết.]]></text>
+					<text><![CDATA[- Nếu sản phẩm của quý khách được mua từ hệ thống Kim Vạn Phước, còn mới, nguyên vẹn và không hao mòn sẽ được Kim Vạn Phước thu mua theo đúng trọng lượng đã bán trước đó.
+- Quý khách vui lòng kiểm tra kỹ tiền trước khi rời khỏi quầy.
+Cảm ơn Quý khách đã lựa chọn Kim Vạn Phước!]]></text>
 				</staticText>
 			</frame>
 		</band>

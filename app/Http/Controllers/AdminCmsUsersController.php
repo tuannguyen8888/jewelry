@@ -50,11 +50,28 @@ class AdminCmsUsersController extends CBExtendController {
 		$this->form[] = array("label"=>"Vài trò","name"=>"id_cms_privileges","type"=>"select","datatable"=>"cms_privileges,name",'datatable_where'=>'id != 1','required'=>true,'width'=>'col-sm-4');
 		$this->form[] = array("label"=>"Mật khẩu","name"=>"password","type"=>"password",'width'=>'col-sm-4',"help"=>"Vui lòng để trống nếu bạn không muốn đổi mật khẩu");
 		# END FORM DO NOT REMOVE THIS LINE
-                
+        $this->index_button[] = ['label'=>'Đồng bộ công nợ nhân viên','url'=>CRUDBooster::mainpath("sync-debt"),"icon"=>"fa fa-refresh",'color'=>'warning'];
         $this->addaction = array();
         if(CRUDBooster::myPrivilegeId() != 2){
             $this->addaction[] = ['label'=>'Bảng kê','url'=>CRUDBooster::mainpath('print-list/[id]'),'icon'=>'fa fa-print','color'=>'info'];
         }
+
+        $this->pre_index_html = "<div class='loading' style='display: none;'></div>";
+
+        $this->script_js = "
+        $(function() {
+            console.info('dk su kien');
+            $('#dong-bo-cong-no-nhan-vien').click(function(){
+                console.log('click dong-bo-cong-no-nhan-vien')
+                $('#dong-bo-cong-no-nhan-vien').addClass('disabled');
+                $('.loading').show();
+                return true;
+            });
+        });";
+
+        $this->load_css = array();
+        $this->load_css[] = asset("css/loading.css");
+        $this->load_css[] = asset("css/site.customize.css");
 	}
 	public function hook_query_index(&$query) {
         //Your code here
@@ -120,7 +137,10 @@ class AdminCmsUsersController extends CBExtendController {
 		$data['row']        = CRUDBooster::first('cms_users',CRUDBooster::myId());		
 		$this->cbView('crudbooster::default.form',$data);				
     }
-    
+    public function getSyncDebt(){
+        DB::select('call dong_bo_cong_no_nhan_vien()');
+        return redirect(CRUDBooster::mainpath());
+    }
     public function getUsers(){
         //First, Add an auth
         if(!CRUDBooster::isView()) CRUDBooster::redirect(CRUDBooster::adminPath(),trans('crudbooster.denied_access'));
@@ -154,7 +174,8 @@ class AdminCmsUsersController extends CBExtendController {
         $filename = 'UB_'.time();
         $parameter = [
             'id'=>$id,
-            'logo'=>storage_path().'/app/uploads/logo.png'
+            'logo'=>storage_path().'/app/uploads/logo.png',
+            'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
         ];
         $input = base_path().'/app/Reports/rpt_user_list.jasper';
         $output = public_path().'/output_reports/'.$filename;
@@ -183,7 +204,8 @@ class AdminCmsUsersController extends CBExtendController {
             'to_date'=>$para_values[0],
             'brand_id'=>$para_values[1],
             'ids'=>$para_values[2],
-            'logo'=>storage_path().'/app/uploads/logo.png'
+            'logo'=>storage_path().'/app/uploads/logo.png',
+            'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
         ];
 
         $input = base_path().'/app/Reports/rpt_user_balance.jasper';
@@ -214,7 +236,8 @@ class AdminCmsUsersController extends CBExtendController {
             'to_date'=>$para_values[0],
             'brand_id'=>$para_values[1],
             'ids'=>$para_values[2],
-            'logo'=>storage_path().'/app/uploads/logo.png'
+            'logo'=>storage_path().'/app/uploads/logo.png',
+            'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
         ];
         $input = base_path().'/app/Reports/rpt_user_balance.jasper';
         $output = public_path().'/output_reports/'.$filename;
@@ -245,7 +268,8 @@ class AdminCmsUsersController extends CBExtendController {
             'to_date'=>$para_values[1],
             'brand_id'=>$para_values[2],
             'ids'=>$para_values[3],
-            'logo'=>storage_path().'/app/uploads/logo.png'
+            'logo'=>storage_path().'/app/uploads/logo.png',
+            'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
         ];
 
         $input = base_path().'/app/Reports/rpt_user_balance_detail.jasper';
@@ -276,7 +300,8 @@ class AdminCmsUsersController extends CBExtendController {
             'to_date'=>$para_values[1],
             'brand_id'=>$para_values[2],
             'ids'=>$para_values[3],
-            'logo'=>storage_path().'/app/uploads/logo.png'
+            'logo'=>storage_path().'/app/uploads/logo.png',
+            'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
         ];
         $input = base_path().'/app/Reports/rpt_user_balance_detail.jasper';
         $output = public_path().'/output_reports/'.$filename;

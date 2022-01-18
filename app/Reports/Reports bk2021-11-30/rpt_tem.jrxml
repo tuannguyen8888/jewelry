@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gold_tem" pageWidth="215" pageHeight="36" columnWidth="215" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="413988bb-8f38-4463-8d00-d677929f92f7">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business_connection"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="272"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="717"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="490"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="496"/>
+	<subDataset name="pays_ds" uuid="74e01e18-3c87-41dc-b762-38294dda5789">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business_connection"/>
+		<parameter name="order_id" class="java.lang.Integer"/>
+		<parameter name="pay_total_wage" class="java.lang.Double"/>
+		<queryString language="SQL">
+			<![CDATA[SELECT 
+	SOP.id as pay_id,
+    CASE WHEN SOP.pay_method = 1 THEN 'Thảo' 
+			   WHEN SOP.pay_method = 2 THEN 'Dẻ' 
+               WHEN SOP.pay_method = 3 THEN 'Tiền mặt' 
+               WHEN SOP.pay_method = 4 THEN 'Đúc' 
+               WHEN SOP.pay_method = 5 THEN 'Bộng' 
+               ELSE '' 
+    END as pay_method,
+	SOP.pay_method as pay_method_id,
+	description,
+    qty,
+    total_weight,
+    gem_weight,
+    gold_weight,
+    money,
+    gold_age,
+    converted_price,
+    exchange_g10
+FROM gold_sale_order_pays as SOP
+WHERE SOP.order_id =  $P{order_id} 
+ORDER BY SOP.id]]>
+		</queryString>
+		<field name="pay_id" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="pay_id"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="gold_sale_order_pays"/>
+		</field>
+		<field name="pay_method" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="pay_method"/>
+		</field>
+		<field name="pay_method_id" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="pay_method_id"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="gold_sale_order_pays"/>
+		</field>
+		<field name="description" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="description"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="gold_sale_order_pays"/>
+		</field>
+		<field name="qty" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="qty"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="gold_sale_order_pays"/>
+		</field>
+		<field name="total_weight" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="total_weight"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="gold_sale_order_pays"/>
+		</field>
+		<field name="gem_weight" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="gem_weight"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="gold_sale_order_pays"/>
+		</field>
+		<field name="gold_weight" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="gold_weight"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="gold_sale_order_pays"/>
+		</field>
+		<field name="money" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="money"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="gold_sale_order_pays"/>
+		</field>
+		<field name="gold_age" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="gold_age"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="gold_sale_order_pays"/>
+		</field>
+		<field name="converted_price" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="converted_price"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="gold_sale_order_pays"/>
+		</field>
+		<field name="exchange_g10" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="exchange_g10"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="gold_sale_order_pays"/>
+		</field>
+	</subDataset>
+	<parameter name="id" class="java.lang.Integer"/>
+	<parameter name="company" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["CTY TNHH VBĐQ KIM VẠN PHƯỚC"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="address" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["57 Bình Tiền 2, Đức Hoà Hạ, ĐH, LA"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TCCS" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["TCCS: 01/2019/KVP"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT T.bar_code, P.product_code, P.product_name, T.total_weight, T.gem_weight, T.gold_weight,
+	T.retail_fee AS retail_fee, T.whole_fee / 1000 AS whole_fee, PT.name AS types, IFNULL(S.code, '') as supplier
+FROM gold_items T 
+	INNER JOIN gold_products P ON T.product_id = P.id
+	LEFT JOIN gold_suppliers S ON T.supplier_id = S.id
+	LEFT JOIN gold_product_types PT ON T.product_type_id = PT.id
+WHERE T.id = $P{id}]]>
+	</queryString>
+	<field name="bar_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bar_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_items"/>
+	</field>
+	<field name="product_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="product_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_products"/>
+	</field>
+	<field name="product_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="product_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_products"/>
+	</field>
+	<field name="total_weight" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="total_weight"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_items"/>
+	</field>
+	<field name="gem_weight" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="gem_weight"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_items"/>
+	</field>
+	<field name="gold_weight" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="gold_weight"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_items"/>
+	</field>
+	<field name="retail_fee" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="retail_fee"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_items"/>
+	</field>
+	<field name="whole_fee" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="whole_fee"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_items"/>
+	</field>
+	<field name="types" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="types"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gold_product_types"/>
+	</field>
+	<field name="supplier" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="supplier"/>
+	</field>
+	<title>
+		<band height="36" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+			<textField>
+				<reportElement key="" x="155" y="2" width="60" height="4" uuid="7d643daa-e180-442e-8d12-137efe737cd8">
+					<property name="com.jaspersoft.studio.unit.x" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="3" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{company}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" x="110" y="7" width="39" height="6" uuid="28a2e073-8290-49e8-9393-164ebe29ec1b">
+					<property name="com.jaspersoft.studio.unit.x" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["KLĐ:" +($F{gem_weight} != 0 ? $F{gem_weight} : "")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" x="97" y="13" width="52" height="9" uuid="991ca59c-2a29-45a2-b99d-9a3f031c6f39">
+					<property name="com.jaspersoft.studio.unit.x" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["KLV: " +$F{gold_weight}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" x="149" y="2" width="6" height="26" uuid="6e752242-5fa3-42a4-9152-0578ae556236">
+					<property name="com.jaspersoft.studio.unit.x" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left">
+					<font fontName="Arial" size="4" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["HLV:" + $F{types}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" x="97" y="22" width="52" height="6" uuid="934bbf10-1f5f-444f-80db-94fc7e5ea01e">
+					<property name="com.jaspersoft.studio.unit.x" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Công: " + TEXT($F{retail_fee}, "#,###")]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" mode="Opaque" x="155" y="2" width="1" height="26" forecolor="#000000" uuid="66840be6-58c5-4ab0-8c1d-4aab80d29d3f">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement key="" x="109" y="2" width="44" height="5" uuid="92ab29c2-062f-4026-9b14-4f3dbad2c9b2">
+					<property name="com.jaspersoft.studio.unit.x" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="4" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["NCC: " + $F{supplier}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" x="156" y="23" width="59" height="5" uuid="7bffea48-e81f-4ea1-9900-4bc48903944a">
+					<property name="com.jaspersoft.studio.unit.x" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="4" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bar_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" x="97" y="7" width="43" height="6" uuid="cd9f3efb-df8a-48b2-9634-3fc929c608d1">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.x" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["KLT:" + $F{total_weight}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" x="97" y="2" width="52" height="5" uuid="56fd570b-9a83-4af6-b03b-4d07e7ffde7f">
+					<property name="com.jaspersoft.studio.unit.x" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="4" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_code}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="158" y="14" width="53" height="10" uuid="29c36c6f-db34-4e6a-b976-7844699df3ff">
+					<property name="com.jaspersoft.studio.unit.y" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.x" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
+					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="20" barHeight="400" evaluationTime="Band">
+					<jr:codeExpression><![CDATA[$F{bar_code}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField>
+				<reportElement key="" x="155" y="6" width="60" height="4" uuid="de43a0e6-e0a2-47e1-b6e3-657c001e2544">
+					<property name="com.jaspersoft.studio.unit.x" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="3" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{address}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" x="155" y="10" width="60" height="4" uuid="900a62ec-739b-4e6d-8d99-7f9913718d35">
+					<property name="com.jaspersoft.studio.unit.x" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="3" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TCCS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

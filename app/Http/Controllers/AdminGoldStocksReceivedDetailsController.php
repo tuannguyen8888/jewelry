@@ -31,7 +31,16 @@
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-            $this->col[] = ["label"=>"Barcode","name"=>"id","callback_php"=>'$row->bar_code'];
+            $this->col[] = ["label"=>"Barcode","name"=>"id","callback_php"=>'$row->bar_code',"export"=>'$row->bar_code'];
+            $this->col[] = ["label"=>"Mã sản phẩm","name"=>"id","callback_php"=>'$row->product_code',"export"=>'$row->product_code'];
+            $this->col[] = ["label"=>"Tên sản phẩm","name"=>"id","callback_php"=>'$row->product_name',"export"=>'$row->product_name'];
+            $this->col[] = ["label"=>"Loại vàng","name"=>"id","callback_php"=>'$row->product_type_name',"export"=>'$row->product_type_name'];
+            $this->col[] = ["label"=>"TL tổng","name"=>"id","callback_php"=>'$row->total_weight',"export"=>'$row->total_weight'];
+            $this->col[] = ["label"=>"TL đá","name"=>"id","callback_php"=>'$row->gem_weight',"export"=>'$row->gem_weight'];
+            $this->col[] = ["label"=>"TL vàng","name"=>"id","callback_php"=>'$row->gold_weight',"export"=>'$row->gold_weight'];
+            $this->col[] = ["label"=>"Tuổi vàng","name"=>"id","callback_php"=>'$row->age',"export"=>'$row->age'];
+            $this->col[] = ["label"=>"Q10","name"=>"id","callback_php"=>'$row->q10',"export"=>'$row->q10'];
+            $this->col[] = ["label"=>"Công vốn","name"=>"id","callback_php"=>'number_format($row->fund_fee)'];
             $this->col[] = ["label"=>"Số phiếu nhập","name"=>"received_no"];
             $this->col[] = ["label"=>"Ngày nhập","name"=>"received_date","callback_php"=>'date_time_format($row->received_date, \'Y-m-d H:i:s\', \'d/m/Y H:i:s\');'];
             $this->col[] = ["label"=>"Mã NCC","name"=>"supplier_id","join"=>"gold_suppliers,code"];
@@ -280,7 +289,20 @@
                 $query->where($this->table . '.brand_id', '=', $current_brand);
             }
             $query->leftJoin('gold_items as I', 'gold_stocks_received.id', '=', 'I.received_id')
-                ->addSelect('I.bar_code');
+                ->leftJoin('gold_products as P', 'I.product_id', '=', 'P.id')
+                ->leftJoin('gold_product_types as PT', 'I.product_type_id', '=', 'PT.id')
+                ->addSelect(
+                    'I.bar_code',
+                    'P.product_code',
+                    'P.product_name',
+                    'I.total_weight',
+                    'I.gem_weight',
+                    'I.gold_weight',
+                    'I.fund_fee',
+                    'I.age',
+                    'I.q10',
+                    'PT.name as product_type_name'
+                    );
 	    }
 
 	    /*

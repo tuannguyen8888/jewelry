@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 7.2.1.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Pawn_Invoice" pageWidth="595" pageHeight="420" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="384" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" whenResourceMissingType="Empty" uuid="661af603-ea6c-48b2-b268-c9c6feb5747a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jewelry_business_connection"/>
@@ -90,6 +90,9 @@ WHERE deleted_at IS NULL
 	</parameter>
 	<parameter name="background" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["/storage/app/uploads/favicon.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="qr_code" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/storage/app/uploads/qr_kvp.png"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT SO.order_no, SO.order_date, C.name AS customer_name, C.address, C.zalo_phone, 
@@ -341,6 +344,12 @@ WHERE SO.id =  $P{id}]]>
 				</textElement>
 				<text><![CDATA[B. ĐÓNG LÃI:]]></text>
 			</staticText>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement x="490" y="10" width="60" height="60" uuid="a4f2e1ca-6394-4f0f-b2f9-8926c3812b65">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{qr_code}]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
@@ -657,7 +666,7 @@ WHERE SO.id =  $P{id}]]>
 					<text><![CDATA[Lưu ý:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="170" y="12" width="370" height="12" forecolor="#FF0000" uuid="76e9aaf5-bd5f-42ba-b9c6-5ec6745f6f1a">
+					<reportElement x="10" y="12" width="530" height="48" forecolor="#FF0000" uuid="2a245981-dd03-4d72-82a7-ed6438dbc912">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -665,29 +674,10 @@ WHERE SO.id =  $P{id}]]>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" size="10" isBold="false" isItalic="true"/>
 					</textElement>
-					<text><![CDATA[(Nếu chưa chuộc thì mỗi tháng quý khách phải đóng lãi 1 lần)]]></text>
+					<text><![CDATA[- Quý khách vui lòng đóng lãi sau mỗi 30 ngày. Trường hợp quá hạn 15 ngày kể từ thời điểm đóng lãi mà công ty không liên hệ được với quý khách thì chúng tôi sẽ tiến hành thanh lý hợp đồng này.
+- Quý khách vui lòng lưu giữ hợp đồng này. Trường hợp bị mất hợp đồng vui lòng liên hệ với công ty.
+Cảm ơn Quý khách đã lựa chọn Kim Vạn Phước!]]></text>
 				</staticText>
-				<staticText>
-					<reportElement x="10" y="24" width="530" height="36" forecolor="#FF0000" uuid="2a245981-dd03-4d72-82a7-ed6438dbc912">
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="false" isItalic="true"/>
-					</textElement>
-					<text><![CDATA[- Quá hạn 10 ngày kể từ ngày biên nhận hết giá trị, mà quý khách không liên hệ với cửa hàng để đóng lãi, coi như quý khách đã tự ý bỏ, cửa hàng sẽ thanh lý để đảm bảo nguồn vốn. Mọi thắc mắc và khiếu nại về sau của quý khách cửa hàng sẽ không giải quyết.]]></text>
-				</staticText>
-				<textField isBlankWhenNull="true">
-					<reportElement x="10" y="12" width="160" height="12" forecolor="#FF0000" uuid="0495b868-8a42-41ca-9f61-f680140d608e">
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="true" isItalic="true" isUnderline="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA["- Biên nhận có giá trị " + $F{due_date} + " ngày"]]></textFieldExpression>
-				</textField>
 			</frame>
 		</band>
 	</pageFooter>

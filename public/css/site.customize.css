@@ -69,3 +69,7 @@
 #search-form .input-group input.form-control.notfocus.invisible{
     display: none !important;
 }
+
+.customize-form-search .form-group{
+    margin-bottom: 0 !important;
+}

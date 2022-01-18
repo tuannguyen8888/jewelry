@@ -56,10 +56,10 @@
 			$this->col[] = ["label"=>"KL vàng","name"=>"gold_weight", "callback_php"=>'number_format($row->gold_weight, 4)'];
 			$this->col[] = ["label"=>"Công bán","name"=>"retail_fee", "callback_php"=>'number_format($row->retail_fee)'];
 			$this->col[] = ["label"=>"Công VIP","name"=>"whole_fee", "callback_php"=>'number_format($row->whole_fee)'];
-			if(CRUDBooster::myPrivilegeId() != 2)// Nhân viên bán hàng
-            {
+//			Mở thêo yêu cầu của Tường if(CRUDBooster::myPrivilegeId() != 2)// Nhân viên bán hàng
+//            {
                 $this->col[] = ["label"=>"Công vốn","name"=>"fund_fee", "callback_php"=>'number_format($row->fund_fee)'];
-			}
+//			}
 			$this->col[] = ["label"=>"Loại vàng","name"=>"product_type_id","join"=>"gold_product_types,name"];
             $this->col[] = ["label"=>"Loại SP","name"=>"product_category_id","join"=>"gold_product_categories,name"];
             $this->col[] = ["label"=>"Nhóm SP","name"=>"product_group_id","join"=>"gold_product_groups,name"];

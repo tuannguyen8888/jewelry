@@ -307,7 +307,7 @@
                 // 'type'=>$para_values[2],
                 'brand_id'=>$para_values[2],
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
             ];
             $input = base_path().'/app/Reports/rpt_pawn.jasper';
             $output = public_path().'/output_reports/'.$filename;

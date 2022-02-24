@@ -376,7 +376,7 @@
             $parameter = [
                 'id'=>$id,
                 'brand_id'=>CRUDBooster::myBrand(),
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
                 'logo'=>storage_path().'/app/uploads/logo.png'
 			];
             Log::debug('$parameter = ', $parameter);
@@ -462,7 +462,7 @@
 				'brand_id'=>$para_values[2],
 				'stock_ids'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_stock_movement.jasper';
@@ -497,7 +497,7 @@
 				'brand_id'=>$para_values[2],
 				'stock_ids'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_stock_movement_all.jasper';
@@ -529,7 +529,7 @@
 				'brand_id'=>$para_values[2],
 				'stock_ids'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_stock_movement.jasper';
@@ -562,7 +562,7 @@
 				'brand_id'=>$para_values[2],
 				'stock_ids'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_stock_movement_all.jasper';
@@ -602,7 +602,7 @@
 				'brand_id'=>$para_values[2],
 				'supplier_ids'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_stock_movement_supplier.jasper';
@@ -634,7 +634,7 @@
 				'brand_id'=>$para_values[2],
 				'supplier_ids'=>$para_values[3],
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_stock_movement_supplier.jasper';
@@ -666,7 +666,7 @@
 				'brand_id'=>$para_values[1],
 				'stock_ids'=>$para_values[2],
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
             Log::debug('$parameter = ', $parameter);
             $input = base_path().'/app/Reports/rpt_stock_balance.jasper';
@@ -700,7 +700,7 @@
 				'brand_id'=>$para_values[1],
 				'stock_ids'=>$para_values[2],
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_stock_balance_all.jasper';
@@ -731,7 +731,7 @@
 				'brand_id'=>$para_values[1],
 				'stock_ids'=>$para_values[2],
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
             $input = base_path().'/app/Reports/rpt_stock_balance.jasper';
             $output = public_path().'/output_reports/'.$filename;
@@ -762,7 +762,7 @@
 				'brand_id'=>$para_values[1],
 				'stock_ids'=>$para_values[2],
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
 			];
 
             $input = base_path().'/app/Reports/rpt_stock_balance_all.jasper';
@@ -796,7 +796,7 @@
                 'brand_id'=>$para_values[1],
                 'stock_ids'=>$para_values[2],
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
             ];
             Log::debug('$parameter = ', $parameter);
             $input = base_path().'/app/Reports/rpt_stock_barcode_balance.jasper';
@@ -830,7 +830,7 @@
                 'brand_id'=>$para_values[1],
                 'stock_ids'=>$para_values[2],
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
             ];
 
             $input = base_path().'/app/Reports/rpt_stock_barcode_balance_all.jasper';
@@ -861,7 +861,7 @@
                 'brand_id'=>$para_values[1],
                 'stock_ids'=>$para_values[2],
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
             ];
             $input = base_path().'/app/Reports/rpt_stock_barcode_balance.jasper';
             $output = public_path().'/output_reports/'.$filename;
@@ -892,7 +892,7 @@
                 'brand_id'=>$para_values[1],
                 'stock_ids'=>$para_values[2],
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
             ];
 
             $input = base_path().'/app/Reports/rpt_stock_barcode_balance_all.jasper';

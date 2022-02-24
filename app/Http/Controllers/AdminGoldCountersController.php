@@ -511,10 +511,11 @@
             $parameter = [
                 'id'=>$id,
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
             ];
             $input = base_path().'/app/Reports/rpt_counter.jasper';
             $output = public_path().'/output_reports/'.$filename;
+            Log::debug('cmd = ' . $jasper->process($input, $output, array('pdf'), $parameter, $database)->output());
             $jasper->process($input, $output, array('pdf'), $parameter, $database)->execute();
 
             while (!file_exists($output.'.pdf' )){
@@ -538,7 +539,7 @@
             $parameter = [
                 'id'=>$id,
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
             ];
             $input = base_path().'/app/Reports/rpt_counter_detail.jasper';
             $output = public_path().'/output_reports/'.$filename;

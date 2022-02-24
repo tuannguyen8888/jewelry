@@ -568,7 +568,7 @@ use Response;
             $parameter = [
                 'id'=>$id,
                 'logo'=>storage_path().'/app/uploads/logo.png',
-                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
+//                'qr_code'=>storage_path().'/app/'.CRUDBooster::getSetting('qr_code'),
             ];
             $input = base_path().'/app/Reports/rpt_pawn_oders_taking.jasper';
             $output = public_path().'/output_reports/'.$filename;
